@@ -26,5 +26,6 @@ module.exports = {
       'error',
       { devDependencies: ['vite.config.ts'] },
     ],
+    'react/react-in-jsx-scope': 'off',
   },
 }

@@ -25,7 +25,13 @@ module.exports = {
     ],
     'import/no-extraneous-dependencies': [
       'error',
-      { devDependencies: ['vite.config.ts'] },
+      {
+        devDependencies: [
+          'vite.config.ts',
+          'src/**/setupTests.ts',
+          'src/**/*.test.ts{,x}',
+        ],
+      },
     ],
     'react/react-in-jsx-scope': 'off',
   },

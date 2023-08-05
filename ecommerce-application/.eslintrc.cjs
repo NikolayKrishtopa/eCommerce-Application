@@ -22,5 +22,9 @@ module.exports = {
       'warn',
       { allowConstantExport: true },
     ],
+    'import/no-extraneous-dependencies': [
+      'error',
+      { devDependencies: ['vite.config.ts'] },
+    ],
   },
 }

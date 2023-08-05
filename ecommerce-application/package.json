@@ -13,7 +13,8 @@
     "format:fix": "prettier --write ./src",
     "test": "vitest",
     "husky:enable": "cd .. && husky install ecommerce-application/.husky",
-    "husky:disable": "git config --unset core.hooksPath"
+    "husky:disable": "git config --unset core.hooksPath",
+    "prepare": "npm run husky:enable"
   },
   "dependencies": {
     "react": "^18.2.0",

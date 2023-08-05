@@ -11,7 +11,9 @@
     "lint:fix": "npm run lint --fix",
     "format": "prettier --check ./src",
     "format:fix": "prettier --write ./src",
-    "test": "vitest"
+    "test": "vitest",
+    "husky:enable": "cd .. && husky install ecommerce-application/.husky",
+    "husky:disable": "git config --unset core.hooksPath"
   },
   "dependencies": {
     "react": "^18.2.0",
@@ -35,6 +37,7 @@
     "eslint-plugin-react": "^7.33.1",
     "eslint-plugin-react-hooks": "^4.6.0",
     "eslint-plugin-react-refresh": "^0.4.3",
+    "husky": "^8.0.3",
     "jsdom": "^22.1.0",
     "prettier": "^3.0.1",
     "sass": "^1.64.2",

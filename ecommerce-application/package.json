@@ -14,7 +14,8 @@
     "test": "vitest",
     "husky:enable": "cd .. && husky install ecommerce-application/.husky",
     "husky:disable": "git config --unset core.hooksPath",
-    "prepare": "npm run husky:enable"
+    "prepare": "npm run husky:enable",
+    "ts-watch-errors": "tsc --noEmit --watch"
   },
   "dependencies": {
     "react": "^18.2.0",

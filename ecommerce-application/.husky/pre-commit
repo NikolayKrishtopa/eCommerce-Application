@@ -5,6 +5,4 @@ __dirname=$(dirname -- "$0")
 source "$__dirname/_/husky.sh"
 
 cd "$__dirname/.."
-npm run format
-npm run lint
-npm test run
+npx lint-staged

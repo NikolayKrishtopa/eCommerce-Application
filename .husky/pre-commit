@@ -4,5 +4,4 @@ __dirname=$(dirname -- "$0")
 
 source "$__dirname/_/husky.sh"
 
-cd "$__dirname/.."
 npx lint-staged

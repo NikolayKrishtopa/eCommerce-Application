@@ -12,7 +12,7 @@
     "format": "prettier --check ./src",
     "format:fix": "prettier --write ./src",
     "test": "vitest",
-    "husky:enable": "cd .. && husky install ecommerce-application/.husky",
+    "husky:enable": "husky install",
     "husky:disable": "git config --unset core.hooksPath",
     "prepare": "npm run husky:enable",
     "ts-watch-errors": "tsc --noEmit --watch"

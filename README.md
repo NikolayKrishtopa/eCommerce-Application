@@ -43,4 +43,5 @@ Linting, formatting and tests are also run automatically at each commit.
 2. Clone the repository: `git clone https://github.com/NikolayKrishtopa/eCommerce-Application`
 4. Go to downloaded folder: `cd eCommerce-Application`
 5. Install dependencies: `npm install`
-6. Here you go
+6. Start dev server: `npm run dev`
+7. Here you go

@@ -1,3 +1,5 @@
+import AppRouter from '../Components/Router/App-router'
+
 export default function App() {
-  return <h1>Hello from task crushers</h1>
+  return <AppRouter />
 }

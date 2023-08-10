@@ -3,7 +3,7 @@
 ## Description
 eCommerce Application is the final task of the JavaScript/Front-End 2023Q1 course at RS School. In this task we aim to bolster skills gained throughout the course, get valuable team-work experience and soak up all the cutting-edge tech trends in the area of ecommerce.
 
-Whithin this project our team of 3 students is creating the following functionality for an online store:
+Within this project our team of 3 students is creating the following functionality for an online store:
 - Main page
 - User login / registration
 - User profile page
@@ -11,7 +11,7 @@ Whithin this project our team of 3 students is creating the following functional
 - Product page
 - Basket page
 - About page
-  
+
 As a backend for the project the [commercetools](https://commercetools.com/) platform is used.
 
 The design is graciously provided by ***✨Ruzanna***

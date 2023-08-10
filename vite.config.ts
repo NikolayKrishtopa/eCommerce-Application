@@ -13,6 +13,9 @@ export default defineConfig({
   },
   css: {
     devSourcemap: true,
+    modules: {
+      localsConvention: 'camelCaseOnly',
+    },
   },
   test: {
     environment: 'jsdom',

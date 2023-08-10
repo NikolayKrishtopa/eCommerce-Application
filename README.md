@@ -46,3 +46,11 @@ Linting, formatting and tests are also run automatically at each commit.
 5. Install dependencies: `npm install`
 6. Start dev server: `npm run dev`
 7. Here you go
+
+## VS Code extensions:
+- [Intellisense for CSS Modules](https://marketplace.visualstudio.com/items?itemName=clinyong.vscode-css-modules). Recommended settings:
+  ```json
+  {
+    "cssModules.camelCase": true
+  }
+  ```

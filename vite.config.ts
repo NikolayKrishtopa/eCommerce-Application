@@ -11,6 +11,9 @@ export default defineConfig({
       { find: '@public', replacement: '' },
     ],
   },
+  css: {
+    devSourcemap: true,
+  },
   test: {
     environment: 'jsdom',
     setupFiles: ['./src/setupTests.ts'],

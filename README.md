@@ -34,7 +34,8 @@ The design is graciously provided by ***✨Ruzanna***
 - to fix all fixable linter errors: `npm run lint:fix`
 - to check for formatter errors: `npm run format`
 - to fix formatter errors: `npm run format:fix`
-- to run tests: `npm run test`
+- to run tests: `npm run test` or `npm run test:watch`
+- to run tests coverage: `npm run coverage` or `npm run coverage:watch`
 
 Linting, formatting and tests are also run automatically at each commit.
 

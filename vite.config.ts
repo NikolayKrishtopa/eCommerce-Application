@@ -3,11 +3,6 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 
-/**
- * The use of __dirname and __filename in ES modules is a Vite specific feature
- */
-
-// https://vitejs.dev/config/
 export default defineConfig({
   plugins: [react()],
   resolve: {

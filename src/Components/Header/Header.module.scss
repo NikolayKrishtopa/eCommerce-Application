@@ -1,0 +1,39 @@
+.header {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 1.6rem;
+  font-family: 'Inter', sans-serif;
+  font-size: 1.2rem;
+}
+
+.logo {
+  flex-grow: 1;
+  display: flex;
+  align-items: center;
+  color: red;
+  font-size: 1.6rem;
+}
+
+.logo-img {
+  margin-right: 0.7rem;
+}
+
+.main-menu {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 4rem;
+  list-style: none;
+  margin-right: 4rem;
+}
+
+.authlink {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 13.7rem;
+  height: 3.2rem;
+  border-radius: 10px;
+  border: 1px solid #fff;
+}

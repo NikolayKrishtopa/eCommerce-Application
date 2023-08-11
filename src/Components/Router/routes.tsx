@@ -22,7 +22,7 @@ const routes = [
         element: <LoginPage />,
       },
       {
-        path: '/registration',
+        path: '/register',
         element: <RegistrationPage />,
       },
     ],

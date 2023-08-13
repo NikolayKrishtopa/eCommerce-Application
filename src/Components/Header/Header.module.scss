@@ -1,17 +1,24 @@
 .header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
   display: flex;
   justify-content: flex-end;
   align-items: center;
+  background-color: transparent;
   gap: 1.6rem;
   font-family: 'Inter', sans-serif;
   font-size: 1.2rem;
+  padding: 1.6rem 3.2rem;
+  mix-blend-mode: difference;
 }
 
 .logo {
   flex-grow: 1;
   display: flex;
   align-items: center;
-  color: red;
   font-size: 1.6rem;
 }
 

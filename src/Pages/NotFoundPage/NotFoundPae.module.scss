@@ -1,0 +1,39 @@
+@import '../../styles/index.scss';
+
+.page {
+  background-color: $main-black;
+  width: 100%;
+  padding-top: 190px;
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+  align-items: center;
+  color: $main-white;
+  font-family: 'Roboto', sans-serif;
+  font-weight: 400;
+}
+
+.img {
+  width: 462px;
+  height: 240px;
+}
+
+.mainText {
+  font-size: 36px;
+  font-style: normal;
+  margin: 0;
+}
+
+.supplText {
+  font-size: 24px;
+  font-style: normal;
+  margin: 0;
+}
+
+.link {
+  font-weight: 700;
+  color: $extra-accent;
+  margin: 0;
+  text-transform: capitalize;
+  text-decoration: underline;
+}

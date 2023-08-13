@@ -7,3 +7,5 @@ const SYSTEM_MESSAGES = {
     REGISTER_SCSS: 'New user account successfully created',
     REGISTER_FAIL: 'Error while creating new user account. Please try again'
 }
+
+export default SYSTEM_MESSAGES

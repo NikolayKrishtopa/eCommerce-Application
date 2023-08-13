@@ -6,10 +6,10 @@ import basketImg from '../../assets/basket.svg'
 export default function Header() {
   return (
     <header className={s.header}>
-      <div className={s.logo}>
+      <h1 className={s.logo}>
         <img className={s.logoImg} src={logoImg} alt="logo" />
         <NavLink to="/">The Skateshop</NavLink>
-      </div>
+      </h1>
       <nav>
         <ul className={s.mainMenu}>
           <li>

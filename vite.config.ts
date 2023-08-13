@@ -11,12 +11,6 @@ export default defineConfig({
       { find: '@public', replacement: '' },
     ],
   },
-  css: {
-    devSourcemap: true,
-    modules: {
-      localsConvention: 'camelCaseOnly',
-    },
-  },
   test: {
     environment: 'jsdom',
     setupFiles: ['./src/setupTests.ts'],

@@ -1,0 +1,66 @@
+@import '../../styles/index.scss';
+
+.popup {
+   width: 100%;
+   max-width: 556px;
+   display: flex;
+   align-items: center;
+   position: absolute;
+   top: 100px;
+   left: 100px;
+   right: 100px;
+   padding: 42px 27px;
+   gap: 18px;
+   background-color: $main-white;
+   border: 4px solid $main-black;
+   border-radius: 25px;
+   justify-content: space-between;
+   transform: translateY(-700px);
+   transition: transform .5s ease;
+
+   @media (max-width: $breakpoint-tablet) {
+      padding: 24px 16px;
+      max-width: calc(100vw - 100px);
+      left: 50px;
+      right: 50px;
+   }
+}
+
+.shown {
+   transform: none;
+
+}
+
+.success {
+   background-color: $extra-success;
+}
+
+.fail {
+   background-color: $extra-fail;
+}
+
+.icon {
+   width: 72px;
+   height: 72px;
+}
+
+.msgText {
+   font-size: 32px;
+   font-weight: 700;
+   color: $main-white;
+
+   @media (max-width: $breakpoint-tablet) {
+      font-size: 24px;
+   }
+}
+
+.closeBtn {
+   @include clickable;
+   width: 30px;
+   height: 30px;
+   border: none;
+   background: transparent;
+   display: flex;
+   align-items: center;
+   justify-content: center;
+}

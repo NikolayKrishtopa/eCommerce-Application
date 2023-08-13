@@ -1,4 +1,7 @@
 #!/usr/bin/env sh
-. "$(dirname -- "$0")/_/husky.sh"
 
-npm test
+__dirname=$(dirname -- "$0")
+
+source "$__dirname/_/husky.sh"
+
+npx lint-staged

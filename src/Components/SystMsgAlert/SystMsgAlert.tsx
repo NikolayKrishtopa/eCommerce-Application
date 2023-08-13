@@ -1,8 +1,8 @@
 import { useEffect } from 'react'
 import cn from 'classnames'
 import SystAlertProps from './SystMsgAlert.props'
-import skateIcon from '../../assets/img/skateboard.svg'
-import closeIcon from '../../assets/img/close.svg'
+import skateIcon from '../../assets/icons/skateboard.svg'
+import closeIcon from '../../assets/icons/close.svg'
 import s from './SystMsgAlert.module.scss'
 
 export default function SystMsgAlert(props: SystAlertProps) {

@@ -1,8 +1,13 @@
 import { useState } from 'react'
+import { Route, Routes } from 'react-router-dom'
 import SystMsgAlert from '../Components/SystMsgAlert/SystMsgAlert'
 
-import AppRouter from '../Components/AppRouter/AppRouter'
 import './App.scss'
+import MainPage from '../Pages/MainPage/MainPage'
+import LoginPage from '../Pages/LoginPage/LoginPage'
+import RegistrationPage from '../Pages/RegistrationPage/RegistrationPage'
+import NotFoundPage from '../Pages/NotFoundPage/NotFoundPage'
+import Header from '../Components/Header/Header'
 
 export default function App() {
   const [systMsg, setSystMsg] = useState('')
@@ -14,8 +19,8 @@ export default function App() {
   }
 
   return (
-    <>
-    <AppRouter />
+  <>
+    <Header />
     <SystMsgAlert
       msg={systMsg}
       onResetMsg={resetSystMsg}
@@ -24,6 +29,24 @@ export default function App() {
       <button type="button" onClick={() => setSystMsg('test message')} style={{marginTop: '100px'}}>
         test use only-needs to be removed then
       </button>
-    </>
-  )
+    <Routes>
+        <Route
+          path="/"
+          element={<MainPage/>}
+          />
+         <Route
+          path="/login"
+          element={<LoginPage/>}
+          />
+          <Route
+          path="/register"
+          element={<RegistrationPage />}
+          />
+          <Route
+          path="/*"
+          element={<NotFoundPage />}
+          />
+    </Routes >
+  </>
+)
 }

@@ -8,4 +8,9 @@ const SYSTEM_MESSAGES = {
     REGISTER_FAIL: 'Error while creating new user account. Please try again'
 }
 
-export default SYSTEM_MESSAGES
+const UI_TEXTS = {
+    NOT_FOUND:'Oops! Didn’t find anything here.',
+    LINK_FROM_NOT_FOUND: 'Go to'
+}
+
+export {SYSTEM_MESSAGES,UI_TEXTS}

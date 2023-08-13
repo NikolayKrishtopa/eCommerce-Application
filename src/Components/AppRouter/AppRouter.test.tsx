@@ -3,7 +3,7 @@ import { fireEvent, render, screen } from '@testing-library/react'
 
 import { RouterProvider, createMemoryRouter } from 'react-router-dom'
 
-import AppRouter from './App-router'
+import AppRouter from './AppRouter'
 import routes from './routes'
 
 describe('Test router', () => {

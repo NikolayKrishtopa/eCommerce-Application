@@ -1,9 +1,9 @@
 import { Outlet } from 'react-router-dom'
-import LoginPage from '../../Pages/Login/login-page'
-import MainPage from '../../Pages/Main/main-page'
-import RegistrationPage from '../../Pages/Registration/registration-page'
-import NotFoundPage from '../../Pages/404/not-found-page'
 import Header from '../Header/Header'
+import LoginPage from '../../Pages/LoginPage/LoginPage'
+import MainPage from '../../Pages/MainPage/MainPage'
+import NotFoundPage from '../../Pages/NotFoundPage/NotFoundPage'
+import RegistrationPage from '../../Pages/RegistrationPage/RegistrationPage'
 
 const routes = [
   {

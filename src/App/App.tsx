@@ -1,4 +1,4 @@
-import AppRouter from '../Components/Router/App-router'
+import AppRouter from '../Components/AppRouter/AppRouter'
 import './App.scss'
 
 export default function App() {

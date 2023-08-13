@@ -19,34 +19,26 @@ export default function App() {
   }
 
   return (
-  <>
-    <Header />
-    <SystMsgAlert
-      msg={systMsg}
-      onResetMsg={resetSystMsg}
-      type={isError ? 'fail' : 'success'}
+    <>
+      <Header />
+      <SystMsgAlert
+        msg={systMsg}
+        onResetMsg={resetSystMsg}
+        type={isError ? 'fail' : 'success'}
       />
-      <button type="button" onClick={() => setSystMsg('test message')} style={{marginTop: '100px'}}>
+      <button
+        type="button"
+        onClick={() => setSystMsg('test message')}
+        style={{ marginTop: '100px' }}
+      >
         test use only-needs to be removed then
       </button>
-    <Routes>
-        <Route
-          path="/"
-          element={<MainPage/>}
-          />
-         <Route
-          path="/login"
-          element={<LoginPage/>}
-          />
-          <Route
-          path="/register"
-          element={<RegistrationPage />}
-          />
-          <Route
-          path="/*"
-          element={<NotFoundPage />}
-          />
-    </Routes >
-  </>
-)
+      <Routes>
+        <Route path="/" element={<MainPage />} />
+        <Route path="/login" element={<LoginPage />} />
+        <Route path="/register" element={<RegistrationPage />} />
+        <Route path="/*" element={<NotFoundPage />} />
+      </Routes>
+    </>
+  )
 }

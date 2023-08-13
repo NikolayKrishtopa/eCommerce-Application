@@ -1,7 +1,7 @@
 import { Outlet } from 'react-router-dom'
 import Header from '../Header/Header'
 import LoginPage from '../../Pages/LoginPage/LoginPage'
-import Main from '../../Pages/Main/Main'
+import MainPage from '../../Pages/MainPage/MainPage'
 import NotFoundPage from '../../Pages/NotFoundPage/NotFoundPage'
 import RegistrationPage from '../../Pages/RegistrationPage/RegistrationPage'
 
@@ -16,7 +16,7 @@ const routes = [
     ),
     errorElement: <NotFoundPage />,
     children: [
-      { index: true, element: <Main /> },
+      { index: true, element: <MainPage /> },
       {
         path: '/login',
         element: <LoginPage />,

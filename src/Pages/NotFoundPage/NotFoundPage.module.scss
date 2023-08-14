@@ -1,15 +1,16 @@
 @use '@/styles/break';
+@use '@/styles/color';
 @import '../../styles/index.scss';
 
 .page {
-  background-color: $main-black;
+  background-color: color.$main-black;
   width: 100%;
   padding: 190px 47px 0;
   display: flex;
   flex-direction: column;
   gap: 30px;
   align-items: center;
-  color: $main-white;
+  color: color.$main-white;
   font-family: 'Roboto', sans-serif;
   font-weight: 400;
   @media (max-width: break.$breakpoint-tablet) {
@@ -51,7 +52,7 @@
 
 .link {
   font-weight: 700;
-  color: $extra-accent;
+  color: color.$extra-accent;
   margin: 0;
   text-decoration: underline;
 }

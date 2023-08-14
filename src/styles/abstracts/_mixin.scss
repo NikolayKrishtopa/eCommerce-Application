@@ -1,0 +1,7 @@
+@mixin clickable {
+  cursor: pointer;
+  transition: opacity 0.3s ease;
+  &:hover {
+    opacity: 60%;
+  }
+}

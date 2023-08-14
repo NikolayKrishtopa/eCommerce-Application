@@ -1,4 +1,5 @@
 @use '@/styles/abstracts/vars' as *;
+@use '@/styles/abstracts/mixin';
 @import '../../styles/index.scss';
 
 .popup {
@@ -56,7 +57,7 @@
 }
 
 .closeBtn {
-  @include clickable;
+  @include mixin.clickable;
   width: 30px;
   height: 30px;
   border: none;

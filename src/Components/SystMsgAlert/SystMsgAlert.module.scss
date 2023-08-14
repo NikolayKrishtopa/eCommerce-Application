@@ -1,29 +1,30 @@
 @use '@/styles/abstracts/vars' as *;
+@use '@/styles/abstracts/function' as *;
 @use '@/styles/abstracts/mixin';
 
 .popup {
   width: 100%;
-  max-width: 556px;
+  max-width: r(556px);
   display: flex;
   align-items: center;
   position: absolute;
-  top: 100px;
-  left: 100px;
-  right: 100px;
-  padding: 42px 27px;
-  gap: 18px;
+  top: r(100px);
+  left: r(100px);
+  right: r(100px);
+  padding: r(42px) r(27px);
+  gap: r(18px);
   background-color: $color-neutral-light;
-  border: 4px solid $color-primary;
-  border-radius: 25px;
+  border: r(4px) solid $color-primary;
+  border-radius: r(25px);
   justify-content: space-between;
   transform: translateY(-700px);
   transition: transform 0.5s ease;
 
   @media (max-width: $break-md) {
-    padding: 24px 16px;
+    padding: r(24px) r(16px);
     max-width: calc(100vw - 100px);
-    left: 50px;
-    right: 50px;
+    left: r(50px);
+    right: r(50px);
   }
 }
 
@@ -40,25 +41,25 @@
 }
 
 .icon {
-  width: 72px;
-  height: 72px;
+  width: r(72px);
+  height: r(72px);
 }
 
 .msgText {
   font-family: 'Roboto', sans-serif;
-  font-size: 32px;
+  font-size: 2rem;
   font-weight: 700;
   color: $color-text-alert;
 
   @media (max-width: $break-md) {
-    font-size: 24px;
+    font-size: 1.5rem;
   }
 }
 
 .closeBtn {
   @include mixin.clickable;
-  width: 30px;
-  height: 30px;
+  width: r(30px);
+  height: r(30px);
   border: none;
   background: transparent;
   display: flex;

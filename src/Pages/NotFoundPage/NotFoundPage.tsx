@@ -1,7 +1,7 @@
 import { NavLink } from 'react-router-dom'
 import pict from '../../assets/img/404.png'
 import { UI_TEXTS } from '../../utils/constants'
-import s from './NotFoundPae.module.scss'
+import s from './NotFoundPage.module.scss'
 
 export default function NotFoundPage() {
   return (

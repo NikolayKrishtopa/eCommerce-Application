@@ -1,3 +1,5 @@
+@use '@/styles/abstracts/vars' as *;
+
 .header {
   position: fixed;
   top: 0;
@@ -42,5 +44,5 @@
   width: 13.7rem;
   height: 3.2rem;
   border-radius: 10px;
-  border: 1px solid #fff;
+  border: 1px solid $color-neutral-light;
 }

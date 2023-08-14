@@ -1,14 +1,14 @@
 @use '@/styles/abstracts/vars' as *;
 
 .page {
-  background-color: $color-main-black;
+  background-color: $color-primary;
   width: 100%;
   padding: 190px 47px 0;
   display: flex;
   flex-direction: column;
   gap: 30px;
   align-items: center;
-  color: $color-main-white;
+  color: $color-on-primary-text;
   font-family: 'Roboto', sans-serif;
   font-weight: 400;
   @media (max-width: $break-md) {
@@ -50,7 +50,7 @@
 
 .link {
   font-weight: 700;
-  color: $color-extra-accent;
+  color: $color-text-link;
   margin: 0;
   text-decoration: underline;
 }

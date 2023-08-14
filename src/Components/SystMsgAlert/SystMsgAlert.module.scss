@@ -12,8 +12,8 @@
   right: 100px;
   padding: 42px 27px;
   gap: 18px;
-  background-color: $color-main-white;
-  border: 4px solid $color-main-black;
+  background-color: $color-neutral-light;
+  border: 4px solid $color-primary;
   border-radius: 25px;
   justify-content: space-between;
   transform: translateY(-700px);
@@ -32,11 +32,11 @@
 }
 
 .success {
-  background-color: $color-extra-success;
+  background-color: $color-success;
 }
 
 .fail {
-  background-color: $color-extra-fail;
+  background-color: $color-danger;
 }
 
 .icon {
@@ -48,7 +48,7 @@
   font-family: 'Roboto', sans-serif;
   font-size: 32px;
   font-weight: 700;
-  color: $color-main-white;
+  color: $color-text-alert;
 
   @media (max-width: $break-md) {
     font-size: 24px;

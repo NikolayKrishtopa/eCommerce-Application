@@ -1,6 +1,19 @@
-$main-black: #151515;
-$main-white: #fff;
-$extra-dark: #545454;
-$extra-success: #447604;
-$extra-fail: #ec4e20;
-$extra-accent: #2983b8;
+$_neutral-100: #ffffff;
+$_neutral-200: #f6f6f6;
+$_neutral-500: #545454;
+$_neutral-900: #000000;
+
+$primary: #151515;
+$success: #447604;
+$danger: #ec4e20;
+$info: #2983b8;
+
+$neutral-light: $_neutral-100;
+$neutral-light-accent: $_neutral-200;
+$neutral-dark: $_neutral-900;
+
+$on-primary-text: $_neutral-100;
+$on-neutral-light-text: $primary;
+$on-neutral-light-text-pale: $_neutral-500;
+$text-link: $info;
+$text-alert: $_neutral-100;

@@ -1,6 +1,4 @@
-@use '@/styles/abstracts/vars' as *;
-@use '@/styles/abstracts/function' as *;
-@use '@/styles/abstracts/mixin';
+@use '@/styles/abstracts' as *;
 
 .popup {
   width: 100%;
@@ -57,7 +55,7 @@
 }
 
 .closeBtn {
-  @include mixin.clickable;
+  @include clickable;
   width: r(30px);
   height: r(30px);
   border: none;

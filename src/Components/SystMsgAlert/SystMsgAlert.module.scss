@@ -1,5 +1,4 @@
-@use '@/styles/break';
-@use '@/styles/color';
+@use '@/styles/abstracts/vars' as *;
 @import '../../styles/index.scss';
 
 .popup {
@@ -13,14 +12,14 @@
   right: 100px;
   padding: 42px 27px;
   gap: 18px;
-  background-color: color.$main-white;
-  border: 4px solid color.$main-black;
+  background-color: $color-main-white;
+  border: 4px solid $color-main-black;
   border-radius: 25px;
   justify-content: space-between;
   transform: translateY(-700px);
   transition: transform 0.5s ease;
 
-  @media (max-width: break.$md) {
+  @media (max-width: $break-md) {
     padding: 24px 16px;
     max-width: calc(100vw - 100px);
     left: 50px;
@@ -33,11 +32,11 @@
 }
 
 .success {
-  background-color: color.$extra-success;
+  background-color: $color-extra-success;
 }
 
 .fail {
-  background-color: color.$extra-fail;
+  background-color: $color-extra-fail;
 }
 
 .icon {
@@ -49,9 +48,9 @@
   font-family: 'Roboto', sans-serif;
   font-size: 32px;
   font-weight: 700;
-  color: color.$main-white;
+  color: $color-main-white;
 
-  @media (max-width: break.$md) {
+  @media (max-width: $break-md) {
     font-size: 24px;
   }
 }

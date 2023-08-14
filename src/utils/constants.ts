@@ -9,7 +9,7 @@ const SYSTEM_MESSAGES = {
 }
 
 const UI_TEXTS = {
-  NOT_FOUND: 'Oops! Didn’t find anything here.',
+  NOT_FOUND: "Oops! Didn't find anything here.",
   LINK_FROM_NOT_FOUND: 'Go to',
 }
 

@@ -1,0 +1,8 @@
+@use 'sass:math';
+
+@function r($pxVal) {
+  @if math.unit($pxVal) != 'px' {
+    @error "Function argument must be a 'px' value";
+  }
+  @return math.div($pxVal, 16px) + rem;
+}

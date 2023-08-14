@@ -1,3 +1,5 @@
+@use '@/styles/abstracts' as *;
+
 .header {
   position: fixed;
   top: 0;
@@ -8,10 +10,9 @@
   justify-content: flex-end;
   align-items: center;
   background-color: transparent;
-  gap: 1.6rem;
-  font-family: 'Inter', sans-serif;
+  gap: r(26px);
   font-size: 1.2rem;
-  padding: 1.6rem 3.2rem;
+  padding: r(26px) r(52px);
   mix-blend-mode: difference;
 }
 
@@ -23,24 +24,24 @@
 }
 
 .logo-img {
-  margin-right: 0.7rem;
+  margin-right: r(13px);
 }
 
 .main-menu {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  gap: 4rem;
+  gap: r(64px);
   list-style: none;
-  margin-right: 4rem;
+  margin-right: r(64px);
 }
 
 .authlink {
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 13.7rem;
-  height: 3.2rem;
-  border-radius: 10px;
-  border: 1px solid #fff;
+  width: r(220px);
+  height: r(52px);
+  border-radius: r(10px);
+  border: r(1px) solid $color-neutral-light;
 }

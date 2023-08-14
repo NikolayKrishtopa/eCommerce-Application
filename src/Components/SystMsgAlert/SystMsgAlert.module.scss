@@ -20,7 +20,7 @@
   transform: translateY(-700px);
   transition: transform 0.5s ease;
 
-  @media (max-width: break.$breakpoint-tablet) {
+  @media (max-width: break.$md) {
     padding: 24px 16px;
     max-width: calc(100vw - 100px);
     left: 50px;
@@ -51,7 +51,7 @@
   font-weight: 700;
   color: color.$main-white;
 
-  @media (max-width: break.$breakpoint-tablet) {
+  @media (max-width: break.$md) {
     font-size: 24px;
   }
 }

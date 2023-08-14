@@ -1,3 +1,4 @@
+@use '@/styles/break';
 @import '../../styles/index.scss';
 
 .page {
@@ -11,7 +12,7 @@
   color: $main-white;
   font-family: 'Roboto', sans-serif;
   font-weight: 400;
-  @media (max-width: $breakpoint-tablet) {
+  @media (max-width: break.$breakpoint-tablet) {
     padding-top: 163px;
   }
 }
@@ -19,7 +20,7 @@
 .img {
   width: 462px;
   height: 240px;
-  @media (max-width: $breakpoint-tablet) {
+  @media (max-width: break.$breakpoint-tablet) {
     width: 245px;
     height: 133px;
   }
@@ -31,7 +32,7 @@
   margin: 0;
   max-width: 500px;
   text-align: center;
-  @media (max-width: $breakpoint-tablet) {
+  @media (max-width: break.$breakpoint-tablet) {
     font-size: 24px;
   }
 }
@@ -42,7 +43,7 @@
   margin: 0;
   max-width: 500px;
   text-align: center;
-  @media (max-width: $breakpoint-tablet) {
+  @media (max-width: break.$breakpoint-tablet) {
     font-size: 20px;
     margin-top: -7px;
   }

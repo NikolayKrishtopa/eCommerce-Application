@@ -1,3 +1,4 @@
+@use '@/styles/break';
 @import '../../styles/index.scss';
 
 .popup {
@@ -18,7 +19,7 @@
   transform: translateY(-700px);
   transition: transform 0.5s ease;
 
-  @media (max-width: $breakpoint-tablet) {
+  @media (max-width: break.$breakpoint-tablet) {
     padding: 24px 16px;
     max-width: calc(100vw - 100px);
     left: 50px;
@@ -49,7 +50,7 @@
   font-weight: 700;
   color: $main-white;
 
-  @media (max-width: $breakpoint-tablet) {
+  @media (max-width: break.$breakpoint-tablet) {
     font-size: 24px;
   }
 }

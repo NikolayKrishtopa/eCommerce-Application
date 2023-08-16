@@ -9,6 +9,7 @@ export default defineConfig({
     alias: [
       { find: '@', replacement: '/src' },
       { find: '@public', replacement: '' },
+      { find: 'node-fetch', replacement: 'isomorphic-fetch' },
     ],
   },
   test: {

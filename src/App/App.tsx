@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Route, Routes } from 'react-router-dom'
 import SystMsgAlert from '../Components/SystMsgAlert/SystMsgAlert'
 
@@ -8,6 +8,7 @@ import LoginPage from '../Pages/LoginPage/LoginPage'
 import RegistrationPage from '../Pages/RegistrationPage/RegistrationPage'
 import NotFoundPage from '../Pages/NotFoundPage/NotFoundPage'
 import Header from '../Components/Header/Header'
+import getProject from '../client'
 
 export default function App() {
   const [systMsg, setSystMsg] = useState('')
@@ -18,6 +19,10 @@ export default function App() {
     setIsError(false)
   }
 
+  useEffect(() => {
+    getProject().then(console.log).catch(console.error)
+  }, [])
+
   return (
     <>
       <Header />
@@ -26,13 +31,6 @@ export default function App() {
         onResetMsg={resetSystMsg}
         type={isError ? 'fail' : 'success'}
       />
-      <button
-        type="button"
-        onClick={() => setSystMsg('test message')}
-        style={{ marginTop: '100px' }}
-      >
-        test use only-needs to be removed then
-      </button>
       <Routes>
         <Route path="/" element={<MainPage />} />
         <Route path="/login" element={<LoginPage />} />

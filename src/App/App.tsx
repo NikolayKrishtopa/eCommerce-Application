@@ -8,19 +8,33 @@ import LoginPage from '../Pages/LoginPage/LoginPage'
 import RegistrationPage from '../Pages/RegistrationPage/RegistrationPage'
 import NotFoundPage from '../Pages/NotFoundPage/NotFoundPage'
 import Header from '../Components/Header/Header'
-import getProject from '../client'
+import { getProject, apiRoot } from '../client'
 
 export default function App() {
   const [systMsg, setSystMsg] = useState('')
-  const [isError, setIsError] = useState(true)
+  const [isError, setIsError] = useState(false)
 
   const resetSystMsg = () => {
     setSystMsg('')
     setIsError(false)
   }
 
+  // remove those useEffects when done
   useEffect(() => {
-    getProject().then(console.log).catch(console.error)
+    getProject()
+      .then((res) => {
+        console.log(res.body)
+        setSystMsg('project data is loaded')
+      })
+      .catch(console.log)
+  }, [])
+
+  useEffect(() => {
+    apiRoot
+      .me()
+      .get({ headers: { token: 'zPAlO72LJQcqplgmj9-VyMgqgRoAgjAK' } })
+      .execute()
+      .then(console.log)
   }, [])
 
   return (

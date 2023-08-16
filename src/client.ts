@@ -13,4 +13,4 @@ const getProject = () => apiRoot.get().execute()
 // Retrieve Project information and output the result to the log
 // getProject().then(console.log).catch(console.error)
 
-export default getProject
+export { getProject, apiRoot }

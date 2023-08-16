@@ -10,6 +10,8 @@ export default defineConfig({
     alias: [
       { find: '@', replacement: resolve(__dirname, 'src') },
       { find: '@public', replacement: '' },
+      // Shim for dependencies that use node-fetch (e.g. @commercetools/sdk-client-v2)
+      { find: 'node-fetch', replacement: 'isomorphic-fetch' },
     ],
   },
   test: {

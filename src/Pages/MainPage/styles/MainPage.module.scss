@@ -1,0 +1,32 @@
+@use '@/styles/abstracts' as *;
+
+.main {
+  color: $color-neutral-light;
+  font-family: $font-stack-text;
+}
+
+.button {
+  min-width: r(175px);
+  padding: r(7px);
+  display: inline-block;
+  font-size: 1rem;
+  font-family: $font-stack-brand;
+  font-weight: bold;
+  border: r(1px) solid $color-neutral-light;
+  border-radius: r(10px);
+  background-color: $color-primary;
+  text-align: center;
+
+  @media screen and (max-width: $break-lg) {
+    padding-inline: r(40px);
+    font-size: 0.75rem;
+    font-family: $font-stack-text;
+  }
+}
+
+// Exports
+
+@mixin container-large {
+  max-width: 1512px;
+  margin-inline: auto;
+}

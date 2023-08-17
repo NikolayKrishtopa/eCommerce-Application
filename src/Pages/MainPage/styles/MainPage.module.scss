@@ -24,9 +24,29 @@
   }
 }
 
+@mixin subHeading {
+  font-family: $font-stack-heading;
+  font-size: 4rem;
+  font-weight: normal;
+  text-align: center;
+
+  @media screen and (max-width: $break-lg) {
+    font-size: 3rem;
+  }
+
+  @media screen and (max-width: $break-sm) {
+    font-size: 1.75rem;
+  }
+}
+
 // Exports
 
 @mixin container-large {
   max-width: 1512px;
+  margin-inline: auto;
+}
+
+@mixin container-medium {
+  max-width: 1314px;
   margin-inline: auto;
 }

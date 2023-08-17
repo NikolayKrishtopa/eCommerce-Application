@@ -55,24 +55,13 @@
     font-size: var(--category-font-size);
   }
 
-  &::after,
+  @include mainPage.gradientMask;
+
   &Image {
     width: 100%;
     height: 100%;
     position: absolute;
     inset: 0;
-  }
-
-  &::after {
-    content: '';
-    background: linear-gradient(
-      to top,
-      rgba(0, 0, 0, 0.5),
-      rgba(255, 255, 255, 0)
-    );
-  }
-
-  &Image {
     object-fit: cover;
   }
 }

@@ -5,7 +5,7 @@
   --header-height: 117px;
   --hero-min-height: 777px;
   --hero-max-height: 777px;
-  --partners-height: 150px;
+  --partners-height: 120px;
 }
 
 .container {
@@ -89,6 +89,7 @@
 
   flex-basis: 100%;
   padding: var(--gap);
+  padding-bottom: 0;
   gap: var(--gap);
   display: grid;
   grid-auto-flow: column;

@@ -4,7 +4,13 @@
   display: flex;
   width: 100%;
   height: max-content;
+
+  @media screen and (max-width: $break-lg) {
+    flex-direction: column;
+  }
 }
+
+// -------------------------------------------------
 
 .auth-promo {
   position: relative;
@@ -17,9 +23,29 @@
     0 -2px 2px $color-primary;
   padding-top: 370px;
   padding-left: 57px;
-  padding-right: -57px;
+  // padding-right: -57px;
   height: 100%;
   max-width: 500px;
+
+  @media screen and (max-width: $break-xl) {
+    max-width: 340px;
+    padding-top: 310px;
+    padding-left: 32px;
+  }
+
+  @media screen and (max-width: $break-lg) {
+    max-width: unset;
+    width: 100%;
+    padding-top: 124px;
+    padding-left: 32px;
+    min-height: 400px;
+  }
+
+  @media screen and (max-width: $break-sm) {
+    padding-top: 148px;
+    padding-left: 21px;
+    min-height: 353px;
+  }
 
   h2 {
     font-family: 'Teko', sans-serif;
@@ -29,6 +55,17 @@
     margin: 0 0 20px 0;
     position: relative;
     z-index: $z-index-2-overlap;
+
+    @media screen and (max-width: $break-xl) {
+      font-size: 68px;
+      line-height: 60px;
+    }
+
+    @media screen and (max-width: $break-sm) {
+      font-size: 48px;
+      line-height: 44px;
+      margin-bottom: 14px;
+    }
   }
 
   p {
@@ -36,6 +73,14 @@
     position: relative;
     margin: 0;
     z-index: $z-index-2-overlap;
+
+    @media screen and (max-width: $break-xl) {
+      font-size: 28px;
+    }
+
+    @media screen and (max-width: $break-sm) {
+      font-size: 20px;
+    }
   }
 
   .skatepic {
@@ -43,8 +88,32 @@
     z-index: $z-index-1-overlap;
     right: -130px;
     top: 100px;
+
+    @media screen and (max-width: $break-xl) {
+      width: 200px;
+      right: -100px;
+      top: 100px;
+    }
+
+    @media screen and (max-width: $break-lg) {
+      width: 146px;
+      transform: rotate(90deg);
+      left: calc((100vw - 146px) / 2);
+      top: unset;
+      bottom: -221px;
+    }
+
+    @media screen and (max-width: $break-sm) {
+      width: 78px;
+      transform: rotate(90deg);
+      left: calc((100vw - 78px) / 2);
+      top: unset;
+      bottom: -118px;
+    }
   }
 }
+
+// ------------------------------------------------------------------
 
 .auth-form-container {
   display: flex;
@@ -55,6 +124,18 @@
   padding: 120px 100px 100px 180px;
   border-radius: 40px 0 0 40px;
   min-height: 100%;
+
+  @media screen and (max-width: $break-xl) {
+    padding: 120px 75px 100px 155px;
+  }
+
+  @media screen and (max-width: $break-lg) {
+    border-radius: 40px 40px 0 0;
+    padding-top: 80px;
+    padding-bottom: 80px;
+    padding-left: calc(64px + (100vw - 428px) / 5.56);
+    padding-right: calc(64px + (100vw - 428px) / 5.56);
+  }
 
   h3 {
     font-family: 'Teko', sans-serif;
@@ -102,7 +183,7 @@
     display: flex;
     gap: 24px;
 
-    @media screen and (max-width: $break-lg) {
+    @media screen and (max-width: $break-xl) {
       flex-direction: column;
       gap: 0;
     }

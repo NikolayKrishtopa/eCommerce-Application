@@ -31,17 +31,10 @@
 
 @mixin subHeading {
   font-family: $font-stack-heading;
-  font-size: 4rem;
+  font-size: clamp(1.75rem, 1rem + 4vw, 4rem);
   font-weight: normal;
   text-align: center;
-
-  @media screen and (max-width: $break-lg) {
-    font-size: 3rem;
-  }
-
-  @media screen and (max-width: $break-sm) {
-    font-size: 1.75rem;
-  }
+  margin-block: 7% 5%;
 }
 
 // Exports

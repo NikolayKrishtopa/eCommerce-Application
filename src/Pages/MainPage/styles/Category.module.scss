@@ -10,7 +10,6 @@
 
 .heading {
   @include mainPage.subHeading;
-  margin-block: 5%;
 }
 
 .categories {
@@ -114,9 +113,6 @@ $category-font-size-lg: max(1.5rem, calc(1rem + 2.5vw));
 }
 
 @media screen and (max-width: $break-sm) {
-  .heading {
-    margin-block: 6%;
-  }
   .categories {
     --categories-cols: 1;
     --category-font-size: 1.3rem;

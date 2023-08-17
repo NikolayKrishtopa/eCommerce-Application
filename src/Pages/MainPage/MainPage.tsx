@@ -1,5 +1,4 @@
 import { Link } from 'react-router-dom'
-import cn from 'classnames'
 import heroImage from '@/assets/img/hero-skater.jpg'
 import vansImage from '@/assets/img/partners/vans.png'
 import nikeImage from '@/assets/img/partners/nike.png'
@@ -66,9 +65,7 @@ export default function MainPage() {
       </div>
       {/* Categories */}
       <div className={categories.container}>
-        <h2 className={cn(main.subHeading, categories.heading)}>
-          Shop by category
-        </h2>
+        <h2 className={categories.heading}>Shop by category</h2>
         <div className={categories.categories}>
           {categoriesData.map(({ name, image, link }) => (
             <Link to={link} key={name} className={categories.singleCategory}>

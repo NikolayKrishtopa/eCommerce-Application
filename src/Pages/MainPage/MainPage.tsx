@@ -8,9 +8,12 @@ import patagoniaImage from '@/assets/img/partners/patagonia.png'
 import skateboardImage from '@/assets/img/categories/skateboards.jpg'
 import decksImage from '@/assets/img/categories/decks.jpg'
 import wheelsImage from '@/assets/img/categories/wheels.jpg'
+import newInImage from '@/assets/img/trending/new-in.jpg'
+import latestImage from '@/assets/img/trending/latest.jpg'
 import main from './styles/MainPage.module.scss'
 import hero from './styles/Hero.module.scss'
 import categories from './styles/Category.module.scss'
+import trending from './styles/Trending.module.scss'
 
 const partnerImages = {
   [vansImage]: 'vans',
@@ -24,6 +27,21 @@ const categoriesData = [
   { name: 'Full skateboards', image: skateboardImage, link: '/no-route' },
   { name: 'Decks', image: decksImage, link: '/no-route' },
   { name: 'Wheels', image: wheelsImage, link: '/no-route' },
+]
+
+const trendingData = [
+  {
+    name: 'New in',
+    description: 'Apparel from Carhartt',
+    image: newInImage,
+    link: '/no-route',
+  },
+  {
+    name: 'Latest',
+    description: 'Chocolate skateboards',
+    image: latestImage,
+    link: '/no-route',
+  },
 ]
 
 export default function MainPage() {
@@ -81,6 +99,30 @@ export default function MainPage() {
         <Link to="/no-route" className={categories.button}>
           Shop
         </Link>
+      </div>
+      {/* Trending */}
+      <div className={trending.container}>
+        <h2 className={trending.heading}>Shop trending</h2>
+        <div className={trending.trends}>
+          {trendingData.map(({ name, description, image, link }) => (
+            <div key={name} className={trending.singleTrend}>
+              <div key={name} className={trending.singleTrendInfoContainer}>
+                <h3 className={trending.singleTrendName}>{name}</h3>
+                <h4 className={trending.singleTrendDescription}>
+                  {description}
+                </h4>
+                <Link to={link} className={trending.singleTrendButton}>
+                  Shop brand
+                </Link>
+              </div>
+              <img
+                className={trending.singleTrendImage}
+                src={image}
+                alt={name}
+              />
+            </div>
+          ))}
+        </div>
       </div>
     </main>
   )

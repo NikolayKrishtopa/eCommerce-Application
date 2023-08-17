@@ -1,0 +1,82 @@
+@use '@/styles/abstracts' as *;
+@use './MainPage.module.scss' as mainPage;
+
+.container {
+  @include mainPage.container-medium;
+}
+
+.heading {
+  @include mainPage.subHeading;
+}
+
+.trends {
+  --trend-base-font-size: max(1.5rem, calc(1rem + 5.5cqw));
+  --trend-aspect-ratio: 0.85;
+  --trend-span: 1;
+}
+
+.trends {
+  display: flex;
+  gap: r(5px);
+}
+
+.singleTrend {
+  width: 100%;
+  position: relative;
+  aspect-ratio: var(--trend-aspect-ratio);
+  isolation: isolate;
+  container-type: inline-size;
+
+  &InfoContainer {
+    z-index: $z-index-1-overlap;
+    position: absolute;
+    inset-inline: calc(8% / var(--trend-span));
+    bottom: 4%;
+    font-size: clamp(1.5rem, 1rem + 4vw, 3rem);
+    font-size: var(--trend-base-font-size);
+  }
+
+  &Name,
+  &Description {
+    margin: 0;
+  }
+
+  &Name {
+    font-family: $font-stack-heading;
+    font-weight: bold;
+    font-size: 1em;
+  }
+
+  &Description {
+    font-family: $font-stack-text;
+    font-size: 0.7em;
+    margin-bottom: r(10px);
+  }
+
+  @include mainPage.gradientMask;
+
+  &Image {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    inset: 0;
+    object-fit: cover;
+  }
+
+  &Button {
+    @include mainPage.button;
+  }
+}
+
+@media screen and (max-width: $break-sm) {
+  .trends {
+    --trend-aspect-ratio: 1.75;
+    --trend-base-font-size: 1.75rem;
+    flex-direction: column;
+  }
+  .singleTrend {
+    &InfoContainer {
+      left: 4%;
+    }
+  }
+}

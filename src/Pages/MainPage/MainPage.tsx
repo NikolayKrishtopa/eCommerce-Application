@@ -46,7 +46,7 @@ export default function MainPage() {
             <h1 className={hero.heading}>
               Skateboards and <br /> Streetwear
             </h1>
-            <Link to="/no-route" className={main.button}>
+            <Link to="/no-route" className={hero.button}>
               Shop now
             </Link>
           </div>
@@ -81,7 +81,7 @@ export default function MainPage() {
             </Link>
           ))}
         </div>
-        <Link to="/no-route" className={cn(main.button, categories.button)}>
+        <Link to="/no-route" className={categories.button}>
           Shop
         </Link>
       </div>

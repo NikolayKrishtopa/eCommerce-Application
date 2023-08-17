@@ -101,6 +101,13 @@
   object-fit: contain;
 }
 
+.button {
+  @include mainPage.button;
+  @include mainPage.buttonExtendSmall {
+    padding-inline: r(30px);
+  }
+}
+
 @media screen and (max-width: $break-xxl) {
   .container {
     --hero-min-height: 600px;

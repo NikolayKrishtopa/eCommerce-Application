@@ -79,9 +79,10 @@
 }
 
 .button {
+  @include mainPage.button;
+  @include mainPage.buttonExtendSmall;
   display: block;
   width: max-content;
-  padding-inline: 67px;
   margin-top: r(40px);
   margin-inline: auto;
 }
@@ -99,16 +100,16 @@ $category-font-size-lg: max(1.5rem, calc(1rem + 2.5vw));
     --category-font-size: 2.5rem;
     --category-font-size: #{$category-font-size-lg};
   }
-}
 
-@media screen and (max-width: $break-lg) and (min-width: $break-sm) {
-  .categories {
-    --category-max-width: 100%;
-    --category-aspect-ratio: 1.5;
-  }
-  .singleCategory:first-child {
-    --category-span: 2;
-    --category-aspect-ratio: 2.5;
+  @media screen and (min-width: $break-sm) {
+    .categories {
+      --category-max-width: 100%;
+      --category-aspect-ratio: 1.5;
+    }
+    .singleCategory:first-child {
+      --category-span: 2;
+      --category-aspect-ratio: 2.5;
+    }
   }
 }
 

@@ -5,7 +5,7 @@
   font-family: $font-stack-text;
 }
 
-.button {
+@mixin button {
   min-width: r(175px);
   padding: r(7px);
   display: inline-block;
@@ -16,11 +16,16 @@
   border-radius: r(10px);
   background-color: $color-primary;
   text-align: center;
+}
 
-  @media screen and (max-width: $break-lg) {
+@mixin buttonExtendSmall {
+  @media screen and (max-width: $break-sm) {
+    min-width: r(115px);
     padding-inline: r(40px);
     font-size: 0.75rem;
     font-family: $font-stack-text;
+    min-width: initial;
+    @content;
   }
 }
 

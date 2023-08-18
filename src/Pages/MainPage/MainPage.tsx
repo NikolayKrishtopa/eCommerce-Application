@@ -14,6 +14,7 @@ import main from './styles/MainPage.module.scss'
 import hero from './styles/Hero.module.scss'
 import categories from './styles/Category.module.scss'
 import trending from './styles/Trending.module.scss'
+import sellers from './styles/Sellers.module.scss'
 
 const partnerImages = {
   [vansImage]: 'vans',
@@ -43,6 +44,21 @@ const trendingData = [
     link: '/no-route',
   },
 ]
+
+const sellersData = Object.values(
+  import.meta.glob('@/assets/img/sellers/*', { eager: true, as: 'url' }),
+)
+  .map((o) => [o, o])
+  .flat()
+  .map((src, id) => ({
+    id,
+    name: 'POLAR',
+    image: src,
+    description:
+      'Polar Herrington Chain smoker 2.0 wheel well 8.5” Skateboard deck (white)',
+    price: '69,99',
+    currency: 'EUR',
+  }))
 
 export default function MainPage() {
   return (
@@ -122,6 +138,28 @@ export default function MainPage() {
               />
             </div>
           ))}
+        </div>
+      </div>
+      {/* Top sellers */}
+      <div className={sellers.container}>
+        <h2 className={sellers.heading}>Our top sellers</h2>
+        <div className={sellers.sellers}>
+          {sellersData.map(
+            ({ id, name, description, image, price, currency }) => (
+              <Link to="/no-route" key={id} className={sellers.singleSeller}>
+                <img className={sellers.singleSellerImage} src={image} alt="" />
+                <div className={sellers.singleSellerInfoContainer}>
+                  <div className={sellers.singleSellerName}>{name}</div>
+                  <div className={sellers.singleSellerDescription}>
+                    {description}
+                  </div>
+                  <div className={sellers.singleSellerPrice}>
+                    <span>{price}</span> <span>{currency}</span>
+                  </div>
+                </div>
+              </Link>
+            ),
+          )}
         </div>
       </div>
     </main>

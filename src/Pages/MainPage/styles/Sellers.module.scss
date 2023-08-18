@@ -1,0 +1,128 @@
+@use '@/styles/abstracts' as *;
+@use './MainPage.module.scss' as mainPage;
+
+.container {
+  @include mainPage.container-medium;
+  padding-inline: r(35px);
+  box-sizing: content-box;
+}
+
+.heading {
+  @include mainPage.subHeading;
+}
+
+.sellers {
+  --sellers-viewport: 100%;
+  --sellers-items: 4;
+  --sellers-rows: 1;
+  --sellers-gap: 1rem;
+  --sellers-scroll-snap-align: end;
+}
+
+.sellers {
+  display: grid;
+  gap: var(--sellers-gap);
+  /* prettier-ignore */
+  grid-auto-columns: calc((
+     var(--sellers-viewport) -
+     var(--sellers-gap) * (var(--sellers-items) - 1)
+    ) / var(--sellers-items)
+  );
+  grid-template-rows: repeat(var(--sellers-rows), auto);
+  grid-auto-flow: column;
+  overflow-x: scroll;
+  scrollbar-width: thin;
+
+  padding-bottom: 5px;
+  scroll-snap-type: x mandatory;
+
+  &::-webkit-scrollbar {
+    height: 10px;
+  }
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  &::-webkit-scrollbar-thumb {
+    background-color: rgba(255, 255, 255, 0.5);
+    border-radius: 20px;
+    border: transparent;
+  }
+
+  > * {
+    scroll-snap-align: var(--sellers-scroll-snap-align);
+  }
+}
+
+.singleSeller {
+  display: flex;
+  flex-direction: column;
+  color: $color-on-neutral-light;
+  background-color: $color-neutral-light;
+  overflow: hidden;
+  border-radius: r(10px);
+  container-type: inline-size;
+
+  &Image {
+    width: 100%;
+    object-fit: cover;
+  }
+
+  &InfoContainer {
+    display: flex;
+    flex-grow: 1;
+    flex-direction: column;
+    row-gap: r(5px);
+    padding: 5%;
+    font-size: clamp(1rem, 1rem + 2vw, 1.3rem);
+    font-size: calc(1rem + 2cqw);
+  }
+
+  &Name,
+  &Price {
+    font-family: $font-stack-heading;
+    font-weight: 600;
+    font-size: 1.2em;
+  }
+
+  &Description {
+    flex-grow: 1;
+    font-size: 0.8em;
+  }
+
+  &Price {
+    font-size: 1.1em;
+  }
+}
+
+@media screen and (max-width: $break-lg) {
+  .container {
+    padding-inline: r(25px);
+  }
+  .sellers {
+    --sellers-items: 2;
+    --sellers-rows: 2;
+  }
+}
+
+@media screen and (max-width: $break-lg) {
+  .sellers {
+    --sellers-items: 2;
+  }
+}
+
+@media screen and (max-width: $break-sm) {
+  .container {
+    padding-inline: 0;
+  }
+  .sellers {
+    --sellers-items: 2.1;
+    --sellers-rows: 1;
+    --sellers-gap: 0.5rem;
+    --sellers-scroll-snap-align: center;
+  }
+  .singleSeller {
+    &Image {
+      min-height: r(350px);
+    }
+  }
+}

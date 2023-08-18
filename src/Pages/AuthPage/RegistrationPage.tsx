@@ -1,5 +1,6 @@
 import s from './AuthPage.module.scss'
 import skatepic from '../../assets/img/skateboard.png'
+import { UI_TEXTS } from '../../utils/constants'
 
 export default function RegistrationPage() {
   return (
@@ -10,11 +11,11 @@ export default function RegistrationPage() {
           Your new <br />
           skateboard
         </h2>
-        <p className={s.authCta}>Register with your email</p>
+        <p className={s.authCta}>{UI_TEXTS.REGISTER_CTA}</p>
       </section>
 
       <section className={s.authFormContainer}>
-        <h3 className={s.authFormHeader}>Create account</h3>
+        <h3 className={s.authFormHeader}>{UI_TEXTS.REGISTER_HEADER}</h3>
         <form action="" className={s.authForm}>
           <fieldset className={s.nameFields}>
             <div className={s.inputBox}>
@@ -131,7 +132,7 @@ export default function RegistrationPage() {
             </label>
           </div>
 
-          <button type="submit">Register</button>
+          <button type="submit">{UI_TEXTS.REGISTER_BTN}</button>
         </form>
         <p className={s.authRedirect}>
           Already have an account? <a href="/login">Log in</a>

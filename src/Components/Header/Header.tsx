@@ -41,15 +41,11 @@ export default function Header() {
         </ul>
 
         <div className={s.authlink}>
-          <NavLink to="/register" onClick={() => setBurgerActive(false)}>
-            Login/Register
+          <NavLink to="/login" onClick={() => setBurgerActive(false)}>
+            Login / Register
           </NavLink>
         </div>
       </nav>
-
-      {/* <div className={s.authlink}>
-        <NavLink to="/login">Login</NavLink>
-      </div> */}
 
       <div className={s.basketLink}>
         <NavLink to="/basket" onClick={() => setBurgerActive(false)}>

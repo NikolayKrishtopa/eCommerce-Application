@@ -3,6 +3,7 @@
 .auth-page {
   display: flex;
   width: 100%;
+  min-height: 100vh;
   height: max-content;
 
   @media screen and (max-width: $break-lg) {

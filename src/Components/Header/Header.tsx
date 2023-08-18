@@ -1,42 +1,69 @@
-import { NavLink } from 'react-router-dom'
+import { useState } from 'react'
+import { NavLink, useLocation } from 'react-router-dom'
 import s from './Header.module.scss'
-import logoImg from '../../assets/icons/logo.svg'
-import basketImg from '../../assets/icons/basket.svg'
+import { ReactComponent as BasketImg } from '../../assets/icons/basket.svg'
+import { ReactComponent as Logo } from '../../assets/icons/logo.svg'
 
 export default function Header() {
+  const [burgerActive, setBurgerActive] = useState(false)
+  const location = useLocation()
+
+  const isTransparent = () =>
+    location.pathname === '/register' || location.pathname === '/login'
+
   return (
-    <header className={s.header}>
+    <header
+      className={isTransparent() ? `${s.header} ${s.transparent}` : s.header}
+    >
       <h1 className={s.logo}>
-        <img className={s.logoImg} src={logoImg} alt="logo" />
-        <NavLink to="/">The Skateshop</NavLink>
+        <NavLink to="/" onClick={() => setBurgerActive(false)}>
+          <Logo className={s.logoImg} />
+          <span>The Skateshop</span>
+        </NavLink>
       </h1>
-      <nav>
+      <nav className={!burgerActive ? s.navbar : `${s.navbar} ${s.open}`}>
         <ul className={s.mainMenu}>
           <li>
-            <NavLink to="/">Home</NavLink>
+            <NavLink to="/" onClick={() => setBurgerActive(false)}>
+              Home
+            </NavLink>
           </li>
           <li>
-            <NavLink to="/catalog">Products</NavLink>
+            <NavLink to="/catalog" onClick={() => setBurgerActive(false)}>
+              Products
+            </NavLink>
           </li>
           <li>
-            <NavLink to="/about">About</NavLink>
+            <NavLink to="/about" onClick={() => setBurgerActive(false)}>
+              About
+            </NavLink>
           </li>
         </ul>
+
+        <div className={s.authlink}>
+          <NavLink to="/register" onClick={() => setBurgerActive(false)}>
+            Login/Register
+          </NavLink>
+        </div>
       </nav>
 
-      <div className={s.authlink}>
+      {/* <div className={s.authlink}>
         <NavLink to="/login">Login</NavLink>
-      </div>
+      </div> */}
 
-      <div className={s.authlink}>
-        <NavLink to="/register">Register</NavLink>
-      </div>
-
-      <div className={s.basketlink}>
-        <NavLink to="/basket">
-          <img className={s.basketImg} src={basketImg} alt="basket" />
+      <div className={s.basketLink}>
+        <NavLink to="/basket" onClick={() => setBurgerActive(false)}>
+          <BasketImg className={s.basketImg} />
         </NavLink>
       </div>
+
+      <button
+        type="button"
+        className={!burgerActive ? s.burger : `${s.burger} ${s.active}`}
+        onClick={() => setBurgerActive(!burgerActive)}
+      >
+        <span />
+      </button>
     </header>
   )
 }

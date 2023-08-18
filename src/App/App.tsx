@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react'
 import { Route, Routes } from 'react-router-dom'
-import SystMsgAlert from '../Components/SystMsgAlert/SystMsgAlert'
 
 import './App.scss'
 import MainPage from '../Pages/MainPage/MainPage'

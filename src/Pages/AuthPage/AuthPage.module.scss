@@ -24,8 +24,9 @@
     0 -2px 2px $color-primary;
   padding-top: 370px;
   padding-left: 57px;
-  // padding-right: -57px;
   height: 100%;
+  margin-left: auto;
+
   max-width: 500px;
 
   @media screen and (max-width: $break-xl) {
@@ -49,13 +50,12 @@
   }
 
   h2 {
-    font-family: 'Teko', sans-serif;
+    font-family: $font-stack-heading;
     font-size: 96px;
     line-height: 90px;
     text-transform: uppercase;
     margin: 0 0 20px 0;
     position: relative;
-    z-index: $z-index-2-overlap;
 
     @media screen and (max-width: $break-xl) {
       font-size: 68px;
@@ -73,7 +73,6 @@
     font-size: 36px;
     position: relative;
     margin: 0;
-    z-index: $z-index-2-overlap;
 
     @media screen and (max-width: $break-xl) {
       font-size: 28px;
@@ -86,7 +85,6 @@
 
   .skatepic {
     position: absolute;
-    z-index: $z-index-1-overlap;
     right: -130px;
     top: 100px;
 
@@ -125,6 +123,7 @@
   padding: 120px 100px 100px 180px;
   border-radius: 40px 0 0 40px;
   min-height: 100%;
+  max-width: 1600px;
 
   @media screen and (max-width: $break-xl) {
     padding: 120px 75px 100px 155px;
@@ -132,14 +131,11 @@
 
   @media screen and (max-width: $break-lg) {
     border-radius: 40px 40px 0 0;
-    padding-top: 80px;
-    padding-bottom: 80px;
-    padding-left: calc(64px + (100vw - 428px) / 5.56);
-    padding-right: calc(64px + (100vw - 428px) / 5.56);
+    padding: 80px 15% 80px 15%;
   }
 
   h3 {
-    font-family: 'Teko', sans-serif;
+    font-family: $font-stack-heading;
     font-size: 40px;
     color: $color-primary;
     line-height: 1;
@@ -164,6 +160,7 @@
     input {
       padding: 10px;
       border-radius: 10px;
+      border: 1.5px solid $color-on-neutral-light-pale;
       width: 100%;
       height: 64px;
       font-size: 16px;
@@ -210,6 +207,7 @@
     color: $color-on-neutral-light-pale;
     font-size: 16px;
     font-weight: 700;
+    margin-top: 6px;
 
     input {
       width: 20px;

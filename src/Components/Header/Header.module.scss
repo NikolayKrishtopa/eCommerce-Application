@@ -137,7 +137,7 @@
 .burger {
   display: none;
   position: relative;
-  z-index: $z-index-4-sidebar;
+  z-index: $z-index-1-overlap;
   align-items: center;
   justify-content: flex-end;
   width: 30px;

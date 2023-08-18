@@ -173,7 +173,7 @@
     p {
       margin: 4px 0 0 8px;
       font-size: 16px;
-      font-weight: 700;
+      font-weight: bold;
     }
   }
 
@@ -206,7 +206,7 @@
     align-items: center;
     color: $color-on-neutral-light-pale;
     font-size: 16px;
-    font-weight: 700;
+    font-weight: bold;
     margin-top: 6px;
 
     input {
@@ -229,7 +229,7 @@
     width: 100%;
     height: 64px;
     font-size: 28px;
-    font-weight: 700;
+    font-weight: bold;
 
     &:hover {
       background-color: $color-btn-hover;
@@ -243,7 +243,7 @@
 
   .auth-redirect {
     font-size: 16px;
-    font-weight: 700;
+    font-weight: bold;
     margin: 8px;
 
     a {

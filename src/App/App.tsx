@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Route, Routes } from 'react-router-dom'
 import SystMsgAlert from '../Components/SystMsgAlert/SystMsgAlert'
 
@@ -8,15 +8,34 @@ import LoginPage from '../Pages/LoginPage/LoginPage'
 import RegistrationPage from '../Pages/RegistrationPage/RegistrationPage'
 import NotFoundPage from '../Pages/NotFoundPage/NotFoundPage'
 import Header from '../Components/Header/Header'
+import { getProject, apiRoot } from '../client'
 
 export default function App() {
   const [systMsg, setSystMsg] = useState('')
-  const [isError, setIsError] = useState(true)
+  const [isError, setIsError] = useState(false)
 
   const resetSystMsg = () => {
     setSystMsg('')
     setIsError(false)
   }
+
+  // remove those useEffects when done
+  useEffect(() => {
+    getProject()
+      .then((res) => {
+        console.log(res.body)
+        setSystMsg('project data is loaded')
+      })
+      .catch(console.log)
+  }, [])
+
+  useEffect(() => {
+    apiRoot
+      .me()
+      .get({ headers: { token: 'zPAlO72LJQcqplgmj9-VyMgqgRoAgjAK' } })
+      .execute()
+      .then(console.log)
+  }, [])
 
   return (
     <>
@@ -26,13 +45,6 @@ export default function App() {
         onResetMsg={resetSystMsg}
         type={isError ? 'fail' : 'success'}
       />
-      <button
-        type="button"
-        onClick={() => setSystMsg('test message')}
-        style={{ marginTop: '100px' }}
-      >
-        test use only-needs to be removed then
-      </button>
       <Routes>
         <Route path="/" element={<MainPage />} />
         <Route path="/login" element={<LoginPage />} />

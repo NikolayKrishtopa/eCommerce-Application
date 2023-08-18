@@ -3,7 +3,7 @@
 .page {
   background-color: $color-primary;
   width: 100%;
-  padding: r(190px) r(47px) 0;
+  padding: r(306px) r(47px) 0;
   display: flex;
   flex-direction: column;
   gap: r(30px);
@@ -48,6 +48,7 @@
 }
 
 .link {
+  @include clickable;
   font-weight: 700;
   color: $color-text-link;
   margin: 0;

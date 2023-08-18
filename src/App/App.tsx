@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { Route, Routes } from 'react-router-dom'
 
 import './App.scss'
+import SystMsgAlert from '@/Components/SystMsgAlert/SystMsgAlert'
 import MainPage from '../Pages/MainPage/MainPage'
 import LoginPage from '../Pages/AuthPage/LoginPage'
 import RegistrationPage from '../Pages/AuthPage/RegistrationPage'

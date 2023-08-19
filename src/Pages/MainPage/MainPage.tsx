@@ -12,8 +12,8 @@ import newInImage from '@/assets/img/trending/new-in.jpg'
 import latestImage from '@/assets/img/trending/latest.jpg'
 import m from './styles/MainPage.module.scss'
 import h from './styles/Hero.module.scss'
-import c from './styles/Category.module.scss'
-import t from './styles/Trending.module.scss'
+import c from './styles/Categories.module.scss'
+import t from './styles/Trends.module.scss'
 import s from './styles/Sellers.module.scss'
 
 const partnerImages = {

@@ -25,19 +25,36 @@ const partnerImages = {
 }
 
 const categoriesData = [
-  { name: 'Full skateboards', image: skateboardImage, link: '/no-route' },
-  { name: 'Decks', image: decksImage, link: '/no-route' },
-  { name: 'Wheels', image: wheelsImage, link: '/no-route' },
+  {
+    id: 1,
+    name: 'Full skateboards',
+    image: skateboardImage,
+    link: '/no-route',
+  },
+  {
+    id: 2,
+    name: 'Decks',
+    image: decksImage,
+    link: '/no-route',
+  },
+  {
+    id: 3,
+    name: 'Wheels',
+    image: wheelsImage,
+    link: '/no-route',
+  },
 ]
 
 const trendingData = [
   {
+    id: 1,
     name: 'New in',
     description: 'Apparel from Carhartt',
     image: newInImage,
     link: '/no-route',
   },
   {
+    id: 2,
     name: 'Latest',
     description: 'Chocolate skateboards',
     image: latestImage,
@@ -47,18 +64,15 @@ const trendingData = [
 
 const sellersData = Object.values(
   import.meta.glob('@/assets/img/sellers/*', { eager: true, as: 'url' }),
-)
-  .map((o) => [o, o])
-  .flat()
-  .map((src, id) => ({
-    id,
-    name: 'POLAR',
-    image: src,
-    description:
-      'Polar Herrington Chain smoker 2.0 wheel well 8.5” Skateboard deck (white)',
-    price: '69,99',
-    currency: 'EUR',
-  }))
+).map((src, index) => ({
+  id: index,
+  name: 'POLAR',
+  image: src,
+  description:
+    'Polar Herrington Chain smoker 2.0 wheel well 8.5” Skateboard deck (white)',
+  price: '69,99',
+  currency: 'EUR',
+}))
 
 export default function MainPage() {
   return (
@@ -101,8 +115,8 @@ export default function MainPage() {
       <div className={c.container}>
         <h2 className={c.heading}>Shop by category</h2>
         <div className={c.categories}>
-          {categoriesData.map(({ name, image, link }) => (
-            <Link to={link} key={name} className={c.singleCategory}>
+          {categoriesData.map(({ id, name, image, link }) => (
+            <Link to={link} key={id} className={c.singleCategory}>
               <h3 className={c.singleCategoryName}>{name}</h3>
               <img className={c.singleCategoryImage} src={image} alt={name} />
             </Link>
@@ -116,9 +130,9 @@ export default function MainPage() {
       <div className={t.container}>
         <h2 className={t.heading}>Shop trending</h2>
         <div className={t.trends}>
-          {trendingData.map(({ name, description, image, link }) => (
-            <div key={name} className={t.singleTrend}>
-              <div key={name} className={t.singleTrendInfoContainer}>
+          {trendingData.map(({ id, name, description, image, link }) => (
+            <div key={id} className={t.singleTrend}>
+              <div className={t.singleTrendInfoContainer}>
                 <h3 className={t.singleTrendName}>{name}</h3>
                 <h4 className={t.singleTrendDescription}>{description}</h4>
                 <Link to={link} className={t.singleTrendButton}>

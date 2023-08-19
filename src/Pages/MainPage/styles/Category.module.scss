@@ -23,6 +23,8 @@
 }
 
 .categories {
+  @include mainPage.resetList;
+
   display: grid;
   gap: max(20px, 2%);
   grid-template-columns: repeat(
@@ -33,9 +35,6 @@
 }
 
 .singleCategory {
-  display: block;
-  width: 100%;
-  height: 100%;
   aspect-ratio: var(--category-aspect-ratio);
   grid-column: span var(--category-span);
   position: relative;
@@ -43,6 +42,13 @@
   isolation: isolate;
   border-radius: r(10px);
   container-type: inline-size;
+
+  &,
+  &LinkWrapper {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
 
   &Name {
     margin: 0;

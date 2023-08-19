@@ -16,6 +16,8 @@
 }
 
 .trends {
+  @include mainPage.resetList;
+
   display: flex;
   gap: r(5px);
 }

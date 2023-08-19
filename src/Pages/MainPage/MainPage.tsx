@@ -78,7 +78,7 @@ export default function MainPage() {
   return (
     <main className={m.main}>
       {/* Hero */}
-      <div className={h.container}>
+      <section className={h.container}>
         <div className={h.hero}>
           <div className={h.background}>
             <div className={h.mask} />
@@ -110,28 +110,30 @@ export default function MainPage() {
             ))}
           </div>
         </div>
-      </div>
+      </section>
       {/* Categories */}
-      <div className={c.container}>
+      <section className={c.container}>
         <h2 className={c.heading}>Shop by category</h2>
-        <div className={c.categories}>
+        <ul className={c.categories}>
           {categoriesData.map(({ id, name, image, link }) => (
-            <Link to={link} key={id} className={c.singleCategory}>
-              <h3 className={c.singleCategoryName}>{name}</h3>
-              <img className={c.singleCategoryImage} src={image} alt={name} />
-            </Link>
+            <li key={id} className={c.singleCategory}>
+              <Link to={link} className={c.singleCategoryLinkWrapper}>
+                <h3 className={c.singleCategoryName}>{name}</h3>
+                <img className={c.singleCategoryImage} src={image} alt={name} />
+              </Link>
+            </li>
           ))}
-        </div>
+        </ul>
         <Link to="/no-route" className={c.button}>
           Shop
         </Link>
-      </div>
+      </section>
       {/* Trending */}
-      <div className={t.container}>
+      <section className={t.container}>
         <h2 className={t.heading}>Shop trending</h2>
-        <div className={t.trends}>
+        <ul className={t.trends}>
           {trendingData.map(({ id, name, description, image, link }) => (
-            <div key={id} className={t.singleTrend}>
+            <li key={id} className={t.singleTrend}>
               <div className={t.singleTrendInfoContainer}>
                 <h3 className={t.singleTrendName}>{name}</h3>
                 <h4 className={t.singleTrendDescription}>{description}</h4>
@@ -140,30 +142,34 @@ export default function MainPage() {
                 </Link>
               </div>
               <img className={t.singleTrendImage} src={image} alt={name} />
-            </div>
+            </li>
           ))}
-        </div>
-      </div>
+        </ul>
+      </section>
       {/* Top sellers */}
-      <div className={s.container}>
+      <section className={s.container}>
         <h2 className={s.heading}>Our top sellers</h2>
-        <div className={s.sellers}>
+        <ul className={s.sellers}>
           {sellersData.map(
             ({ id, name, description, image, price, currency }) => (
-              <Link to="/no-route" key={id} className={s.singleSeller}>
-                <img className={s.singleSellerImage} src={image} alt="" />
-                <div className={s.singleSellerInfoContainer}>
-                  <div className={s.singleSellerName}>{name}</div>
-                  <div className={s.singleSellerDescription}>{description}</div>
-                  <div className={s.singleSellerPrice}>
-                    <span>{price}</span> <span>{currency}</span>
+              <li key={id} className={s.singleSeller}>
+                <Link to="/no-route" className={s.singleSellerLinkWrapper}>
+                  <img className={s.singleSellerImage} src={image} alt="" />
+                  <div className={s.singleSellerInfoContainer}>
+                    <div className={s.singleSellerName}>{name}</div>
+                    <div className={s.singleSellerDescription}>
+                      {description}
+                    </div>
+                    <div className={s.singleSellerPrice}>
+                      <span>{price}</span> <span>{currency}</span>
+                    </div>
                   </div>
-                </div>
-              </Link>
+                </Link>
+              </li>
             ),
           )}
-        </div>
-      </div>
+        </ul>
+      </section>
     </main>
   )
 }

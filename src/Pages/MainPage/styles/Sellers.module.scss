@@ -20,6 +20,8 @@
 }
 
 .sellers {
+  @include mainPage.resetList;
+
   display: grid;
   gap: var(--sellers-gap);
   /* prettier-ignore */

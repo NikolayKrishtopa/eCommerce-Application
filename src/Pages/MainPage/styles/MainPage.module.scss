@@ -5,6 +5,12 @@
   font-family: $font-stack-text;
 }
 
+@mixin resetList {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
 @mixin button {
   min-width: r(175px);
   padding: r(7px);

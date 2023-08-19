@@ -119,7 +119,7 @@ export default function MainPage() {
             <li key={id} className={c.singleCategory}>
               <Link to={link} className={c.singleCategoryLinkWrapper}>
                 <h3 className={c.singleCategoryName}>{name}</h3>
-                <img className={c.singleCategoryImage} src={image} alt={name} />
+                <img className={c.singleCategoryImage} src={image} alt="" />
               </Link>
             </li>
           ))}
@@ -141,7 +141,7 @@ export default function MainPage() {
                   Shop brand
                 </Link>
               </div>
-              <img className={t.singleTrendImage} src={image} alt={name} />
+              <img className={t.singleTrendImage} src={image} alt="" />
             </li>
           ))}
         </ul>

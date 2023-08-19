@@ -10,11 +10,11 @@ import decksImage from '@/assets/img/categories/decks.jpg'
 import wheelsImage from '@/assets/img/categories/wheels.jpg'
 import newInImage from '@/assets/img/trending/new-in.jpg'
 import latestImage from '@/assets/img/trending/latest.jpg'
-import main from './styles/MainPage.module.scss'
-import hero from './styles/Hero.module.scss'
-import categories from './styles/Category.module.scss'
-import trending from './styles/Trending.module.scss'
-import sellers from './styles/Sellers.module.scss'
+import m from './styles/MainPage.module.scss'
+import h from './styles/Hero.module.scss'
+import c from './styles/Category.module.scss'
+import t from './styles/Trending.module.scss'
+import s from './styles/Sellers.module.scss'
 
 const partnerImages = {
   [vansImage]: 'vans',
@@ -62,33 +62,33 @@ const sellersData = Object.values(
 
 export default function MainPage() {
   return (
-    <main className={main.main}>
+    <main className={m.main}>
       {/* Hero */}
-      <div className={hero.container}>
-        <div className={hero.hero}>
-          <div className={hero.background}>
-            <div className={hero.mask} />
+      <div className={h.container}>
+        <div className={h.hero}>
+          <div className={h.background}>
+            <div className={h.mask} />
             <img
-              className={hero.image}
+              className={h.image}
               draggable={false}
               src={heroImage}
               alt="boy doing a skate trick"
             />
           </div>
-          <div className={hero.content}>
-            <h1 className={hero.heading}>
+          <div className={h.content}>
+            <h1 className={h.heading}>
               Skateboards and <br /> Streetwear
             </h1>
-            <Link to="/no-route" className={hero.button}>
+            <Link to="/no-route" className={h.button}>
               Shop now
             </Link>
           </div>
         </div>
-        <div className={hero.partnersContainer}>
-          <div className={hero.partners}>
+        <div className={h.partnersContainer}>
+          <div className={h.partners}>
             {Object.entries(partnerImages).map(([imgSrc, brand]) => (
               <img
-                className={hero.singlePartner}
+                className={h.singlePartner}
                 key={imgSrc}
                 src={imgSrc}
                 alt={`brand ${brand} logo`}
@@ -98,62 +98,50 @@ export default function MainPage() {
         </div>
       </div>
       {/* Categories */}
-      <div className={categories.container}>
-        <h2 className={categories.heading}>Shop by category</h2>
-        <div className={categories.categories}>
+      <div className={c.container}>
+        <h2 className={c.heading}>Shop by category</h2>
+        <div className={c.categories}>
           {categoriesData.map(({ name, image, link }) => (
-            <Link to={link} key={name} className={categories.singleCategory}>
-              <h3 className={categories.singleCategoryName}>{name}</h3>
-              <img
-                className={categories.singleCategoryImage}
-                src={image}
-                alt={name}
-              />
+            <Link to={link} key={name} className={c.singleCategory}>
+              <h3 className={c.singleCategoryName}>{name}</h3>
+              <img className={c.singleCategoryImage} src={image} alt={name} />
             </Link>
           ))}
         </div>
-        <Link to="/no-route" className={categories.button}>
+        <Link to="/no-route" className={c.button}>
           Shop
         </Link>
       </div>
       {/* Trending */}
-      <div className={trending.container}>
-        <h2 className={trending.heading}>Shop trending</h2>
-        <div className={trending.trends}>
+      <div className={t.container}>
+        <h2 className={t.heading}>Shop trending</h2>
+        <div className={t.trends}>
           {trendingData.map(({ name, description, image, link }) => (
-            <div key={name} className={trending.singleTrend}>
-              <div key={name} className={trending.singleTrendInfoContainer}>
-                <h3 className={trending.singleTrendName}>{name}</h3>
-                <h4 className={trending.singleTrendDescription}>
-                  {description}
-                </h4>
-                <Link to={link} className={trending.singleTrendButton}>
+            <div key={name} className={t.singleTrend}>
+              <div key={name} className={t.singleTrendInfoContainer}>
+                <h3 className={t.singleTrendName}>{name}</h3>
+                <h4 className={t.singleTrendDescription}>{description}</h4>
+                <Link to={link} className={t.singleTrendButton}>
                   Shop brand
                 </Link>
               </div>
-              <img
-                className={trending.singleTrendImage}
-                src={image}
-                alt={name}
-              />
+              <img className={t.singleTrendImage} src={image} alt={name} />
             </div>
           ))}
         </div>
       </div>
       {/* Top sellers */}
-      <div className={sellers.container}>
-        <h2 className={sellers.heading}>Our top sellers</h2>
-        <div className={sellers.sellers}>
+      <div className={s.container}>
+        <h2 className={s.heading}>Our top sellers</h2>
+        <div className={s.sellers}>
           {sellersData.map(
             ({ id, name, description, image, price, currency }) => (
-              <Link to="/no-route" key={id} className={sellers.singleSeller}>
-                <img className={sellers.singleSellerImage} src={image} alt="" />
-                <div className={sellers.singleSellerInfoContainer}>
-                  <div className={sellers.singleSellerName}>{name}</div>
-                  <div className={sellers.singleSellerDescription}>
-                    {description}
-                  </div>
-                  <div className={sellers.singleSellerPrice}>
+              <Link to="/no-route" key={id} className={s.singleSeller}>
+                <img className={s.singleSellerImage} src={image} alt="" />
+                <div className={s.singleSellerInfoContainer}>
+                  <div className={s.singleSellerName}>{name}</div>
+                  <div className={s.singleSellerDescription}>{description}</div>
+                  <div className={s.singleSellerPrice}>
                     <span>{price}</span> <span>{currency}</span>
                   </div>
                 </div>

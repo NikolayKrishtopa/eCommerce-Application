@@ -84,7 +84,7 @@
 }
 
 .partners {
-  @include mainPage.container-large;
+  @include mainPage.containerLarge;
   margin-inline: initial;
 
   flex-basis: 100%;

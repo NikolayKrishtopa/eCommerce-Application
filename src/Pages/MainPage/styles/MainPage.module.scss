@@ -58,14 +58,12 @@
   }
 }
 
-// Exports
-
-@mixin container-large {
+@mixin containerLarge {
   max-width: 1512px;
   margin-inline: auto;
 }
 
-@mixin container-medium {
+@mixin containerMedium {
   max-width: 1314px;
   margin-inline: auto;
 }

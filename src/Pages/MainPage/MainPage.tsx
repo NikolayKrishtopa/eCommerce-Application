@@ -27,7 +27,7 @@ const partnerImages = {
 const categoriesData = [
   {
     id: 1,
-    name: 'Full skateboards',
+    name: 'Full Skateboards',
     image: skateboardImage,
     link: '/no-route',
   },

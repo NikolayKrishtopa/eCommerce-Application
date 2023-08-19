@@ -2,7 +2,7 @@
 @use './MainPage.module.scss' as mainPage;
 
 .container {
-  @include mainPage.container-medium;
+  @include mainPage.containerMedium;
 }
 
 .heading {

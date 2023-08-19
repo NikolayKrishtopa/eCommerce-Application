@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react'
 import { Route, Routes } from 'react-router-dom'
+import { UserRegisterPayloadType, UserLoginPayloadType } from '@/Models/Models'
+import { SYSTEM_MESSAGES } from '@/utils/constants'
 import SystMsgAlert from '../Components/SystMsgAlert/SystMsgAlert'
-
 import './App.scss'
 import MainPage from '../Pages/MainPage/MainPage'
 import LoginPage from '../Pages/LoginPage/LoginPage'
@@ -19,6 +20,42 @@ export default function App() {
     setIsError(false)
   }
 
+  const register = (data: UserRegisterPayloadType) => {
+    apiRoot
+      .customers()
+      .post({
+        body: data,
+      })
+      .execute()
+      .then(() => {
+        setIsError(false)
+        setSystMsg(SYSTEM_MESSAGES.REGISTER_SCSS)
+      })
+      .catch(() => {
+        setIsError(true)
+        setSystMsg(SYSTEM_MESSAGES.REGISTER_FAIL)
+      })
+      .finally(console.log)
+  }
+
+  const login = (data: UserLoginPayloadType) => {
+    apiRoot
+      .login()
+      .post({
+        body: data,
+      })
+      .execute()
+      .then(() => {
+        setIsError(false)
+        setSystMsg(SYSTEM_MESSAGES.LOGIN_SCSS)
+      })
+      .catch(() => {
+        setIsError(true)
+        setSystMsg(SYSTEM_MESSAGES.LOGIN_FAIL)
+      })
+      .finally(console.log)
+  }
+
   // remove those useEffects when done
   useEffect(() => {
     getProject()
@@ -29,17 +66,43 @@ export default function App() {
       .catch(console.log)
   }, [])
 
-  useEffect(() => {
-    apiRoot
-      .me()
-      .get({ headers: { token: 'zPAlO72LJQcqplgmj9-VyMgqgRoAgjAK' } })
-      .execute()
-      .then(console.log)
-  }, [])
+  // useEffect(() => {
+  //   apiRoot
+  //     .me()
+  //     .get({ headers: { token: 'zPAlO72LJQcqplgmj9-VyMgqgRoAgjAK' } })
+  //     .execute()
+  //     .then(console.log)
+  // }, [])
 
   return (
     <>
       <Header />
+      <button
+        style={{ marginTop: '300px' }}
+        type="button"
+        onClick={() =>
+          register({
+            email: 'johndoe@example.com',
+            firstName: 'John',
+            lastName: 'Doe',
+            password: 'secret123',
+          })
+        }
+      >
+        Register
+      </button>
+      <button
+        style={{ marginTop: '300px' }}
+        type="button"
+        onClick={() =>
+          login({
+            email: 'johndoe@example.com',
+            password: 'secret123',
+          })
+        }
+      >
+        Login
+      </button>
       <SystMsgAlert
         msg={systMsg}
         onResetMsg={resetSystMsg}

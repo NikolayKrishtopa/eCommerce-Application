@@ -51,10 +51,21 @@ export default function useAuth(
       })
   }
 
+  const checkAuth = () => {
+    apiRoot
+      .customers()
+      //   .withPasswordToken({
+      //     passwordToken: 'c40f7784-012a-45d6-bebe-fe340263ec85',
+      //   })
+      .get()
+      .execute()
+      .then(console.log)
+  }
+
   const logout = () => {
     setCurrentUser(null)
     setSystMsg(SYSTEM_MESSAGES.LOGOUT_SCSS, false)
   }
 
-  return { login, register, isLoggedIn, currentUser, logout }
+  return { login, register, isLoggedIn, currentUser, logout, checkAuth }
 }

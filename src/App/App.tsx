@@ -21,7 +21,8 @@ export default function App() {
     setIsError(error)
   }
 
-  const { login, register, isLoggedIn, currentUser, logout } = useAuth(setupMsg)
+  const { login, register, isLoggedIn, currentUser, logout, checkAuth } =
+    useAuth(setupMsg)
 
   const resetSystMsg = () => {
     setupMsg('', false)
@@ -31,6 +32,7 @@ export default function App() {
   useEffect(() => {
     getProject().catch(() => setupMsg(SYSTEM_MESSAGES.INIT_ERROR, true))
     console.log([isLoggedIn, currentUser])
+    checkAuth()
   }, [])
 
   // useEffect(() => {

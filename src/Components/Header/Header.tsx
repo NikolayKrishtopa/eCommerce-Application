@@ -1,12 +1,24 @@
-import { useState } from 'react'
+import { useState, useContext, useEffect } from 'react'
 import { NavLink, useLocation } from 'react-router-dom'
+import CurrentUserContext from '@/contexts/CurrentUserContext'
 import s from './Header.module.scss'
 import { ReactComponent as BasketImg } from '../../assets/icons/basket.svg'
 import { ReactComponent as Logo } from '../../assets/icons/logo.svg'
+import { HeaderProps } from './Header.props'
 
-export default function Header() {
+export default function Header(props: HeaderProps) {
+  const { onLogout } = props
   const [burgerActive, setBurgerActive] = useState(false)
   const location = useLocation()
+  const currentUser = useContext(CurrentUserContext)
+
+  // ************
+  //  !!!!!Это нужно только чтобы не ругалось на неиспользуемые переменные, удали когда заюзаешь их
+  useEffect(() => {
+    console.log(currentUser)
+    console.log(onLogout)
+  })
+  // ***************
 
   const isTransparent = () =>
     location.pathname === '/register' || location.pathname === '/login'

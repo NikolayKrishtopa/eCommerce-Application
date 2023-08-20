@@ -1,18 +1,45 @@
-import { useState } from 'react'
+import { FormEvent, useState } from 'react'
 import { Link } from 'react-router-dom'
+import { UserRegisterPayloadType } from '@/Models/Models'
 import s from './AuthPage.module.scss'
 import skatepic from '../../assets/img/skateboard.png'
 import { UI_TEXTS } from '../../utils/constants'
 import { ReactComponent as VisiblePass } from '../../assets/icons/eye.svg'
 import { ReactComponent as InvisiblePass } from '../../assets/icons/eye-slash.svg'
 import useFormHandlers from './useFormHandlers'
+import { AuthPageProps } from './AuthPage.props'
 
-export default function RegistrationPage() {
+export default function RegistrationPage(
+  props: AuthPageProps<UserRegisterPayloadType>,
+) {
+  const { onSubmit } = props
   const { values, errors, handleChange } = useFormHandlers()
   const [visiblePass, setVisiblePass] = useState(false)
   const [billingisthesame, setBillingisthesame] = useState(true)
   const [defaultship, setDefaultship] = useState(true)
   const [defaultbill, setDefaultbill] = useState(true)
+
+  const handleSubmit = (e: FormEvent) => {
+    e.preventDefault()
+    onSubmit({
+      email: values.email,
+      password: values.password,
+      firstName: values.firstname,
+      lastName: values.lastname,
+      dateOfBirth: values.dob,
+      street: values.street_ship,
+      bldng: values.house_ship,
+      zipCode: values.postal_code_ship,
+      city: values.city_ship,
+      country: values.country_ship,
+      isBillingAddressSame: billingisthesame,
+      setDefaultShipAddress: defaultship,
+      billingBldng: values.house_bill,
+      billingZipCode: values.postal_code_bill,
+      billingCountry: values.country_bill,
+      billingCity: values.city_bill,
+    })
+  }
 
   return (
     <div className={s.authPage}>
@@ -30,7 +57,7 @@ export default function RegistrationPage() {
         <form
           action=""
           className={s.authForm}
-          // onSubmit={handleFormValidation}
+          onSubmit={handleSubmit}
           noValidate
         >
           <fieldset className={s.nameFields}>

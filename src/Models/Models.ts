@@ -22,6 +22,7 @@ export interface UserRegisterPayloadType extends UserLoginPayloadType {
 }
 
 export interface UserLoggedIn {
+  id: string
   email: string
   firstName: string
   lastName: string

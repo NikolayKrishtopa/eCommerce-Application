@@ -5,7 +5,7 @@
   max-width: r(556px);
   display: flex;
   align-items: center;
-  position: absolute;
+  position: fixed;
   top: r(100px);
   left: r(100px);
   right: r(100px);
@@ -17,6 +17,7 @@
   justify-content: space-between;
   transform: translateY(-700px);
   transition: transform 0.5s ease;
+  z-index: 400;
 
   @media (max-width: $break-md) {
     padding: r(24px) r(16px);

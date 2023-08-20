@@ -7,6 +7,7 @@ const SYSTEM_MESSAGES = {
   REGISTER_SCSS: 'New user account successfully created',
   REGISTER_FAIL: 'Error while creating new user account. Please try again',
   INIT_ERROR: 'Error while app initialization',
+  WELCOME_BACK: 'Welcome back',
 }
 
 const UI_TEXTS = {

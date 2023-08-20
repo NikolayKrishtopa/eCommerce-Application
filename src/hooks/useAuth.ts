@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { CustomerUpdateAction } from '@commercetools/platform-sdk'
 import { SYSTEM_MESSAGES } from '@/utils/constants'
 import {
@@ -13,6 +14,7 @@ export default function useAuth(
 ) {
   const [currentUser, setCurrentUser] = useState<null | UserLoggedIn>(null)
   const isLoggedIn = !!currentUser
+  const navigate = useNavigate()
 
   const register = (data: UserRegisterPayloadType) => {
     apiRoot
@@ -119,7 +121,10 @@ export default function useAuth(
                 },
               })
               .execute()
-              .then(() => setSystMsg(SYSTEM_MESSAGES.REGISTER_SCSS, false))
+              .then(() => {
+                setSystMsg(SYSTEM_MESSAGES.REGISTER_SCSS, false)
+                navigate('/login')
+              })
           })
       })
       .catch((res) => {
@@ -136,33 +141,59 @@ export default function useAuth(
       .execute()
       .then((res) => {
         setCurrentUser({
+          id: res.body.customer.id,
           email: res.body.customer.email,
           firstName: res.body.customer.firstName as string,
           lastName: res.body.customer.lastName as string,
         })
+        localStorage.setItem('currentUser', res.body.customer.id)
         setSystMsg(
           `${SYSTEM_MESSAGES.LOGIN_SCSS} ${res.body.customer.firstName}`,
           false,
         )
+        navigate('/')
       })
       .catch(() => {
         setSystMsg(SYSTEM_MESSAGES.LOGIN_FAIL, true)
+        localStorage.clear()
       })
-  }
-
-  const checkAuth = () => {
-    apiRoot
-      .get()
-      //   .withPasswordToken({
-      //     passwordToken: 'c40f7784-012a-45d6-bebe-fe340263ec85',
-      //   })
-      .execute()
-      .then(console.log)
   }
 
   const logout = () => {
     setCurrentUser(null)
+    localStorage.clear()
     setSystMsg(SYSTEM_MESSAGES.LOGOUT_SCSS, false)
+    navigate('/')
+  }
+
+  const checkAuth = () => {
+    if (currentUser) return
+    const id = localStorage.getItem('currentUser')
+    if (!id) {
+      logout()
+      return
+    }
+    apiRoot
+      .customers()
+      .withId({ ID: id })
+      .get()
+      .execute()
+      .then((res) => {
+        if (!res.body.firstName || !res.body.lastName) {
+          logout()
+          return
+        }
+        setCurrentUser({
+          email: res.body.email,
+          firstName: res.body.firstName,
+          lastName: res.body.lastName,
+          id: res.body.id,
+        })
+        setSystMsg(
+          `${SYSTEM_MESSAGES.WELCOME_BACK}, ${res.body.firstName}`,
+          false,
+        )
+      })
   }
 
   return { login, register, isLoggedIn, currentUser, logout, checkAuth }

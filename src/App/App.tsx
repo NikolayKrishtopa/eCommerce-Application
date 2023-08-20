@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { Route, Routes } from 'react-router-dom'
 import useAuth from '@/hooks/useAuth'
 import { SYSTEM_MESSAGES } from '@/utils/constants'
+import CurrentUserContext from '@/hooks/contexts/CurrentUserContext'
 import SystMsgAlert from '../Components/SystMsgAlert/SystMsgAlert'
 import './App.scss'
 import MainPage from '../Pages/MainPage/MainPage'
@@ -41,7 +42,7 @@ export default function App() {
   // }, [])
 
   return (
-    <>
+    <CurrentUserContext.Provider value={currentUser}>
       <Header />
       <button
         style={{ marginTop: '300px' }}
@@ -88,6 +89,6 @@ export default function App() {
         <Route path="/register" element={<RegistrationPage />} />
         <Route path="/*" element={<NotFoundPage />} />
       </Routes>
-    </>
+    </CurrentUserContext.Provider>
   )
 }

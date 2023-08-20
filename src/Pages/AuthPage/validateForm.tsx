@@ -102,7 +102,7 @@ export default function validateForm(values: Values) {
   }
 
   if (values.country_ship === '') {
-    errors.dob = 'Shipping country is required'
+    errors.country_ship = 'Shipping country is required'
   }
 
   if (values.city_ship === '') {
@@ -139,14 +139,14 @@ export default function validateForm(values: Values) {
     errors.postal_code_ship = zipCheck(values.postal_code_ship)
 
   if (values.street_ship === '') {
-    errors.lastname = 'Street is required'
+    errors.street_ship = 'Street is required'
   } else if (values.street_ship && !streetPattern.test(values.street_ship)) {
     errors.street_ship = 'Street name must contain at least 3 letters'
   }
 
   if (!values.billingisthesame) {
     if (values.country_bill === '') {
-      errors.dob = 'Country is required'
+      errors.country_bill = 'Country is required'
     }
 
     if (values.city_bill === '') {
@@ -160,7 +160,7 @@ export default function validateForm(values: Values) {
       errors.postal_code_bill = zipCheck(values.postal_code_bill)
 
     if (values.street_bill === '') {
-      errors.lastname = 'Street is required'
+      errors.street_bill = 'Street is required'
     } else if (values.street_bill && !streetPattern.test(values.street_bill)) {
       errors.street_bill = 'Street name must contain at least 3 letters'
     }

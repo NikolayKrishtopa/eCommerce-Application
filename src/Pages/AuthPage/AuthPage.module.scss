@@ -157,13 +157,48 @@
       font-size: 16px;
     }
 
-    input {
-      padding: 10px;
+    .input-field-box {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      height: 64px;
       border-radius: 10px;
       border: 1.5px solid $color-on-neutral-light-pale;
       width: 100%;
-      height: 64px;
+
+      &.input-error {
+        border: 1.5px solid $color-error;
+        color: $color-error;
+        * {
+          color: $color-error;
+        }
+      }
+    }
+
+    .input-field-control {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: transparent;
+      border: none;
+      width: min-content;
+      color: inherit;
+      padding: 0 10px;
+    }
+
+    .input-error-msg {
+      color: $color-error;
+    }
+
+    input {
+      border: none;
       font-size: 16px;
+      flex-grow: 1;
+      padding: 10px;
+
+      &:focus {
+        outline: none;
+      }
     }
 
     input::placeholder {

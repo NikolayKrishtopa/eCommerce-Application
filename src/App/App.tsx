@@ -51,10 +51,22 @@ export default function App() {
         type="button"
         onClick={() =>
           register({
-            email: 'johndoe@example.com',
-            firstName: 'John',
-            lastName: 'Doe',
+            email: 'fff@example.am',
+            firstName: 'Samuel',
+            lastName: 'Jackson',
             password: 'secret123',
+            country: 'US',
+            city: 'Los Angeles',
+            street: '1st str.',
+            bldng: '3',
+            zipCode: '001001',
+            isBillingAddressSame: false,
+            setDefaultShipAddress: false,
+            billingCountry: 'US',
+            billingCity: 'Tacoma',
+            billingStreet: '5st str.',
+            billingBldng: '14',
+            billingZipCode: '001001',
           })
         }
       >
@@ -65,7 +77,7 @@ export default function App() {
         type="button"
         onClick={() =>
           login({
-            email: 'johndoe@example.com',
+            email: 'fff@example.am',
             password: 'secret123',
           })
         }

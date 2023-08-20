@@ -1,13 +1,13 @@
 import { useEffect, useState } from 'react'
 import { Route, Routes } from 'react-router-dom'
+import CurrentUserContext from '@/hooks/contexts/CurrentUserContext'
 import useAuth from '@/hooks/useAuth'
 import { SYSTEM_MESSAGES } from '@/utils/constants'
-import CurrentUserContext from '@/hooks/contexts/CurrentUserContext'
 import SystMsgAlert from '../Components/SystMsgAlert/SystMsgAlert'
 import './App.scss'
 import MainPage from '../Pages/MainPage/MainPage'
-import LoginPage from '../Pages/LoginPage/LoginPage'
-import RegistrationPage from '../Pages/RegistrationPage/RegistrationPage'
+import LoginPage from '../Pages/AuthPage/LoginPage'
+import RegistrationPage from '../Pages/AuthPage/RegistrationPage'
 import NotFoundPage from '../Pages/NotFoundPage/NotFoundPage'
 import Header from '../Components/Header/Header'
 import { getProject } from '../eComMerchant/client'
@@ -21,8 +21,7 @@ export default function App() {
     setIsError(error)
   }
 
-  const { login, register, isLoggedIn, currentUser, logout, checkAuth } =
-    useAuth(setupMsg)
+  const { login, register, currentUser, logout, checkAuth } = useAuth(setupMsg)
 
   const resetSystMsg = () => {
     setupMsg('', false)
@@ -31,17 +30,8 @@ export default function App() {
   // remove those useEffects when done
   useEffect(() => {
     getProject().catch(() => setupMsg(SYSTEM_MESSAGES.INIT_ERROR, true))
-    console.log([isLoggedIn, currentUser])
     checkAuth()
   }, [])
-
-  // useEffect(() => {
-  //   apiRoot
-  //     .me()
-  //     .get({ headers: { token: 'zPAlO72LJQcqplgmj9-VyMgqgRoAgjAK' } })
-  //     .execute()
-  //     .then(console.log)
-  // }, [])
 
   return (
     <CurrentUserContext.Provider value={currentUser}>

@@ -11,7 +11,7 @@ export default function SystMsgAlert(props: SystAlertProps) {
   useEffect(() => {
     const timeout = setTimeout(onResetMsg, 3000)
     return () => clearTimeout(timeout)
-  }, [msg])
+  }, [msg, onResetMsg])
 
   return (
     <div

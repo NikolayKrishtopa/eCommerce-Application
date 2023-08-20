@@ -12,6 +12,14 @@ const SYSTEM_MESSAGES = {
 const UI_TEXTS = {
   NOT_FOUND: "Oops! Didn't find anything here.",
   LINK_FROM_NOT_FOUND: 'Go to',
+
+  REGISTER_HEADER: 'Create account',
+  REGISTER_CTA: 'Register with your email',
+  REGISTER_BTN: 'Register',
+
+  LOGIN_HEADER: 'Log in',
+  LOGIN_CTA: 'Welcome back!',
+  LOGIN_BTN: 'Login',
 }
 
 export { SYSTEM_MESSAGES, UI_TEXTS }

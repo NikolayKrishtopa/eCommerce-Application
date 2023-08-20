@@ -1,0 +1,69 @@
+@use '@/styles/abstracts' as *;
+
+.main {
+  color: $color-neutral-light;
+  font-family: $font-stack-text;
+}
+
+@mixin resetList {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+@mixin button {
+  min-width: r(175px);
+  padding: r(7px);
+  display: inline-block;
+  font-size: 1rem;
+  font-family: $font-stack-brand;
+  font-weight: bold;
+  border: r(1px) solid $color-neutral-light;
+  border-radius: r(10px);
+  background-color: $color-primary;
+  text-align: center;
+}
+
+@mixin buttonExtendSmall {
+  @media screen and (max-width: $break-sm) {
+    min-width: r(115px);
+    padding-inline: r(40px);
+    font-size: 0.75rem;
+    font-family: $font-stack-text;
+    min-width: initial;
+    @content;
+  }
+}
+
+@mixin subHeading {
+  font-family: $font-stack-heading;
+  font-size: clamp(1.75rem, 1rem + 4vw, 4rem);
+  font-weight: normal;
+  text-align: center;
+  margin-block: 7% 5%;
+}
+
+@mixin gradientMask {
+  &::after {
+    content: '';
+    position: absolute;
+    z-index: 0;
+    inset: 0;
+    background: linear-gradient(
+      to top,
+      rgba(0, 0, 0, 0.5),
+      rgba(255, 255, 255, 0)
+    );
+    @content;
+  }
+}
+
+@mixin containerLarge {
+  max-width: 1512px;
+  margin-inline: auto;
+}
+
+@mixin containerMedium {
+  max-width: 1314px;
+  margin-inline: auto;
+}

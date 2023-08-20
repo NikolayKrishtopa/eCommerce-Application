@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Route, Routes } from 'react-router-dom'
 import useAuth from '@/hooks/useAuth'
+import { SYSTEM_MESSAGES } from '@/utils/constants'
 import SystMsgAlert from '../Components/SystMsgAlert/SystMsgAlert'
 import './App.scss'
 import MainPage from '../Pages/MainPage/MainPage'
@@ -8,7 +9,7 @@ import LoginPage from '../Pages/LoginPage/LoginPage'
 import RegistrationPage from '../Pages/RegistrationPage/RegistrationPage'
 import NotFoundPage from '../Pages/NotFoundPage/NotFoundPage'
 import Header from '../Components/Header/Header'
-import { getProject } from '../client'
+import { getProject } from '../eComMerchant/client'
 
 export default function App() {
   const [systMsg, setSystMsg] = useState('')
@@ -19,7 +20,7 @@ export default function App() {
     setIsError(error)
   }
 
-  const { login, register } = useAuth(setupMsg)
+  const { login, register, isLoggedIn, currentUser, logout } = useAuth(setupMsg)
 
   const resetSystMsg = () => {
     setupMsg('', false)
@@ -27,12 +28,8 @@ export default function App() {
 
   // remove those useEffects when done
   useEffect(() => {
-    getProject()
-      .then((res) => {
-        console.log(res.body)
-        setSystMsg('project data is loaded')
-      })
-      .catch(console.log)
+    getProject().catch(() => setupMsg(SYSTEM_MESSAGES.INIT_ERROR, true))
+    console.log([isLoggedIn, currentUser])
   }, [])
 
   // useEffect(() => {
@@ -71,6 +68,14 @@ export default function App() {
         }
       >
         Login
+      </button>
+      <SystMsgAlert
+        msg={systMsg}
+        onResetMsg={resetSystMsg}
+        type={isError ? 'fail' : 'success'}
+      />
+      <button style={{ marginTop: '300px' }} type="button" onClick={logout}>
+        Logout
       </button>
       <SystMsgAlert
         msg={systMsg}

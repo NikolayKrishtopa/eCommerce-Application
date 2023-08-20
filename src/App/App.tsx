@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react'
 import { Route, Routes } from 'react-router-dom'
-import { UserRegisterPayloadType, UserLoginPayloadType } from '@/Models/Models'
-import { SYSTEM_MESSAGES } from '@/utils/constants'
+import useAuth from '@/hooks/useAuth'
 import SystMsgAlert from '../Components/SystMsgAlert/SystMsgAlert'
 import './App.scss'
 import MainPage from '../Pages/MainPage/MainPage'
@@ -9,51 +8,21 @@ import LoginPage from '../Pages/LoginPage/LoginPage'
 import RegistrationPage from '../Pages/RegistrationPage/RegistrationPage'
 import NotFoundPage from '../Pages/NotFoundPage/NotFoundPage'
 import Header from '../Components/Header/Header'
-import { getProject, apiRoot } from '../client'
+import { getProject } from '../client'
 
 export default function App() {
   const [systMsg, setSystMsg] = useState('')
   const [isError, setIsError] = useState(false)
 
+  const setupMsg = (msg: string, error: boolean) => {
+    setSystMsg(msg)
+    setIsError(error)
+  }
+
+  const { login, register } = useAuth(setupMsg)
+
   const resetSystMsg = () => {
-    setSystMsg('')
-    setIsError(false)
-  }
-
-  const register = (data: UserRegisterPayloadType) => {
-    apiRoot
-      .customers()
-      .post({
-        body: data,
-      })
-      .execute()
-      .then(() => {
-        setIsError(false)
-        setSystMsg(SYSTEM_MESSAGES.REGISTER_SCSS)
-      })
-      .catch(() => {
-        setIsError(true)
-        setSystMsg(SYSTEM_MESSAGES.REGISTER_FAIL)
-      })
-      .finally(console.log)
-  }
-
-  const login = (data: UserLoginPayloadType) => {
-    apiRoot
-      .login()
-      .post({
-        body: data,
-      })
-      .execute()
-      .then(() => {
-        setIsError(false)
-        setSystMsg(SYSTEM_MESSAGES.LOGIN_SCSS)
-      })
-      .catch(() => {
-        setIsError(true)
-        setSystMsg(SYSTEM_MESSAGES.LOGIN_FAIL)
-      })
-      .finally(console.log)
+    setupMsg('', false)
   }
 
   // remove those useEffects when done

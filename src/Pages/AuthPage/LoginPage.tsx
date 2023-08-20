@@ -3,7 +3,6 @@ import { Link } from 'react-router-dom'
 import s from './AuthPage.module.scss'
 import skatepic from '../../assets/img/skateboard.png'
 import { UI_TEXTS } from '../../utils/constants'
-// import validateForm from './validateForm'
 import { ReactComponent as VisiblePass } from '../../assets/icons/eye.svg'
 import { ReactComponent as InvisiblePass } from '../../assets/icons/eye-slash.svg'
 import useFormHandlers from './useFormHandlers'
@@ -74,7 +73,7 @@ export default function LoginPage() {
             {errors.email && <p className={s.inputErrorMsg}>{errors.email}</p>}
           </div>
 
-          <div className={s.inputBox}>
+          <div className={`${s.inputBox} ${s.inputBoxClosing}`}>
             <label htmlFor="password">Password</label>
             <div
               className={

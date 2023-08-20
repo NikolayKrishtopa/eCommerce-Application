@@ -4,11 +4,40 @@ import validateForm from './validateForm'
 const initialValues = {
   email: '',
   password: '',
+  firstname: '',
+  lastname: '',
+  dob: '',
+  country_ship: '',
+  city_ship: '',
+  postal_code_ship: '',
+  street_ship: '',
+  house_ship: '',
+  setasdefaultship: true,
+  billingisthesame: true,
+  country_bill: '',
+  city_bill: '',
+  postal_code_bill: '',
+  street_bill: '',
+  house_bill: '',
+  setasdefaultbill: true,
 }
 
 const initialErrors = {
   email: '',
   password: '',
+  firstname: '',
+  lastname: '',
+  dob: '',
+  country_ship: '',
+  city_ship: '',
+  postal_code_ship: '',
+  street_ship: '',
+  house_ship: '',
+  country_bill: '',
+  city_bill: '',
+  postal_code_bill: '',
+  street_bill: '',
+  house_bill: '',
 }
 
 export default function useFormHandlers() {
@@ -18,12 +47,13 @@ export default function useFormHandlers() {
 
   const handleChange = (e: ChangeEvent) => {
     const target = e.target as HTMLInputElement
-    const { name, value } = target
-    setValues({ ...values, [name]: value })
-    setErrors(validateForm(values))
-    console.log(value)
-    console.log(values)
-    console.log(errors)
+    const { name, value, checked, type } = target
+    if (type === 'checkbox') {
+      setValues({ ...values, [name]: checked })
+    } else {
+      setValues({ ...values, [name]: value })
+    }
+    setErrors(validateForm({ ...values, [name]: value }))
     setIsValid(!Object.values(errors).some((err) => err !== ''))
   }
 

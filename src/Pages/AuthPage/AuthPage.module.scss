@@ -190,7 +190,8 @@
       color: $color-error;
     }
 
-    input {
+    input,
+    select {
       border: none;
       font-size: 16px;
       flex-grow: 1;
@@ -201,7 +202,8 @@
       }
     }
 
-    input::placeholder {
+    input::placeholder,
+    select option[disabled='true'] {
       color: $color-neutral-light-additional;
     }
 
@@ -227,13 +229,23 @@
   .billing-address {
     border: none;
     padding: 0;
+
+    legend {
+      font-size: larger;
+      font-weight: bold;
+      padding: 30px 0;
+    }
   }
 
   .shipping-address,
   .billing-address {
-    :last-child {
+    .input-box-closing {
       margin-bottom: 0;
     }
+  }
+
+  .billing-address:disabled {
+    display: none;
   }
 
   .checkbox-container {

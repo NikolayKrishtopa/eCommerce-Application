@@ -1,50 +1,50 @@
-import { useEffect, useState } from 'react'
+// import { useEffect, useState } from 'react'
 import { Route, Routes } from 'react-router-dom'
 
 import './App.scss'
-import SystMsgAlert from '@/Components/SystMsgAlert/SystMsgAlert'
+// import SystMsgAlert from '@/Components/SystMsgAlert/SystMsgAlert'
 import MainPage from '../Pages/MainPage/MainPage'
 import LoginPage from '../Pages/AuthPage/LoginPage'
 import RegistrationPage from '../Pages/AuthPage/RegistrationPage'
 import NotFoundPage from '../Pages/NotFoundPage/NotFoundPage'
 import Header from '../Components/Header/Header'
-import { getProject, apiRoot } from '../client'
+// import { getProject, apiRoot } from '../client'
 
 export default function App() {
-  const [systMsg, setSystMsg] = useState('')
-  const [isError, setIsError] = useState(false)
+  // const [systMsg, setSystMsg] = useState('')
+  // const [isError, setIsError] = useState(false)
 
-  const resetSystMsg = () => {
-    setSystMsg('')
-    setIsError(false)
-  }
+  // const resetSystMsg = () => {
+  //   setSystMsg('')
+  //   setIsError(false)
+  // }
 
   // remove those useEffects when done
-  useEffect(() => {
-    getProject()
-      .then((res) => {
-        console.log(res.body)
-        setSystMsg('project data is loaded')
-      })
-      .catch(console.log)
-  }, [])
+  // useEffect(() => {
+  //   getProject()
+  //     .then((res) => {
+  //       console.log(res.body)
+  //       setSystMsg('project data is loaded')
+  //     })
+  //     .catch(console.log)
+  // }, [])
 
-  useEffect(() => {
-    apiRoot
-      .me()
-      .get({ headers: { token: 'zPAlO72LJQcqplgmj9-VyMgqgRoAgjAK' } })
-      .execute()
-      .then(console.log)
-  }, [])
+  // useEffect(() => {
+  //   apiRoot
+  //     .me()
+  //     .get({ headers: { token: 'zPAlO72LJQcqplgmj9-VyMgqgRoAgjAK' } })
+  //     .execute()
+  //     .then(console.log)
+  // }, [])
 
   return (
     <>
       <Header />
-      <SystMsgAlert
+      {/* <SystMsgAlert
         msg={systMsg}
         onResetMsg={resetSystMsg}
         type={isError ? 'fail' : 'success'}
-      />
+      /> */}
       <Routes>
         <Route path="/" element={<MainPage />} />
         <Route path="/login" element={<LoginPage />} />

@@ -1,56 +1,58 @@
-// import { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Route, Routes } from 'react-router-dom'
-
+import CurrentUserContext from '@/contexts/CurrentUserContext'
+import useAuth from '@/hooks/useAuth'
+import SystMsgAlert from '../Components/SystMsgAlert/SystMsgAlert'
 import './App.scss'
-// import SystMsgAlert from '@/Components/SystMsgAlert/SystMsgAlert'
 import MainPage from '../Pages/MainPage/MainPage'
 import LoginPage from '../Pages/AuthPage/LoginPage'
 import RegistrationPage from '../Pages/AuthPage/RegistrationPage'
 import NotFoundPage from '../Pages/NotFoundPage/NotFoundPage'
 import Header from '../Components/Header/Header'
-// import { getProject, apiRoot } from '../client'
 
 export default function App() {
-  // const [systMsg, setSystMsg] = useState('')
-  // const [isError, setIsError] = useState(false)
+  const [systMsg, setSystMsg] = useState('')
+  const [isError, setIsError] = useState(false)
 
-  // const resetSystMsg = () => {
-  //   setSystMsg('')
-  //   setIsError(false)
-  // }
+  const setupMsg = (msg: string, error: boolean) => {
+    setSystMsg(msg)
+    setIsError(error)
+  }
+
+  const { login, register, currentUser, logout, checkAuth } = useAuth(setupMsg)
+
+  const resetSystMsg = () => {
+    setSystMsg('')
+  }
 
   // remove those useEffects when done
-  // useEffect(() => {
-  //   getProject()
-  //     .then((res) => {
-  //       console.log(res.body)
-  //       setSystMsg('project data is loaded')
-  //     })
-  //     .catch(console.log)
-  // }, [])
-
-  // useEffect(() => {
-  //   apiRoot
-  //     .me()
-  //     .get({ headers: { token: 'zPAlO72LJQcqplgmj9-VyMgqgRoAgjAK' } })
-  //     .execute()
-  //     .then(console.log)
-  // }, [])
+  useEffect(() => {
+    checkAuth()
+    console.log(currentUser)
+  }, [])
 
   return (
-    <>
-      <Header />
-      {/* <SystMsgAlert
+    <CurrentUserContext.Provider value={currentUser}>
+      <Header onLogout={logout} />
+      <SystMsgAlert
         msg={systMsg}
         onResetMsg={resetSystMsg}
         type={isError ? 'fail' : 'success'}
-      /> */}
+      />
+      <SystMsgAlert
+        msg={systMsg}
+        onResetMsg={resetSystMsg}
+        type={isError ? 'fail' : 'success'}
+      />
       <Routes>
         <Route path="/" element={<MainPage />} />
-        <Route path="/login" element={<LoginPage />} />
-        <Route path="/register" element={<RegistrationPage />} />
+        <Route path="/login" element={<LoginPage onSubmit={login} />} />
+        <Route
+          path="/register"
+          element={<RegistrationPage onSubmit={register} />}
+        />
         <Route path="/*" element={<NotFoundPage />} />
       </Routes>
-    </>
+    </CurrentUserContext.Provider>
   )
 }

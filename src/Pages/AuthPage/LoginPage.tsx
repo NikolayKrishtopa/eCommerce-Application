@@ -1,37 +1,27 @@
-import { useState } from 'react'
+import { FormEvent, useState } from 'react'
 import { Link } from 'react-router-dom'
+import { UserLoginPayloadType } from '@/Models/Models'
 import s from './AuthPage.module.scss'
 import skatepic from '../../assets/img/skateboard.png'
 import { UI_TEXTS } from '../../utils/constants'
 import { ReactComponent as VisiblePass } from '../../assets/icons/eye.svg'
 import { ReactComponent as InvisiblePass } from '../../assets/icons/eye-slash.svg'
 import useFormHandlers from './useFormHandlers'
+import { AuthPageProps } from './AuthPage.props'
 
-export default function LoginPage() {
-  const { errors, handleChange } = useFormHandlers()
+export default function LoginPage(props: AuthPageProps<UserLoginPayloadType>) {
+  const { errors, handleChange, values } = useFormHandlers()
   const [visiblePass, setVisiblePass] = useState(false)
 
-  // const [errors, setErrors] = useState({
-  //   email: '',
-  //   password: '',
-  // })
-  // const [values, setValues] = useState({
-  //   email: '',
-  //   password: '',
-  // })
+  const { onSubmit } = props
 
-  // const handleChange = (e: ChangeEvent) => {
-  //   e.preventDefault()
-  //   const target = e.target as HTMLInputElement
-  //   const { name, value } = target
-  //   setValues({ ...values, [name]: value })
-  // }
-
-  // const handleFormValidation = (e: FormEvent): void => {
-  //   e.preventDefault()
-  //   setValues({ ...values, email: values.email.trim() })
-  //   setErrors(validateForm(values))
-  // }
+  const handleSubmit = (e: FormEvent) => {
+    e.preventDefault()
+    onSubmit({
+      email: values.email,
+      password: values.password,
+    })
+  }
 
   return (
     <div className={s.authPage}>
@@ -49,7 +39,7 @@ export default function LoginPage() {
         <form
           action=""
           className={s.authForm}
-          // onSubmit={handleFormValidation}
+          onSubmit={handleSubmit}
           noValidate
         >
           <div className={s.inputBox}>

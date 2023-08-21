@@ -72,6 +72,7 @@ const sellersData = Object.values(
     'Polar Herrington Chain smoker 2.0 wheel well 8.5” Skateboard deck (white)',
   price: '69,99',
   currency: 'EUR',
+  link: '/no-route',
 }))
 
 export default function MainPage() {
@@ -151,11 +152,11 @@ export default function MainPage() {
         <h2 className={s.heading}>Our top sellers</h2>
         <ul className={s.sellers}>
           {sellersData.map(
-            ({ id, name, description, image, price, currency }) => (
+            ({ id, name, description, image, link, price, currency }) => (
               <li key={id} className={s.singleSeller}>
                 <img className={s.singleSellerImage} src={image} alt="" />
                 <div className={s.singleSellerInfoContainer}>
-                  <Link to="/no-route" className={s.singleSellerLink}>
+                  <Link to={link} className={s.singleSellerLink}>
                     <div className={s.singleSellerName}>{name}</div>
                   </Link>
                   <div className={s.singleSellerDescription}>{description}</div>

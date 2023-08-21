@@ -10,7 +10,9 @@ type LoaderProps = Partial<{
 export default function Loader(props: LoaderProps) {
   const { show = true, className = '' } = props
 
-  return <div className={cn(s.loader, { [s.hide]: !show }, className)} />
+  if (!show) return null
+
+  return <div className={cn(s.loader, className)} />
 }
 
 export function FullPageLoader(props: LoaderProps) {
@@ -23,8 +25,10 @@ export function FullPageLoader(props: LoaderProps) {
     }
   }, [])
 
+  if (!show) return null
+
   return (
-    <div className={cn(s.fullPageMask, { [s.hide]: !show }, className)}>
+    <div className={cn(s.fullPageMask, className)}>
       <div className={cn(s.loader)} />
     </div>
   )

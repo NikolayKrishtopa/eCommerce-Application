@@ -1,0 +1,9 @@
+<svg width="16" height="20" viewBox="0 0 16 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g id="Person">
+<g id="Body">
+<path id="Left" d="M3.33333 10C2.4 10.7778 1 12.52 1 15.1333C1 17.7467 5.66667 17.9333 8 17.9333" stroke="white" stroke-width="1.5" stroke-linecap="round"/>
+<path id="Right" d="M12.6667 10C13.6 10.7778 15 12.52 15 15.1333C15 17.7467 10.3333 17.9333 8 17.9333" stroke="white" stroke-width="1.5" stroke-linecap="round"/>
+</g>
+<circle id="Head" cx="8" cy="5" r="3.75" stroke="white" stroke-width="1.5"/>
+</g>
+</svg>

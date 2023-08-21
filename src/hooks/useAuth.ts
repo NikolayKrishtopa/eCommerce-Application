@@ -16,6 +16,33 @@ export default function useAuth(
   const isLoggedIn = !!currentUser
   const navigate = useNavigate()
 
+  const login = (data: UserLoginPayloadType) => {
+    apiRoot
+      .login()
+      .post({
+        body: data,
+      })
+      .execute()
+      .then((res) => {
+        setCurrentUser({
+          id: res.body.customer.id,
+          email: res.body.customer.email,
+          firstName: res.body.customer.firstName as string,
+          lastName: res.body.customer.lastName as string,
+        })
+        localStorage.setItem('currentUser', res.body.customer.id)
+        setSystMsg(
+          `${SYSTEM_MESSAGES.LOGIN_SCSS} ${res.body.customer.firstName}`,
+          false,
+        )
+        navigate('/')
+      })
+      .catch(() => {
+        setSystMsg(SYSTEM_MESSAGES.LOGIN_FAIL, true)
+        localStorage.clear()
+      })
+  }
+
   const register = (data: UserRegisterPayloadType) => {
     apiRoot
       .customers()
@@ -79,7 +106,13 @@ export default function useAuth(
               })
               if (data.setDefaultShipAddress) {
                 actions2.push({
-                  action: 'addShippingAddressId',
+                  action: 'setDefaultShippingAddress',
+                  addressId: res2.body.addresses[0].id,
+                })
+              }
+              if (data.setDefaultBillingAddress) {
+                actions2.push({
+                  action: 'setDefaultBillingAddress',
                   addressId: res2.body.addresses[0].id,
                 })
               }
@@ -100,14 +133,21 @@ export default function useAuth(
                   a.streetName === data.street &&
                   a.streetNumber === data.bldng,
               )
-              actions2.push({
-                action: 'addBillingAddressId',
-                addressId: billingAddress!.id,
-              })
               if (data.setDefaultShipAddress) {
                 actions2.push({
                   action: 'setDefaultShippingAddress',
                   addressId: address!.id,
+                })
+              }
+              if (data.setDefaultBillingAddress) {
+                actions2.push({
+                  action: 'setDefaultBillingAddress',
+                  addressId: billingAddress!.id,
+                })
+              } else {
+                actions2.push({
+                  action: 'addBillingAddressId',
+                  addressId: billingAddress!.id,
                 })
               }
             }
@@ -123,39 +163,15 @@ export default function useAuth(
               .execute()
               .then(() => {
                 setSystMsg(SYSTEM_MESSAGES.REGISTER_SCSS, false)
-                navigate('/login')
+                login({ email: data.email, password: data.password })
               })
+          })
+          .catch((res2) => {
+            setSystMsg(res2.body.message ?? SYSTEM_MESSAGES.REGISTER_FAIL, true)
           })
       })
       .catch((res) => {
         setSystMsg(res.body.message ?? SYSTEM_MESSAGES.REGISTER_FAIL, true)
-      })
-  }
-
-  const login = (data: UserLoginPayloadType) => {
-    apiRoot
-      .login()
-      .post({
-        body: data,
-      })
-      .execute()
-      .then((res) => {
-        setCurrentUser({
-          id: res.body.customer.id,
-          email: res.body.customer.email,
-          firstName: res.body.customer.firstName as string,
-          lastName: res.body.customer.lastName as string,
-        })
-        localStorage.setItem('currentUser', res.body.customer.id)
-        setSystMsg(
-          `${SYSTEM_MESSAGES.LOGIN_SCSS} ${res.body.customer.firstName}`,
-          false,
-        )
-        navigate('/')
-      })
-      .catch(() => {
-        setSystMsg(SYSTEM_MESSAGES.LOGIN_FAIL, true)
-        localStorage.clear()
       })
   }
 
@@ -170,7 +186,6 @@ export default function useAuth(
     if (currentUser) return
     const id = localStorage.getItem('currentUser')
     if (!id) {
-      logout()
       return
     }
     apiRoot
@@ -180,7 +195,6 @@ export default function useAuth(
       .execute()
       .then((res) => {
         if (!res.body.firstName || !res.body.lastName) {
-          logout()
           return
         }
         setCurrentUser({
@@ -189,10 +203,6 @@ export default function useAuth(
           lastName: res.body.lastName,
           id: res.body.id,
         })
-        setSystMsg(
-          `${SYSTEM_MESSAGES.WELCOME_BACK}, ${res.body.firstName}`,
-          false,
-        )
       })
   }
 

@@ -1,9 +1,11 @@
-import { useState, useContext, useEffect } from 'react'
+import { useState, useContext } from 'react'
 import { NavLink, useLocation } from 'react-router-dom'
 import CurrentUserContext from '@/contexts/CurrentUserContext'
 import s from './Header.module.scss'
 import { ReactComponent as BasketImg } from '../../assets/icons/basket.svg'
 import { ReactComponent as Logo } from '../../assets/icons/logo.svg'
+import { ReactComponent as LogoutImg } from '../../assets/icons/logout.svg'
+import { ReactComponent as ProfileImg } from '../../assets/icons/person.svg'
 import { HeaderProps } from './Header.props'
 
 export default function Header(props: HeaderProps) {
@@ -11,14 +13,6 @@ export default function Header(props: HeaderProps) {
   const [burgerActive, setBurgerActive] = useState(false)
   const location = useLocation()
   const currentUser = useContext(CurrentUserContext)
-
-  // ************
-  //  !!!!!Это нужно только чтобы не ругалось на неиспользуемые переменные, удали когда заюзаешь их
-  useEffect(() => {
-    console.log(currentUser)
-    console.log(onLogout)
-  })
-  // ***************
 
   const isTransparent = () =>
     location.pathname === '/register' || location.pathname === '/login'
@@ -52,12 +46,36 @@ export default function Header(props: HeaderProps) {
           </li>
         </ul>
 
-        <div className={s.authlink}>
-          <NavLink to="/login" onClick={() => setBurgerActive(false)}>
-            Login / Register
+        {!currentUser && (
+          <div className={s.authlink}>
+            <NavLink to="/login" onClick={() => setBurgerActive(false)}>
+              Login / Register
+            </NavLink>
+          </div>
+        )}
+      </nav>
+
+      {currentUser && (
+        <div className={s.profileLink}>
+          <NavLink to="/" onClick={() => setBurgerActive(false)}>
+            <ProfileImg className={s.profileImg} />
           </NavLink>
         </div>
-      </nav>
+      )}
+
+      {currentUser && (
+        <div className={s.profileLink}>
+          <NavLink
+            to="/"
+            onClick={() => {
+              onLogout()
+              setBurgerActive(false)
+            }}
+          >
+            <LogoutImg className={s.profileImg} />
+          </NavLink>
+        </div>
+      )}
 
       <div className={s.basketLink}>
         <NavLink to="/basket" onClick={() => setBurgerActive(false)}>

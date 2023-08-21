@@ -34,6 +34,10 @@
       }
     }
   }
+
+  @media screen and (max-width: $break-sm) {
+    gap: 4%;
+  }
 }
 
 .logo {
@@ -119,11 +123,13 @@
   font-size: 16px;
 }
 
+.profile-link a,
 .basket-link a {
   display: flex;
   align-items: center;
 }
 
+.profile-img,
 .basket-img {
   width: 30px;
   height: 30px;

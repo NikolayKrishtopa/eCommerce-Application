@@ -19,11 +19,10 @@ export function FullPageLoader(props: LoaderProps) {
   const { show = true, className = '' } = props
 
   useEffect(() => {
-    document.body.style.overflow = 'hidden'
-    return () => {
-      document.body.style.overflow = 'unset'
-    }
-  }, [])
+    document.body.style.overflow = show ? 'hidden' : 'unset'
+  }, [show])
+
+  if (!show) return null
 
   if (!show) return null
 

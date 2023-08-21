@@ -38,6 +38,8 @@ export default function RegistrationPage(
       billingZipCode: values.postal_code_bill,
       billingCountry: values.country_bill,
       billingCity: values.city_bill,
+      setDefaultBillingAddress: values.setasdefaultbill,
+      billingStreet: values.street_bill,
     })
   }
 

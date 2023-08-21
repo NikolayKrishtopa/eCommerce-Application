@@ -202,6 +202,10 @@
       }
     }
 
+    select {
+      margin-right: 10px;
+    }
+
     input::placeholder,
     select option[disabled='true'] {
       color: $color-neutral-light-additional;

@@ -13,7 +13,7 @@ export default function RegistrationPage(
   props: AuthPageProps<UserRegisterPayloadType>,
 ) {
   const { onSubmit } = props
-  const { values, errors, handleChange } = useFormHandlers()
+  const { values, errors, handleChange, isValid } = useFormHandlers()
   const [visiblePass, setVisiblePass] = useState(false)
   const [billingisthesame, setBillingisthesame] = useState(true)
   const [defaultship, setDefaultship] = useState(true)
@@ -482,7 +482,9 @@ export default function RegistrationPage(
             </div>
           </fieldset>
 
-          <button type="submit">{UI_TEXTS.REGISTER_BTN}</button>
+          <button type="submit" disabled={!isValid}>
+            {UI_TEXTS.REGISTER_BTN}
+          </button>
         </form>
         <p className={s.authRedirect}>
           Already have an account? <Link to="/login">Log in</Link>

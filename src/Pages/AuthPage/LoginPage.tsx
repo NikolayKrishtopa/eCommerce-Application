@@ -10,7 +10,7 @@ import useFormHandlers from './useFormHandlers'
 import { AuthPageProps } from './AuthPage.props'
 
 export default function LoginPage(props: AuthPageProps<UserLoginPayloadType>) {
-  const { errors, handleChange, values } = useFormHandlers()
+  const { errors, handleChange, values, isValid } = useFormHandlers()
   const [visiblePass, setVisiblePass] = useState(false)
 
   const { onSubmit } = props
@@ -94,7 +94,9 @@ export default function LoginPage(props: AuthPageProps<UserLoginPayloadType>) {
             </p>
           </div>
 
-          <button type="submit">{UI_TEXTS.LOGIN_BTN}</button>
+          <button type="submit" disabled={!isValid}>
+            {UI_TEXTS.LOGIN_BTN}
+          </button>
         </form>
         <p className={s.authRedirect}>
           Don&apos;t have an account yet? <Link to="/register">Register</Link>

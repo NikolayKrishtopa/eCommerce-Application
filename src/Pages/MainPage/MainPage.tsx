@@ -157,7 +157,7 @@ export default function MainPage() {
                 <img className={s.singleSellerImage} src={image} alt="" />
                 <div className={s.singleSellerInfoContainer}>
                   <Link to={link} className={s.singleSellerLink}>
-                    <div className={s.singleSellerName}>{name}</div>
+                    <h5 className={s.singleSellerName}>{name}</h5>
                   </Link>
                   <div className={s.singleSellerDescription}>{description}</div>
                   <div className={s.singleSellerPrice}>

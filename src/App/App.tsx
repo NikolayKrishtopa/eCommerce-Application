@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { Route, Routes } from 'react-router-dom'
 import CurrentUserContext from '@/contexts/CurrentUserContext'
 import useAuth from '@/hooks/useAuth'
+import ProtectedRoute from '@/hok/ProtectedRoute'
 import { FullPageLoader } from '@/Components/Loader/Loader'
 import SystMsgAlert from '../Components/SystMsgAlert/SystMsgAlert'
 import './App.scss'
@@ -50,10 +51,21 @@ export default function App() {
       <Header onLogout={logout} />
       <Routes>
         <Route path="/" element={<MainPage />} />
-        <Route path="/login" element={<LoginPage onSubmit={login} />} />
+        <Route
+          path="/login"
+          element={
+            <ProtectedRoute condition={!currentUser}>
+              <LoginPage onSubmit={login} />
+            </ProtectedRoute>
+          }
+        />
         <Route
           path="/register"
-          element={<RegistrationPage onSubmit={register} />}
+          element={
+            <ProtectedRoute condition={!currentUser}>
+              <RegistrationPage onSubmit={register} />
+            </ProtectedRoute>
+          }
         />
         <Route path="/*" element={<NotFoundPage />} />
       </Routes>

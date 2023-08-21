@@ -15,6 +15,7 @@ Within this project our team of 3 students is creating the following functionali
 As a backend for the project the [commercetools](https://commercetools.com/) platform is used.
 
 The design is graciously provided by ***✨Ruzanna***
+(<baldryan.ruzanna@gmail.com>, [LinkedIn](https://www.linkedin.com/in/ruzanna-baldryan/))
 
 ## Technology stack
 - Backend - **commercetools**

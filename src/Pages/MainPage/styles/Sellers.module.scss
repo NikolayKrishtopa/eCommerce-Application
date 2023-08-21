@@ -79,6 +79,14 @@
     font-size: calc(1rem + 2cqw);
   }
 
+  &Link {
+    width: max-content;
+    text-decoration: underline;
+    &:hover {
+      color: $color-info;
+    }
+  }
+
   &Name,
   &Price {
     font-family: $font-stack-heading;

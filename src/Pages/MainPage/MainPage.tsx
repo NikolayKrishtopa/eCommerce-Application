@@ -153,18 +153,16 @@ export default function MainPage() {
           {sellersData.map(
             ({ id, name, description, image, price, currency }) => (
               <li key={id} className={s.singleSeller}>
-                <Link to="/no-route" className={s.singleSellerLinkWrapper}>
-                  <img className={s.singleSellerImage} src={image} alt="" />
-                  <div className={s.singleSellerInfoContainer}>
+                <img className={s.singleSellerImage} src={image} alt="" />
+                <div className={s.singleSellerInfoContainer}>
+                  <Link to="/no-route" className={s.singleSellerLink}>
                     <div className={s.singleSellerName}>{name}</div>
-                    <div className={s.singleSellerDescription}>
-                      {description}
-                    </div>
-                    <div className={s.singleSellerPrice}>
-                      <span>{price}</span> <span>{currency}</span>
-                    </div>
+                  </Link>
+                  <div className={s.singleSellerDescription}>{description}</div>
+                  <div className={s.singleSellerPrice}>
+                    <span>{price}</span> <span>{currency}</span>
                   </div>
-                </Link>
+                </div>
               </li>
             ),
           )}

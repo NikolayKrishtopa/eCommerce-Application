@@ -13,7 +13,7 @@ import NotFoundPage from '../Pages/NotFoundPage/NotFoundPage'
 import Header from '../Components/Header/Header'
 
 export default function App() {
-  const [systMsg, setSystMsg] = useState('User successfully logged out')
+  const [systMsg, setSystMsg] = useState('')
   const [isError, setIsError] = useState(false)
   const [isFetching, setIsFetching] = useState(false)
 

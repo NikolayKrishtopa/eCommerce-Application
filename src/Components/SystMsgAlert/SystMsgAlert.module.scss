@@ -25,6 +25,13 @@
     left: r(50px);
     right: r(50px);
   }
+  @media (max-width: $break-sm) {
+    padding: r(12px) r(8px);
+    max-width: calc(100vw - 40px);
+    left: r(20px);
+    right: r(20px);
+    gap: r(10px);
+  }
 }
 
 .shown {
@@ -42,6 +49,10 @@
 .icon {
   width: r(72px);
   height: r(72px);
+  @media (max-width: $break-sm) {
+    width: r(40px);
+    height: r(40px);
+  }
 }
 
 .msgText {
@@ -51,6 +62,9 @@
 
   @media (max-width: $break-md) {
     font-size: 1.5rem;
+  }
+  @media (max-width: $break-sm) {
+    font-size: 1rem;
   }
 }
 
@@ -63,4 +77,15 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  @media (max-width: $break-sm) {
+    width: r(20px);
+    height: r(20px);
+  }
+}
+
+.closeIcon {
+  @media (max-width: $break-sm) {
+    width: r(15px);
+    height: r(15px);
+  }
 }

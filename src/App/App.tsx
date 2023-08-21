@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { Route, Routes } from 'react-router-dom'
 import CurrentUserContext from '@/contexts/CurrentUserContext'
 import useAuth from '@/hooks/useAuth'
+import { FullPageLoader } from '@/Components/Loader/Loader'
 import SystMsgAlert from '../Components/SystMsgAlert/SystMsgAlert'
 import './App.scss'
 import MainPage from '../Pages/MainPage/MainPage'
@@ -13,6 +14,7 @@ import Header from '../Components/Header/Header'
 export default function App() {
   const [systMsg, setSystMsg] = useState('')
   const [isError, setIsError] = useState(false)
+  const [isFetching, setIsFetching] = useState(false)
 
   const setupMsg = (msg: string, error: boolean) => {
     setSystMsg(msg)
@@ -29,21 +31,23 @@ export default function App() {
   useEffect(() => {
     checkAuth()
     console.log(currentUser)
+    setIsFetching(false)
   }, [])
 
   return (
     <CurrentUserContext.Provider value={currentUser}>
+      <FullPageLoader show={isFetching} />
+      <SystMsgAlert
+        msg={systMsg}
+        onResetMsg={resetSystMsg}
+        type={isError ? 'fail' : 'success'}
+      />
+      <SystMsgAlert
+        msg={systMsg}
+        onResetMsg={resetSystMsg}
+        type={isError ? 'fail' : 'success'}
+      />
       <Header onLogout={logout} />
-      <SystMsgAlert
-        msg={systMsg}
-        onResetMsg={resetSystMsg}
-        type={isError ? 'fail' : 'success'}
-      />
-      <SystMsgAlert
-        msg={systMsg}
-        onResetMsg={resetSystMsg}
-        type={isError ? 'fail' : 'success'}
-      />
       <Routes>
         <Route path="/" element={<MainPage />} />
         <Route path="/login" element={<LoginPage onSubmit={login} />} />

@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { Route, Routes } from 'react-router-dom'
 import CurrentUserContext from '@/contexts/CurrentUserContext'
 import useAuth from '@/hooks/useAuth'
-import ProtectedRoute from '@/hok/ProtectedRoute'
+import ProtectedRoute from '@/hok/ProtectedRoute/ProtectedRoute'
 import { FullPageLoader } from '@/Components/Loader/Loader'
 import SystMsgAlert from '../Components/SystMsgAlert/SystMsgAlert'
 import './App.scss'
@@ -13,7 +13,7 @@ import NotFoundPage from '../Pages/NotFoundPage/NotFoundPage'
 import Header from '../Components/Header/Header'
 
 export default function App() {
-  const [systMsg, setSystMsg] = useState('')
+  const [systMsg, setSystMsg] = useState('User successfully logged out')
   const [isError, setIsError] = useState(false)
   const [isFetching, setIsFetching] = useState(false)
 
@@ -22,7 +22,10 @@ export default function App() {
     setIsError(error)
   }
 
-  const { login, register, currentUser, logout, checkAuth } = useAuth(setupMsg)
+  const { login, register, currentUser, logout, checkAuth } = useAuth(
+    setupMsg,
+    setIsFetching,
+  )
 
   const resetSystMsg = () => {
     setSystMsg('')

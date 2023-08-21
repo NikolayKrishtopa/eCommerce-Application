@@ -11,12 +11,14 @@ import { apiRoot } from '../eComMerchant/client'
 
 export default function useAuth(
   setSystMsg: (msg: string, isSuccess: boolean) => void,
+  setIsFetching: (isFetching: boolean) => void,
 ) {
   const [currentUser, setCurrentUser] = useState<null | UserLoggedIn>(null)
   const isLoggedIn = !!currentUser
   const navigate = useNavigate()
 
   const login = (data: UserLoginPayloadType) => {
+    setIsFetching(true)
     apiRoot
       .login()
       .post({
@@ -41,9 +43,11 @@ export default function useAuth(
         setSystMsg(SYSTEM_MESSAGES.LOGIN_FAIL, true)
         localStorage.clear()
       })
+      .finally(() => setIsFetching(false))
   }
 
   const register = (data: UserRegisterPayloadType) => {
+    setIsFetching(true)
     apiRoot
       .customers()
       .post({
@@ -173,6 +177,7 @@ export default function useAuth(
       .catch((res) => {
         setSystMsg(res.body.message ?? SYSTEM_MESSAGES.REGISTER_FAIL, true)
       })
+      .finally(() => setIsFetching(false))
   }
 
   const logout = () => {
@@ -183,6 +188,7 @@ export default function useAuth(
   }
 
   const checkAuth = () => {
+    setIsFetching(true)
     if (currentUser) return
     const id = localStorage.getItem('currentUser')
     if (!id) {
@@ -204,6 +210,7 @@ export default function useAuth(
           id: res.body.id,
         })
       })
+      .finally(() => setIsFetching(false))
   }
 
   return { login, register, isLoggedIn, currentUser, logout, checkAuth }

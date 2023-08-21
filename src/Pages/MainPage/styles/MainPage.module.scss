@@ -1,3 +1,4 @@
+@use 'sass:color';
 @use '@/styles/abstracts' as *;
 
 .main {
@@ -22,6 +23,12 @@
   border-radius: r(10px);
   background-color: $color-primary;
   text-align: center;
+  transition-duration: 150ms;
+  transition-property: background-color;
+
+  &:hover {
+    background-color: $color-primary-light;
+  }
 }
 
 @mixin buttonExtendSmall {

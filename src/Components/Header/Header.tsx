@@ -49,7 +49,15 @@ export default function Header(props: HeaderProps) {
         {!currentUser && (
           <div className={s.authlink}>
             <NavLink to="/login" onClick={() => setBurgerActive(false)}>
-              Login / Register
+              Login
+            </NavLink>
+          </div>
+        )}
+
+        {!currentUser && (
+          <div className={s.authlink}>
+            <NavLink to="/register" onClick={() => setBurgerActive(false)}>
+              Register
             </NavLink>
           </div>
         )}

@@ -1,4 +1,4 @@
-type Values = {
+export type ValidateFormValues = {
   email: string
   password: string
   firstname: string
@@ -19,7 +19,7 @@ type Values = {
   setasdefaultbill: boolean
 }
 
-export default function validateForm(values: Values, path: string) {
+export default function validateForm(values: ValidateFormValues, path: string) {
   const errors = {
     email: '',
     password: '',
@@ -36,7 +36,7 @@ export default function validateForm(values: Values, path: string) {
     postal_code_bill: '',
     street_bill: '',
     house_bill: '',
-  }
+  } as ValidateFormValues
 
   const emailPattern =
     /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/

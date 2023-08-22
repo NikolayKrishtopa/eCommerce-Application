@@ -180,4 +180,47 @@ describe('Registration form validation', () => {
       })
     })
   })
+
+  describe('Address fields:', () => {
+    describe('Street: Must contain at least one character', () => {
+      const expectError = expectFormErrorMaker('street_ship')
+
+      testValid(`Letsby Avenue, Sheffield`, expectError(false))
+      testError(``, expectError(true))
+    })
+
+    describe('City: Must contain at least one character and no special characters or numbers', () => {
+      const expectError = expectFormErrorMaker('city_ship')
+
+      testValid(`Liverpool`, expectError(false))
+      testValid(`liverpool`, expectError(false))
+      testValid(`Liver Pool`, expectError(false))
+      testError(``, expectError(true))
+      ;[...Numbers, ...Specials].forEach((n) => {
+        const names = [`Liverpool${n}`, `Lever${n}pool`, `${n}Liverpool`]
+        test(`Error: ${names.join(', ')}`, () => {
+          names.forEach(expectError(true))
+        })
+      })
+    })
+
+    const COUNTRIES = [
+      { code: 'GB', zipCodes: ['SW1W 0NY', 'PO16 7GZ'] },
+      { code: 'DE', zipCodes: ['10115', '14199'] },
+      { code: 'FR', zipCodes: ['75001', '75020'] },
+      { code: 'BE', zipCodes: ['1000', '8000'] },
+      { code: 'NL', zipCodes: ['1000 AA', '1799 ZZ'] },
+    ]
+
+    describe('Postal code: Must follow the format for the country (e.g., 12345 or A1B 2C3 for the U.S. and Canada, respectively)', () => {
+      COUNTRIES.forEach(({ code, zipCodes }) => {
+        const expectError = expectFormErrorMaker('postal_code_ship', {
+          country_ship: code,
+        })
+        zipCodes.forEach((zip) => {
+          testValid(zip, expectError(false))
+        })
+      })
+    })
+  })
 })

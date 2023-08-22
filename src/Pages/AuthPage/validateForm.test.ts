@@ -145,4 +145,39 @@ describe('Registration form validation', () => {
       testError(`${' '}aABbCc${' '}`, expectError(true))
     })
   })
+
+  const Numbers = [0, 1, 2, 3, 4, 5, 6, 7, 8]
+  const Specials = ['$', '#', '&']
+
+  describe('Validate name', () => {
+    describe('First name: Must contain at least one character and no special characters or numbers', () => {
+      const expectError = expectFormErrorMaker('firstname')
+
+      testValid(`name`, expectError(false))
+      testValid(`Name`, expectError(false))
+      testError(``, expectError(true))
+      testError(`Na Me`, expectError(true))
+      ;[...Numbers, ...Specials].forEach((n) => {
+        const names = [`Name${n}`, `Na${n}me`, `${n}Name`]
+        test(`Error: ${names.join(', ')}`, () => {
+          names.forEach(expectError(true))
+        })
+      })
+    })
+
+    describe('Last name: Must contain at least one character and no special characters or numbers', () => {
+      const expectError = expectFormErrorMaker('lastname')
+
+      testValid(`surname`, expectError(false))
+      testValid(`Surname`, expectError(false))
+      testError(``, expectError(true))
+      testError(`Sur Name`, expectError(true))
+      ;[...Numbers, ...Specials].forEach((n) => {
+        const names = [`Surname${n}`, `Sur${n}name`, `${n}Surname`]
+        test(`Error: ${names.join(', ')}`, () => {
+          names.forEach(expectError(true))
+        })
+      })
+    })
+  })
 })

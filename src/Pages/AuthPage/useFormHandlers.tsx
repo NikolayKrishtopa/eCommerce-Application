@@ -1,4 +1,5 @@
 import { useState, useCallback, ChangeEvent } from 'react'
+import { useLocation } from 'react-router-dom'
 import validateForm from './validateForm'
 
 const initialValues = {
@@ -45,6 +46,8 @@ export default function useFormHandlers() {
   const [values, setValues] = useState(initialValues)
   const [isValid, setIsValid] = useState(false)
 
+  const location = useLocation()
+
   const handleChange = (e: ChangeEvent) => {
     const target = e.target as HTMLInputElement
     const { name, value, checked, type } = target
@@ -53,8 +56,13 @@ export default function useFormHandlers() {
     } else {
       setValues({ ...values, [name]: value })
     }
-    setErrors(validateForm({ ...values, [name]: value }))
-    setIsValid(!Object.values(errors).some((err) => err !== ''))
+
+    const currentErrors = validateForm(
+      { ...values, [name]: value },
+      location.pathname,
+    )
+    setErrors(currentErrors)
+    setIsValid(!Object.values(currentErrors).some((err) => err !== ''))
   }
 
   const resetForm = useCallback(

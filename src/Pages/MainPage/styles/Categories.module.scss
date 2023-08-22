@@ -43,6 +43,10 @@
   border-radius: r(10px);
   container-type: inline-size;
 
+  &:hover &Name {
+    text-decoration: underline;
+  }
+
   &,
   &LinkWrapper {
     display: block;

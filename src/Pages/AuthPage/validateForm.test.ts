@@ -95,7 +95,7 @@ describe('Registration form validation', () => {
 
     describe('Password must be at least 8 characters long', () => {
       testValid()('aA3456789')
-      testError()('aA345678')
+      testError()('aA34567')
       describe('With special symbol:', () => {
         testValid()('aA0$56789')
       })

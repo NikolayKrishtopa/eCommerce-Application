@@ -94,8 +94,8 @@ describe('Registration form validation', () => {
     const [error, testValid, testError] = importKeyFuncs('password')
 
     describe('Password must be at least 8 characters long', () => {
-      testValid()('123456Aa9')
-      testError()('aA0#5678')
+      testValid()('aA3456789')
+      testError()('aA345678')
       describe('With special symbol:', () => {
         testValid()('aA0$56789')
       })
@@ -121,13 +121,14 @@ describe('Registration form validation', () => {
         testValid()(`${'1'}bA#BbCc`)
       })
     })
-    describe('(Optional) Password must contain at least one special character (e.g., !@#$%^&*)', () => {
+    describe('(Optional) Password may contain special characters (e.g., !@#$%^&*)', () => {
       ;['!', '@', '#', '$', '%', '^', '&', '*'].forEach((s) => {
         const names = [`aABbCc89${s}`, `aABb${s}Cc89`, `${s}aABbCc89`]
         test(`Valid: ${names.join(', ')}`, () => {
           names.forEach((v) => expect(error(v)).toBeFalsy())
         })
       })
+      testValid()(`$!@#$%^&*Bb3`)
     })
     describe('Password must not contain leading or trailing whitespace', () => {
       testError()(`${' '}aABbCc`)

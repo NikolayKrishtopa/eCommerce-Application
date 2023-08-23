@@ -41,9 +41,11 @@ export default function validateForm(values: ValidateFormValues, path: string) {
   const emailPattern =
     /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
 
-  const passwordPattern = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])[a-zA-Z0-9]{8,}$/
+  // const passwordPattern = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])[a-zA-Z0-9]{8,}$/ //no special chars
+  const passwordPattern =
+    /^(?!.* )(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*]).{8,}$/ // with special chars
 
-  const namePattern = /^[a-z ,.'-]+$/i
+  const namePattern = /^[a-z,.'-]+$/i
 
   const allowedAge = 14
 
@@ -78,7 +80,7 @@ export default function validateForm(values: ValidateFormValues, path: string) {
     errors.password = 'Password is required'
   } else if (!passwordPattern.test(values.password)) {
     errors.password =
-      'Password must have min 8 characters, at least 1 uppercase letter, 1 lowercase letter, and 1 number'
+      'Password must have min 8 characters, at least 1 uppercase letter, 1 lowercase letter, 1 number and 1 of these !@#$%^&* special characters. Spaces are not allowed.'
   }
 
   if (path === '/register') {

@@ -32,7 +32,7 @@ describe('Loader tests', () => {
     })
   })
 
-  describe(`FullPageLoader removes no scroll side effect`, () => {
+  describe(`<FullPageLoader /> unset no scroll side effect`, () => {
     test(`-> on hide`, () => {
       const { rerender } = render(<FullPageLoader show />)
       expect(document.body).toHaveStyle({ overflow: 'hidden' })

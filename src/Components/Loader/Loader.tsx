@@ -15,11 +15,16 @@ export default function Loader(props: LoaderProps) {
   return <div className={cn(s.loader, className)} data-testid="loader" />
 }
 
+const toggleNoScroll = (force: boolean) => {
+  document.body.style.overflow = force ? 'hidden' : 'unset'
+}
+
 export function FullPageLoader(props: LoaderProps) {
   const { show = true, className = '' } = props
 
   useEffect(() => {
-    document.body.style.overflow = show ? 'hidden' : 'unset'
+    toggleNoScroll(show)
+    return () => toggleNoScroll(false)
   }, [show])
 
   if (!show) return null

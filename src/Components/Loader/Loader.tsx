@@ -12,7 +12,7 @@ export default function Loader(props: LoaderProps) {
 
   if (!show) return null
 
-  return <div className={cn(s.loader, className)} />
+  return <div className={cn(s.loader, className)} data-testid="loader" />
 }
 
 export function FullPageLoader(props: LoaderProps) {
@@ -25,7 +25,7 @@ export function FullPageLoader(props: LoaderProps) {
   if (!show) return null
 
   return (
-    <div className={cn(s.fullPageMask, className)}>
+    <div className={cn(s.fullPageMask, className)} data-testid="loader">
       <div className={cn(s.loader)} />
     </div>
   )

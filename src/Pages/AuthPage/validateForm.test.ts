@@ -128,6 +128,7 @@ describe('Registration form validation', () => {
           names.forEach((v) => expect(error(v)).toBeFalsy())
         })
       })
+      testValid()(`$!@#$%^&*Bb3`)
     })
     describe('Password must not contain leading or trailing whitespace', () => {
       testError()(`${' '}aABbCc`)

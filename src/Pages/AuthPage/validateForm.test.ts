@@ -121,7 +121,7 @@ describe('Registration form validation', () => {
         testValid()(`${'1'}bA#BbCc`)
       })
     })
-    describe('(Optional) Password must contain at least one special character (e.g., !@#$%^&*)', () => {
+    describe('(Optional) Password may contain special characters (e.g., !@#$%^&*)', () => {
       ;['!', '@', '#', '$', '%', '^', '&', '*'].forEach((s) => {
         const names = [`aABbCc89${s}`, `aABb${s}Cc89`, `${s}aABbCc89`]
         test(`Valid: ${names.join(', ')}`, () => {

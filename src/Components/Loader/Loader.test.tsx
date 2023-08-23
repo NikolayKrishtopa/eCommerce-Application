@@ -7,10 +7,10 @@ describe('Loader tests', () => {
     cleanup()
   })
 
-  test('Show... Hide... Show', () => {
-    const getLoader = () => screen.queryByTestId('loader')
+  const getLoader = () => screen.queryByTestId('loader')
 
-    test('FullPageLoader', () => {
+  describe('Loader mount/unmount on show attribute change', () => {
+    test('<FullPageLoader />', () => {
       const { rerender } = render(<FullPageLoader show />)
       expect(getLoader()).toBeInTheDocument()
 
@@ -20,7 +20,7 @@ describe('Loader tests', () => {
       render(<FullPageLoader show />)
       expect(getLoader()).toBeInTheDocument()
     })
-    test('Loader', () => {
+    test('<Loader />', () => {
       const { rerender } = render(<Loader show />)
       expect(getLoader()).toBeInTheDocument()
 
@@ -29,6 +29,23 @@ describe('Loader tests', () => {
 
       render(<Loader show />)
       expect(getLoader()).toBeInTheDocument()
+    })
+  })
+
+  describe(`FullPageLoader removes no scroll side effect`, () => {
+    test(`-> on hide`, () => {
+      const { rerender } = render(<FullPageLoader show />)
+      expect(document.body).toHaveStyle({ overflow: 'hidden' })
+
+      rerender(<FullPageLoader show={false} />)
+      expect(document.body).not.toHaveStyle({ overflow: 'hidden' })
+    })
+    test(`-> on unmount`, () => {
+      const { unmount } = render(<FullPageLoader show />)
+      expect(document.body).toHaveStyle({ overflow: 'hidden' })
+
+      unmount()
+      expect(document.body).not.toHaveStyle({ overflow: 'hidden' })
     })
   })
 })

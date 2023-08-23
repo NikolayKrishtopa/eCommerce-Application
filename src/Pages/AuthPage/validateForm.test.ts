@@ -94,7 +94,7 @@ describe('Registration form validation', () => {
     const [error, testValid, testError] = importKeyFuncs('password')
 
     describe('Password must be at least 8 characters long', () => {
-      testValid()('123456Aa9')
+      testValid()('aA3456789')
       testError()('aA345678')
       describe('With special symbol:', () => {
         testValid()('aA0$56789')

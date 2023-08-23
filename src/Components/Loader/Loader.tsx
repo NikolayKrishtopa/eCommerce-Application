@@ -24,8 +24,6 @@ export function FullPageLoader(props: LoaderProps) {
 
   if (!show) return null
 
-  if (!show) return null
-
   return (
     <div className={cn(s.fullPageMask, className)}>
       <div className={cn(s.loader)} />

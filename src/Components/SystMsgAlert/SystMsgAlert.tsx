@@ -24,7 +24,12 @@ export default function SystMsgAlert(props: SystAlertProps) {
     >
       <img src={skateIcon} alt="scateboard icon" className={s.icon} />
       <p className={s.msgText}>{msg}</p>
-      <button type="button" className={s.closeBtn} onClick={onResetMsg}>
+      <button
+        type="button"
+        className={s.closeBtn}
+        onClick={onResetMsg}
+        data-testid="exit-button"
+      >
         <img src={closeIcon} alt="Close button" className={s.closeIcon} />
       </button>
     </div>

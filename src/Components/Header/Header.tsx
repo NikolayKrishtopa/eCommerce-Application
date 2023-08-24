@@ -48,7 +48,11 @@ export default function Header(props: HeaderProps) {
 
         {!currentUser && (
           <div className={s.authlink}>
-            <NavLink to="/login" onClick={() => setBurgerActive(false)}>
+            <NavLink
+              to="/login"
+              onClick={() => setBurgerActive(false)}
+              data-testid="login-button"
+            >
               Login
             </NavLink>
           </div>
@@ -56,7 +60,11 @@ export default function Header(props: HeaderProps) {
 
         {!currentUser && (
           <div className={s.authlink}>
-            <NavLink to="/register" onClick={() => setBurgerActive(false)}>
+            <NavLink
+              to="/register"
+              onClick={() => setBurgerActive(false)}
+              data-testid="register-button"
+            >
               Register
             </NavLink>
           </div>
@@ -65,7 +73,11 @@ export default function Header(props: HeaderProps) {
 
       {currentUser && (
         <div className={s.profileLink}>
-          <NavLink to="/" onClick={() => setBurgerActive(false)}>
+          <NavLink
+            to="/"
+            onClick={() => setBurgerActive(false)}
+            data-testid="profile-button"
+          >
             <ProfileImg className={s.profileImg} />
           </NavLink>
         </div>
@@ -79,6 +91,7 @@ export default function Header(props: HeaderProps) {
               onLogout()
               setBurgerActive(false)
             }}
+            data-testid="logout-button"
           >
             <LogoutImg className={s.profileImg} />
           </NavLink>

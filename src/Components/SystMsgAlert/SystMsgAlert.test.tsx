@@ -2,6 +2,7 @@ import { vi, beforeEach, describe, test, expect } from 'vitest'
 import { render, cleanup, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import SystMsgAlert from './SystMsgAlert'
+import s from './SystMsgAlert.module.scss'
 
 describe('System message tests', () => {
   beforeEach(() => {
@@ -16,5 +17,17 @@ describe('System message tests', () => {
 
     await user.click(screen.getByTestId('exit-button'))
     expect(onResetMsg).toBeCalled()
+  })
+
+  test(`Toggle '.shown' className on empty 'msg' attribute`, async () => {
+    const { rerender } = render(
+      <SystMsgAlert msg="Error" onResetMsg={() => {}} />,
+    )
+
+    expect(screen.getByTestId('alert')).toHaveClass(s.shown)
+
+    rerender(<SystMsgAlert msg="" onResetMsg={() => {}} />)
+
+    expect(screen.getByTestId('alert')).not.toHaveClass(s.shown)
   })
 })

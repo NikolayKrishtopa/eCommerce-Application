@@ -1,4 +1,4 @@
-import { useState, useContext } from 'react'
+import { useState, useContext, useEffect } from 'react'
 import { NavLink, useLocation } from 'react-router-dom'
 import CurrentUserContext from '@/contexts/CurrentUserContext'
 import s from './Header.module.scss'
@@ -16,6 +16,10 @@ export default function Header(props: HeaderProps) {
 
   const isTransparent = () =>
     location.pathname === '/register' || location.pathname === '/login'
+
+  useEffect(() => {
+    document.body.style.overflow = burgerActive ? 'hidden' : 'unset'
+  }, [burgerActive])
 
   return (
     <header
@@ -94,7 +98,9 @@ export default function Header(props: HeaderProps) {
       <button
         type="button"
         className={!burgerActive ? s.burger : `${s.burger} ${s.active}`}
-        onClick={() => setBurgerActive(!burgerActive)}
+        onClick={() => {
+          setBurgerActive(!burgerActive)
+        }}
       >
         <span />
       </button>

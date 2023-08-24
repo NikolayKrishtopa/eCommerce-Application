@@ -26,6 +26,7 @@
       stroke: $color-primary;
     }
     @media screen and (max-width: $break-lg) {
+      background-color: $color-primary;
       .main-menu {
         color: unset;
       }
@@ -33,6 +34,10 @@
         stroke: $color-neutral-light;
       }
     }
+  }
+
+  @media screen and (max-width: $break-lm) {
+    position: fixed;
   }
 
   @media screen and (max-width: $break-sm) {

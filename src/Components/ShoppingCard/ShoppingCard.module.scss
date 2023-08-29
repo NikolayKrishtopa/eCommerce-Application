@@ -1,6 +1,7 @@
 @use '@/styles/abstracts' as *;
 
 .singleSeller {
+  position: relative;
   display: flex;
   flex-direction: column;
   color: $color-on-neutral-light;
@@ -55,7 +56,27 @@
   }
 
   &Price {
+    display: flex;
+    gap: 0.75ch;
     font-size: 1.1em;
+    text-transform: uppercase;
+  }
+
+  &Discount {
+    position: absolute;
+    top: 5%;
+    padding: 5px;
+    padding-inline: 10px 20px;
+    font-size: 1.3rem;
+    font-weight: bold;
+    color: $color-on-primary;
+    background-color: $color-danger;
+    border-radius: 0 25px 25px 0;
+    user-select: none;
+  }
+
+  &DiscountPrice {
+    color: $color-danger;
   }
 }
 

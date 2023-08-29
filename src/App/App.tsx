@@ -73,11 +73,6 @@ export default function App() {
         onResetMsg={resetSystMsg}
         type={isError ? 'fail' : 'success'}
       />
-      <SystMsgAlert
-        msg={systMsg}
-        onResetMsg={resetSystMsg}
-        type={isError ? 'fail' : 'success'}
-      />
       <Header onLogout={logout} />
       <Routes>
         <Route

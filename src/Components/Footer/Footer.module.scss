@@ -44,10 +44,13 @@ $footer-width: 1450px;
   justify-content: start;
   gap: r(20px) r(50px);
   list-style: none;
-}
 
-.link {
-  line-height: 1;
+  .linkItem {
+    line-height: 1;
+    &:hover {
+      text-decoration: underline;
+    }
+  }
 }
 
 .row2 {
@@ -65,10 +68,16 @@ $footer-width: 1450px;
   margin-top: r(20px);
 }
 
-.socials {
+.socialsGroup {
   display: flex;
   align-items: end;
   gap: r(20px);
+
+  .socialSvgLink:hover {
+    svg * {
+      fill: $color-info;
+    }
+  }
 }
 
 @media screen and (max-width: $break-sm) {

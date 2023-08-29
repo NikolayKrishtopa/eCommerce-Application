@@ -1,0 +1,68 @@
+@use '@/styles/abstracts' as *;
+
+.singleSeller {
+  display: flex;
+  flex-direction: column;
+  color: $color-on-neutral-light;
+  background-color: $color-neutral-light;
+  overflow: hidden;
+  border-radius: r(10px);
+  container-type: inline-size;
+
+  &Image {
+    width: 100%;
+    object-fit: cover;
+  }
+
+  &InfoContainer {
+    display: flex;
+    flex-grow: 1;
+    flex-direction: column;
+    padding: 5%;
+    font-size: clamp(1rem, 1rem + 2vw, 1.3rem);
+    font-size: calc(1rem + 2cqw);
+
+    > * {
+      margin-top: r(15px);
+    }
+  }
+
+  &Button {
+    @include button-reset;
+    width: max-content;
+    > * {
+      margin-block: 0;
+      line-height: 1;
+    }
+    &:not(.noHover) {
+      border-bottom: 2px solid currentColor;
+      &:hover {
+        color: $color-info;
+      }
+    }
+  }
+
+  &Name,
+  &Price {
+    font-family: $font-stack-heading;
+    font-weight: 600;
+    font-size: 1.2em;
+  }
+
+  &Description {
+    flex-grow: 1;
+    font-size: 0.8em;
+  }
+
+  &Price {
+    font-size: 1.1em;
+  }
+}
+
+@media screen and (max-width: $break-sm) {
+  .singleSeller {
+    &Image {
+      min-height: r(350px);
+    }
+  }
+}

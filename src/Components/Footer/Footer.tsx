@@ -36,7 +36,8 @@ export default function Footer() {
             </NavLink>
           </div>
           <div className={s.copyright}>
-            2023 The Skateshop. All rights reserved.
+            <span>2023 The Skateshop.</span>
+            <span>All rights reserved.</span>
           </div>
         </div>
         <div className={s.socialsGroup}>

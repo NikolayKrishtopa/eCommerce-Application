@@ -66,6 +66,9 @@ $footer-width: 1450px;
 
 .copyright {
   margin-top: r(20px);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75ch;
 }
 
 .socialsGroup {

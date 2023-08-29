@@ -84,6 +84,9 @@ $footer-width: 1450px;
 }
 
 @media screen and (max-width: $break-sm) {
+  .footer {
+    margin-top: r(35px);
+  }
   .row1 {
     flex-direction: column;
     margin-right: 0;

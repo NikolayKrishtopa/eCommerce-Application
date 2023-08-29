@@ -11,6 +11,28 @@ import LoginPage from '../Pages/AuthPage/LoginPage'
 import RegistrationPage from '../Pages/AuthPage/RegistrationPage'
 import NotFoundPage from '../Pages/NotFoundPage/NotFoundPage'
 import Header from '../Components/Header/Header'
+import Footer from '../Components/Footer/Footer'
+
+function PageBuilder(build: {
+  HeaderJSX: JSX.Element
+  FooterJSX: JSX.Element
+}) {
+  const { HeaderJSX, FooterJSX } = build
+  return function Page(props: {
+    header?: boolean
+    footer?: boolean
+    children: JSX.Element
+  }) {
+    const { header = false, children, footer = false } = props
+    return (
+      <>
+        {header && HeaderJSX}
+        {children}
+        {footer && FooterJSX}
+      </>
+    )
+  }
+}
 
 export default function App() {
   const [systMsg, setSystMsg] = useState('')
@@ -38,6 +60,11 @@ export default function App() {
     setIsFetching(false)
   }, [])
 
+  const Page = PageBuilder({
+    HeaderJSX: <Header onLogout={logout} />,
+    FooterJSX: <Footer />,
+  })
+
   return (
     <CurrentUserContext.Provider value={currentUser}>
       <FullPageLoader show={isFetching} />
@@ -53,12 +80,21 @@ export default function App() {
       />
       <Header onLogout={logout} />
       <Routes>
-        <Route path="/" element={<MainPage />} />
+        <Route
+          path="/"
+          element={
+            <Page header footer>
+              <MainPage />
+            </Page>
+          }
+        />
         <Route
           path="/login"
           element={
             <ProtectedRoute condition={!currentUser}>
-              <LoginPage onSubmit={login} />
+              <Page header>
+                <LoginPage onSubmit={login} />
+              </Page>
             </ProtectedRoute>
           }
         />
@@ -66,11 +102,20 @@ export default function App() {
           path="/register"
           element={
             <ProtectedRoute condition={!currentUser}>
-              <RegistrationPage onSubmit={register} />
+              <Page header>
+                <RegistrationPage onSubmit={register} />
+              </Page>
             </ProtectedRoute>
           }
         />
-        <Route path="/*" element={<NotFoundPage />} />
+        <Route
+          path="/*"
+          element={
+            <Page header>
+              <NotFoundPage />
+            </Page>
+          }
+        />
       </Routes>
     </CurrentUserContext.Provider>
   )

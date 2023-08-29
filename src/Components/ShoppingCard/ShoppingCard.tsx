@@ -1,19 +1,6 @@
 import cn from 'classnames'
+import type ShoppingCardProps from './ShoppingCard.d'
 import s from './ShoppingCard.module.scss'
-
-type ShoppingCardProps = {
-  className?: string
-  name: string
-  description: string
-  imageUrl: string
-  imageAlt: string
-  price: number
-  currency: string
-  discountRate?: number
-  onNameClick?: () => void
-  toFixed?: 2
-  intlLocale?: string
-}
 
 export default function ShoppingCard(props: ShoppingCardProps) {
   const {

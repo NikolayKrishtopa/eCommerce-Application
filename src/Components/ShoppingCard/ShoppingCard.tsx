@@ -12,6 +12,7 @@ type ShoppingCardProps = {
   discountRate?: number
   onNameClick?: () => void
   toFixed?: 2
+  intlLocale?: string
 }
 
 export default function ShoppingCard(props: ShoppingCardProps) {
@@ -23,14 +24,21 @@ export default function ShoppingCard(props: ShoppingCardProps) {
     currency,
     imageUrl,
     imageAlt,
-    discountRate = 1,
+    discountRate = undefined,
     onNameClick = undefined,
     toFixed = 2,
+    intlLocale = 'de-DE',
   } = props
 
   const isDiscount = typeof discountRate === 'number'
 
-  const formatPrice = (p: number) => `${p.toFixed(toFixed)} ${currency}`
+  const formatPrice = (p: number) =>
+    new Intl.NumberFormat(intlLocale, {
+      style: 'currency',
+      currencyDisplay: 'code',
+      currency,
+      maximumFractionDigits: toFixed,
+    }).format(p)
 
   const originalPrice = formatPrice(price)
   const discountPrice = formatPrice(price * (1 - (discountRate as number)))

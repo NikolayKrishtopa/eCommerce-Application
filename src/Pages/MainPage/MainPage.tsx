@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import heroImage from '@/assets/img/hero-skater.jpg'
 import vansImage from '@/assets/img/partners/vans.png'
 import nikeImage from '@/assets/img/partners/nike.png'
@@ -10,6 +10,7 @@ import decksImage from '@/assets/img/categories/decks.jpg'
 import wheelsImage from '@/assets/img/categories/wheels.jpg'
 import newInImage from '@/assets/img/trending/new-in.jpg'
 import latestImage from '@/assets/img/trending/latest.jpg'
+import ShoppingCard from '@/Components/ShoppingCard/ShoppingCard'
 import m from './styles/MainPage.module.scss'
 import h from './styles/Hero.module.scss'
 import c from './styles/Categories.module.scss'
@@ -70,12 +71,14 @@ const sellersData = Object.values(
   image: src,
   description:
     'Polar Herrington Chain smoker 2.0 wheel well 8.5” Skateboard deck (white)',
-  price: '69,99',
+  price: 69.99,
   currency: 'EUR',
   link: '/no-route',
 }))
 
 export default function MainPage() {
+  const navigate = useNavigate()
+
   return (
     <main className={m.main}>
       {/* Hero */}
@@ -153,17 +156,16 @@ export default function MainPage() {
         <ul className={s.sellers}>
           {sellersData.map(
             ({ id, name, description, image, link, price, currency }) => (
-              <li key={id} className={s.singleSeller}>
-                <img className={s.singleSellerImage} src={image} alt="" />
-                <div className={s.singleSellerInfoContainer}>
-                  <Link to={link} className={s.singleSellerLink}>
-                    <h5 className={s.singleSellerName}>{name}</h5>
-                  </Link>
-                  <div className={s.singleSellerDescription}>{description}</div>
-                  <div className={s.singleSellerPrice}>
-                    <span>{price}</span> <span>{currency}</span>
-                  </div>
-                </div>
+              <li key={id}>
+                <ShoppingCard
+                  name={name}
+                  description={description}
+                  imageUrl={image}
+                  imageAlt=""
+                  onNameClick={() => navigate(link)}
+                  price={price}
+                  currency={currency}
+                />
               </li>
             ),
           )}

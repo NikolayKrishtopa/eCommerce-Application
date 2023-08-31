@@ -1,6 +1,7 @@
 @use '@/styles/abstracts' as *;
 
 .auth-page {
+  margin-top: -$global-header-height;
   display: flex;
   width: 100%;
   min-height: 100vh;

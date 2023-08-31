@@ -3,11 +3,7 @@
 $header-height: $global-header-height;
 
 .header {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  z-index: $z-index-3-mask;
+  position: relative;
   height: $header-height;
   display: flex;
   justify-content: flex-end;
@@ -36,10 +32,6 @@ $header-height: $global-header-height;
         stroke: $color-neutral-light;
       }
     }
-  }
-
-  @media screen and (max-width: $break-lm) {
-    position: fixed;
   }
 
   @media screen and (max-width: $break-sm) {

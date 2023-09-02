@@ -28,3 +28,10 @@ export interface UserLoggedIn {
   firstName: string
   lastName: string
 }
+
+export interface ProductQueryParams {
+  limit: number
+  offset: number
+  filter?: string
+  sort?: string
+}

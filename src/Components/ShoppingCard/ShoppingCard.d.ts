@@ -6,9 +6,9 @@ type ShoppingCardProps = {
   imageAlt: string
   price: number
   currency: string
-  discountRate?: number
+  discountPrice?: number
   onNameClick?: () => void
-  toFixed?: 2
+  toFixed?: number
   intlLocale?: string
 }
 

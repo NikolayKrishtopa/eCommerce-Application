@@ -26,6 +26,7 @@ export default function useAuth(
     if (currentUser) return
     const id = localStorage.getItem('currentUser')
     if (!id) {
+      setIsFetching(false)
       return
     }
     apiRoot
@@ -39,7 +40,9 @@ export default function useAuth(
         }
         setCurrentUser(res.body)
       })
-      .finally(() => setIsFetching(false))
+      .finally(() => {
+        setIsFetching(false)
+      })
   }
 
   const login = async (data: UserLoginPayloadType) => {

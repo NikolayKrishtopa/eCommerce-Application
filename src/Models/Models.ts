@@ -3,7 +3,16 @@ export interface UserLoginPayloadType {
   password: string
 }
 
-export interface UserRegisterPayloadType extends UserLoginPayloadType {
+export interface UserUpdatePayloadType {
+  firstName: string
+  email: string
+  lastName: string
+  dateOfBirth: string
+}
+
+export interface UserRegisterPayloadType
+  extends UserLoginPayloadType,
+    UserUpdatePayloadType {
   firstName: string
   lastName: string
   dateOfBirth: string

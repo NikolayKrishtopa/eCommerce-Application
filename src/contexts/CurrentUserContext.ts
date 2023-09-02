@@ -1,6 +1,6 @@
 import { createContext } from 'react'
-import { UserLoggedIn } from '@/Models/Models'
+import { Customer } from '@commercetools/platform-sdk'
 
-const CurrentUserContext = createContext<null | UserLoggedIn>(null)
+const CurrentUserContext = createContext<null | Customer>(null)
 
 export default CurrentUserContext

@@ -1,0 +1,21 @@
+@use '@/styles/abstracts' as *;
+
+.breadcrumbs {
+  font-family: $font-stack-text;
+  font-size: 16px;
+  font-weight: 400;
+  text-transform: capitalize;
+}
+
+.crumb {
+  padding-right: 10px;
+
+  &::after {
+    content: '/';
+    padding-left: 10px;
+  }
+
+  &:last-child::after {
+    display: none;
+  }
+}

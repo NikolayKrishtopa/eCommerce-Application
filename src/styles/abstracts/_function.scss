@@ -1,8 +1,17 @@
 @use 'sass:math';
+@use 'sass:map';
 
 @function r($pxVal) {
   @if math.unit($pxVal) != 'px' {
     @error "Function argument must be a 'px' value";
   }
   @return math.div($pxVal, 16px) + rem;
+}
+
+@function def-var($var-name, $list) {
+  @if map.has-key($list, $var-name) {
+    @return var(#{$var-name}, #{map.get($list, $var-name)});
+  } @else {
+    @error "Unknown variable: " + $var-name;
+  }
 }

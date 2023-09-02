@@ -30,3 +30,17 @@ export interface UserRegisterPayloadType
   billingCountry: string
   billingCity: string
 }
+
+export interface UserLoggedIn {
+  id: string
+  email: string
+  firstName: string
+  lastName: string
+}
+
+export interface ProductQueryParams {
+  limit: number
+  offset: number
+  filter?: string
+  sort?: string
+}

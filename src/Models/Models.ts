@@ -3,7 +3,16 @@ export interface UserLoginPayloadType {
   password: string
 }
 
-export interface UserRegisterPayloadType extends UserLoginPayloadType {
+export interface UserUpdatePayloadType {
+  firstName: string
+  email: string
+  lastName: string
+  dateOfBirth: string
+}
+
+export interface UserRegisterPayloadType
+  extends UserLoginPayloadType,
+    UserUpdatePayloadType {
   firstName: string
   lastName: string
   dateOfBirth: string
@@ -22,9 +31,42 @@ export interface UserRegisterPayloadType extends UserLoginPayloadType {
   billingCity: string
 }
 
-export interface UserLoggedIn {
+export interface Root {
   id: string
+  version: number
+  versionModifiedAt: string
+  lastMessageSequenceNumber: number
+  createdAt: string
+  lastModifiedAt: string
+  lastModifiedBy: LastModifiedBy
+  createdBy: CreatedBy
   email: string
   firstName: string
   lastName: string
+  password: string
+  addresses: Address[]
+  shippingAddressIds: string[]
+  billingAddressIds: string[]
+  isEmailVerified: boolean
+  stores: Array<unknown>
+  authenticationMode: string
+}
+
+export interface LastModifiedBy {
+  clientId: string
+  isPlatformClient: boolean
+}
+
+export interface CreatedBy {
+  clientId: string
+  isPlatformClient: boolean
+}
+
+export interface Address {
+  id: string
+  streetName: string
+  streetNumber: string
+  postalCode: string
+  city: string
+  country: string
 }

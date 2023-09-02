@@ -44,10 +44,20 @@ export default function App() {
     setIsError(error)
   }
 
-  const { login, register, currentUser, logout, checkAuth } = useAuth(
-    setupMsg,
-    setIsFetching,
-  )
+  const {
+    login,
+    register,
+    currentUser,
+    logout,
+    checkAuth,
+    // isLoggedIn,
+    // setDefaultAddress,
+    // setAddress,
+    // addAddress,
+    // removeAddress,
+    // updateUserData,
+    // updatePassword,
+  } = useAuth(setupMsg, setIsFetching)
 
   const resetSystMsg = () => {
     setSystMsg('')
@@ -56,8 +66,6 @@ export default function App() {
   // remove those useEffects when done
   useEffect(() => {
     checkAuth()
-    console.log(currentUser)
-    setIsFetching(false)
   }, [])
 
   const Page = PageBuilder({

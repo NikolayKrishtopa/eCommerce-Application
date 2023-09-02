@@ -8,6 +8,9 @@ const SYSTEM_MESSAGES = {
   REGISTER_FAIL: 'Error while creating new user account. Please try again',
   INIT_ERROR: 'Error while app initialization',
   WELCOME_BACK: 'Welcome back',
+  EDIT_USER_SCSS: 'User profile successfully changed',
+  PASSWORD_CHANGE_SCSS: 'Your password successfully changed',
+  PASSWORD_CHANGE_ERR: 'Error during password change. Please try again',
 }
 
 const UI_TEXTS = {

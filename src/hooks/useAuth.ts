@@ -1,11 +1,15 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { CustomerUpdateAction } from '@commercetools/platform-sdk'
+import {
+  CustomerUpdateAction,
+  Customer,
+  Address,
+} from '@commercetools/platform-sdk'
 import { SYSTEM_MESSAGES } from '@/utils/constants'
 import {
   UserRegisterPayloadType,
   UserLoginPayloadType,
-  UserLoggedIn,
+  UserUpdatePayloadType,
 } from '@/Models/Models'
 import { apiRoot } from '../eComMerchant/client'
 
@@ -13,11 +17,32 @@ export default function useAuth(
   setSystMsg: (msg: string, isSuccess: boolean) => void,
   setIsFetching: (isFetching: boolean) => void,
 ) {
-  const [currentUser, setCurrentUser] = useState<null | UserLoggedIn>(null)
+  const [currentUser, setCurrentUser] = useState<null | Customer>(null)
   const isLoggedIn = !!currentUser
   const navigate = useNavigate()
 
-  const login = (data: UserLoginPayloadType) => {
+  const checkAuth = () => {
+    setIsFetching(true)
+    if (currentUser) return
+    const id = localStorage.getItem('currentUser')
+    if (!id) {
+      return
+    }
+    apiRoot
+      .customers()
+      .withId({ ID: id })
+      .get()
+      .execute()
+      .then((res) => {
+        if (!res || !res.body.firstName || !res.body.lastName) {
+          return
+        }
+        setCurrentUser(res.body)
+      })
+      .finally(() => setIsFetching(false))
+  }
+
+  const login = async (data: UserLoginPayloadType) => {
     setIsFetching(true)
     apiRoot
       .login()
@@ -26,17 +51,13 @@ export default function useAuth(
       })
       .execute()
       .then((res) => {
-        setCurrentUser({
-          id: res.body.customer.id,
-          email: res.body.customer.email,
-          firstName: res.body.customer.firstName as string,
-          lastName: res.body.customer.lastName as string,
-        })
         localStorage.setItem('currentUser', res.body.customer.id)
+
         setSystMsg(
           `${SYSTEM_MESSAGES.LOGIN_SCSS} ${res.body.customer.firstName}`,
           false,
         )
+        checkAuth()
         navigate('/')
       })
       .catch(() => {
@@ -187,31 +208,213 @@ export default function useAuth(
     navigate('/')
   }
 
-  const checkAuth = () => {
+  const setDefaultAddress = (
+    addressType: 'shipping' | 'billing',
+    addressId: string,
+  ) => {
     setIsFetching(true)
-    if (currentUser) return
-    const id = localStorage.getItem('currentUser')
-    if (!id) {
-      return
-    }
+    if (!currentUser) return
+    const { id } = currentUser
+
     apiRoot
       .customers()
       .withId({ ID: id })
-      .get()
-      .execute()
-      .then((res) => {
-        if (!res.body.firstName || !res.body.lastName) {
-          return
-        }
-        setCurrentUser({
-          email: res.body.email,
-          firstName: res.body.firstName,
-          lastName: res.body.lastName,
-          id: res.body.id,
-        })
+      .post({
+        body: {
+          version: currentUser.version,
+          actions: [
+            {
+              action:
+                addressType === 'billing'
+                  ? 'setDefaultBillingAddress'
+                  : 'setDefaultShippingAddress',
+              addressId,
+            },
+          ],
+        },
       })
+      .execute()
+      .then(() => setSystMsg(SYSTEM_MESSAGES.EDIT_USER_SCSS, false))
+      .catch((res) =>
+        setSystMsg(res.body.message ?? SYSTEM_MESSAGES.DEFAULT_ERROR, true),
+      )
       .finally(() => setIsFetching(false))
   }
 
-  return { login, register, isLoggedIn, currentUser, logout, checkAuth }
+  const setAddress = (
+    addressType: 'shipping' | 'billing',
+    addressId: string,
+  ) => {
+    setIsFetching(true)
+    if (!currentUser) return
+    const { id } = currentUser
+
+    apiRoot
+      .customers()
+      .withId({ ID: id })
+      .post({
+        body: {
+          version: currentUser.version,
+          actions: [
+            {
+              action:
+                addressType === 'billing'
+                  ? 'addBillingAddressId'
+                  : 'addShippingAddressId',
+              addressId,
+            },
+          ],
+        },
+      })
+      .execute()
+      .then(() => setSystMsg(SYSTEM_MESSAGES.EDIT_USER_SCSS, false))
+      .catch((res) =>
+        setSystMsg(res.body.message ?? SYSTEM_MESSAGES.DEFAULT_ERROR, true),
+      )
+      .finally(() => setIsFetching(false))
+  }
+
+  const addAddress = (address: Address) => {
+    setIsFetching(true)
+    if (!currentUser) return
+    const { id } = currentUser
+
+    apiRoot
+      .customers()
+      .withId({ ID: id })
+      .post({
+        body: {
+          version: currentUser.version,
+          actions: [
+            {
+              action: 'addAddress',
+              address,
+            },
+          ],
+        },
+      })
+      .execute()
+      .then(() => setSystMsg(SYSTEM_MESSAGES.EDIT_USER_SCSS, false))
+      .catch((res) =>
+        setSystMsg(res.body.message ?? SYSTEM_MESSAGES.DEFAULT_ERROR, true),
+      )
+      .finally(() => setIsFetching(false))
+  }
+
+  const removeAddress = (addressId: string) => {
+    setIsFetching(true)
+    if (!currentUser) return
+    const { id } = currentUser
+
+    apiRoot
+      .customers()
+      .withId({ ID: id })
+      .post({
+        body: {
+          version: currentUser.version,
+          actions: [
+            {
+              action: 'removeAddress',
+              addressId,
+            },
+          ],
+        },
+      })
+      .execute()
+      .then(() => setSystMsg(SYSTEM_MESSAGES.EDIT_USER_SCSS, false))
+      .catch((res) =>
+        setSystMsg(res.body.message ?? SYSTEM_MESSAGES.DEFAULT_ERROR, true),
+      )
+      .finally(() => setIsFetching(false))
+  }
+
+  const updateUserData = (userData: UserUpdatePayloadType) => {
+    if (!currentUser) return
+    setIsFetching(true)
+    const { firstName, lastName, dateOfBirth, email } = userData
+
+    const actions = [] as CustomerUpdateAction[]
+    if (firstName && firstName !== currentUser?.firstName) {
+      actions.push({
+        action: 'setFirstName',
+        firstName,
+      })
+    }
+    if (lastName && lastName !== currentUser?.lastName) {
+      actions.push({
+        action: 'setLastName',
+        lastName,
+      })
+    }
+    if (dateOfBirth && dateOfBirth !== currentUser?.dateOfBirth) {
+      actions.push({
+        action: 'setDateOfBirth',
+        dateOfBirth,
+      })
+    }
+    if (email && email !== currentUser?.email) {
+      actions.push({
+        action: 'changeEmail',
+        email,
+      })
+    }
+    if (actions.length === 0) return
+    apiRoot
+      .customers()
+      .withId({ ID: currentUser.id })
+      .post({
+        body: {
+          version: currentUser.version,
+          actions,
+        },
+      })
+      .execute()
+      .then(() => setSystMsg(SYSTEM_MESSAGES.EDIT_USER_SCSS, false))
+      .catch((res) =>
+        setSystMsg(res.body.message ?? SYSTEM_MESSAGES.DEFAULT_ERROR, true),
+      )
+      .finally(() => setIsFetching(false))
+  }
+
+  const updatePassword = (newPassword: string, currentPassword: string) => {
+    setIsFetching(true)
+    if (!currentUser) return
+    const { id } = currentUser
+
+    apiRoot
+      .customers()
+      .password()
+      .post({
+        body: {
+          id,
+          version: currentUser.version,
+          currentPassword,
+          newPassword,
+        },
+      })
+      .execute()
+      .then(() => setSystMsg(SYSTEM_MESSAGES.PASSWORD_CHANGE_SCSS, false))
+      .catch((res) =>
+        setSystMsg(
+          res.body.message ?? SYSTEM_MESSAGES.PASSWORD_CHANGE_ERR,
+          true,
+        ),
+      )
+      .finally(() => setIsFetching(false))
+  }
+
+  return {
+    login,
+    register,
+    isLoggedIn,
+    currentUser,
+    logout,
+    checkAuth,
+    setDefaultAddress,
+    setAddress,
+    addAddress,
+    removeAddress,
+    updateUserData,
+    updatePassword,
+  }
 }

@@ -9,6 +9,7 @@ import Loader from '@/Components/Loader/Loader'
 import ProductCard from '@/Components/ProductCard/ProductCard'
 import Breadcrumbs from '@/Components/Breadcrumbs/Breadcrumbs'
 import Search from '@/Components/Search/Search'
+import Categories from '@/Components/Categories/Categories'
 import s from './ProductsPage.module.scss'
 
 const PRODS_ON_PAGE = 15

@@ -112,6 +112,12 @@ export default function useAuth(
             },
           })
         }
+        if (data.dateOfBirth) {
+          actions.push({
+            action: 'setDateOfBirth',
+            dateOfBirth: data.dateOfBirth,
+          })
+        }
         apiRoot
           .customers()
           .withId({ ID: res.body.customer.id })

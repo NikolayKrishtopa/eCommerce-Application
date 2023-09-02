@@ -1,0 +1,87 @@
+@use '@/styles/abstracts' as *;
+
+$section-max-width: 805px;
+$section-padding: r(35px) r(30px);
+$section-row-gap: r(5px);
+$section-col-gap: r(25px);
+$section-border-radius: r(10px);
+$section-background: $color-neutral-light;
+$button-active-color: adjust-color($color-primary, $lightness: 20%);
+
+.section {
+  margin-inline: auto;
+  max-width: $section-max-width;
+  padding: $section-padding;
+  font-size: 1rem;
+  color: $color-on-neutral-light;
+  background-color: $section-background;
+  border-radius: $section-border-radius;
+  & {
+    --text-input-color-background: #{$section-background};
+  }
+}
+
+.fieldset {
+  border: 0;
+  margin: 0;
+  min-width: 0;
+  padding: 0.01em 0 0 0;
+}
+
+.legend {
+  padding: 0;
+  font-family: $font-stack-heading;
+  font-size: 2.5em;
+  font-weight: bold;
+  line-height: 1;
+}
+
+.hint {
+  margin: 0;
+  margin-top: r(15px);
+  font-size: 1em;
+  font-weight: bold;
+}
+
+.interactive {
+  margin-top: r(45px);
+  display: flex;
+  row-gap: $section-row-gap;
+  flex-direction: column;
+}
+
+@mixin FlexRow {
+  display: flex;
+  row-gap: $section-row-gap;
+  column-gap: $section-col-gap;
+  flex-direction: row;
+  > * {
+    flex-grow: 1;
+  }
+  @media screen and (max-width: $break-sm) {
+    flex-direction: column;
+  }
+}
+
+@mixin Button {
+  @include button-reset;
+  padding: r(15px);
+  display: block;
+  font-size: 1.75rem;
+  font-weight: bold;
+  color: $color-on-primary;
+  background-color: $color-primary;
+  border-radius: r(10px);
+  user-select: none;
+  transition-property: background-color;
+  transition-duration: 200ms;
+  @media screen and (max-width: $break-sm) {
+    font-size: 1.25rem;
+  }
+}
+
+@mixin ButtonActive {
+  &:active {
+    background-color: $button-active-color;
+  }
+}

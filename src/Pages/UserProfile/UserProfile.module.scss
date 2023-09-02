@@ -1,0 +1,134 @@
+@use 'sass:math';
+@use '@/styles/abstracts' as *;
+@use '@/Components/UIKit/TextInput/TextInput.module';
+@use './FormSection/FormSection.module';
+
+.main {
+  > * {
+    margin-top: r(40px);
+  }
+}
+
+.introSection {
+  position: relative;
+
+  $image-width: 135px;
+  $image-height: 390px;
+
+  &::before {
+    content: '';
+    display: block;
+    width: $image-width;
+    height: $image-height;
+    position: absolute;
+    bottom: 0;
+    left: calc(50% - #{FormSection.$section-max-width} / 2);
+    z-index: -1;
+    transform: translateX(-50%);
+    background-image: url('@/assets/img/skateboard.png');
+    background-repeat: no-repeat;
+    background-size: contain;
+    background-position: center;
+  }
+
+  @media screen and (max-width: $break-lg) {
+    $max-width: 85vw;
+    $aspect-ratio: math.div($image-width, $image-height);
+    margin-top: calc(
+      min(
+        #{math.div($image-width, 2)},
+        #{math.div($max-width, 2)} * #{$aspect-ratio}
+      )
+    );
+    &::before {
+      aspect-ratio: $aspect-ratio;
+      max-height: $max-width;
+      width: auto;
+      top: 0;
+      transform: translate(-50%, -50%) rotate(90deg);
+      left: 50%;
+    }
+  }
+}
+
+.link {
+  display: block;
+  text-decoration: underline;
+  &:hover {
+    color: $color-info;
+  }
+}
+
+.inputsRow {
+  @include FormSection.FlexRow;
+}
+
+.buttonsRow {
+  @include FormSection.FlexRow;
+  row-gap: r(15px);
+}
+
+.button {
+  @include FormSection.Button;
+  @include FormSection.ButtonActive;
+}
+
+.inputWith {
+  margin-bottom: TextInput.$error-min-height;
+  > *:not(:first-child) {
+    margin: r(5px) 0 0 r(2px);
+  }
+}
+
+.addAddress {
+  @include button-reset;
+  position: relative;
+  margin-inline: auto;
+  max-width: FormSection.$section-max-width;
+  aspect-ratio: 1.5;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  font-size: 3rem;
+  font-family: $font-stack-heading;
+  font-weight: normal;
+  color: $color-on-neutral-light;
+  background-color: $color-neutral-light;
+  border-radius: FormSection.$section-border-radius;
+
+  &:active {
+    color: FormSection.$button-active-color;
+  }
+
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    margin: 3%;
+    border-width: 5px;
+    border-style: dashed;
+    border-color: currentColor;
+  }
+
+  --icon-size: #{r(70px)};
+
+  svg {
+    width: var(--icon-size);
+    height: var(--icon-size);
+    path {
+      stroke: currentColor;
+    }
+  }
+
+  @media screen and (max-width: $break-sm) {
+    font-size: 2rem;
+    &::before {
+      border-width: 4px;
+    }
+    svg {
+      --icon-size: #{r(45px)};
+    }
+  }
+}

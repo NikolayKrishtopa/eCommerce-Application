@@ -4,6 +4,8 @@ import { ProductProjection } from '@commercetools/platform-sdk'
 import useProducts from '@/hooks/useProducts'
 import ShoppingCard from '@/Components/ShoppingCard/ShoppingCard'
 import Loader from '@/Components/Loader/Loader'
+import Breadcrumbs from '@/Components/Breadcrumbs/Breadcrumbs'
+import Search from '@/Components/Search/Search'
 import s from './ProductsPage.module.scss'
 
 const PRODS_ON_PAGE = 15
@@ -74,6 +76,11 @@ export default function ProductsPage() {
 
   return (
     <section className={s.productsContainer}>
+      <div className={s.breadAndSearch}>
+        <Breadcrumbs />
+        <Search />
+      </div>
+
       <h2 className={s.prodHeader}>
         Products {total && <span>[{total} products]</span>}
       </h2>

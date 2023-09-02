@@ -9,10 +9,11 @@
   overflow: hidden;
   border-radius: r(10px);
   container-type: inline-size;
+  flex-grow: 1;
 
   &Image {
     width: 100%;
-    object-fit: cover;
+    object-fit: contain;
   }
 
   &InfoContainer {

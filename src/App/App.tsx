@@ -12,6 +12,7 @@ import RegistrationPage from '../Pages/AuthPage/RegistrationPage'
 import NotFoundPage from '../Pages/NotFoundPage/NotFoundPage'
 import Header from '../Components/Header/Header'
 import Footer from '../Components/Footer/Footer'
+import ProductsPage from '../Pages/ProductsPage/ProductsPage'
 
 function PageBuilder(build: {
   HeaderJSX: JSX.Element
@@ -101,6 +102,14 @@ export default function App() {
                 <RegistrationPage onSubmit={register} />
               </Page>
             </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/catalog"
+          element={
+            <Page header footer>
+              <ProductsPage />
+            </Page>
           }
         />
         <Route

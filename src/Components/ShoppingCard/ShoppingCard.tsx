@@ -11,13 +11,13 @@ export default function ShoppingCard(props: ShoppingCardProps) {
     currency,
     imageUrl,
     imageAlt,
-    discountRate = undefined,
+    discountPrice = undefined,
     onNameClick = undefined,
     toFixed = 2,
     intlLocale = 'de-DE',
   } = props
 
-  const isDiscount = typeof discountRate === 'number'
+  const isDiscount = typeof discountPrice === 'number'
 
   const formatPrice = (p: number) =>
     new Intl.NumberFormat(intlLocale, {
@@ -28,7 +28,6 @@ export default function ShoppingCard(props: ShoppingCardProps) {
     }).format(p)
 
   const originalPrice = formatPrice(price)
-  const discountPrice = formatPrice(price * (1 - (discountRate as number)))
 
   const PriceJSX = isDiscount ? (
     <>
@@ -43,7 +42,7 @@ export default function ShoppingCard(props: ShoppingCardProps) {
     <div className={cn(s.singleSeller, className)}>
       {isDiscount && (
         <span className={s.singleSellerDiscount}>
-          -{Math.floor(discountRate * 100)}%
+          -{Math.round(((price - discountPrice) * 100) / price)}%
         </span>
       )}
       <img className={s.singleSellerImage} src={imageUrl} alt={imageAlt} />

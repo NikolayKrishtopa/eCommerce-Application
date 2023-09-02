@@ -13,6 +13,7 @@ import NotFoundPage from '../Pages/NotFoundPage/NotFoundPage'
 import Header from '../Components/Header/Header'
 import Footer from '../Components/Footer/Footer'
 import ProductsPage from '../Pages/ProductsPage/ProductsPage'
+import UserProfile from '../Pages/UserProfile/UserProfile'
 
 function PageBuilder(build: {
   HeaderJSX: JSX.Element
@@ -74,7 +75,6 @@ export default function App() {
         onResetMsg={resetSystMsg}
         type={isError ? 'fail' : 'success'}
       />
-      <Header onLogout={logout} />
       <Routes>
         <Route
           path="/"
@@ -110,6 +110,15 @@ export default function App() {
             <Page header footer>
               <ProductsPage />
             </Page>
+        />
+        <Route
+          path="/profile"
+          element={
+            <ProtectedRoute condition={!currentUser}>
+              <Page header footer>
+                <UserProfile />
+              </Page>
+            </ProtectedRoute>
           }
         />
         <Route

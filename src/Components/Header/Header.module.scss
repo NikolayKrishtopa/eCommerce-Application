@@ -1,12 +1,10 @@
 @use '@/styles/abstracts' as *;
 
+$header-height: $global-header-height;
+
 .header {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  z-index: $z-index-3-mask;
-  height: 80px;
+  position: relative;
+  height: $header-height;
   display: flex;
   justify-content: flex-end;
   align-items: center;
@@ -36,10 +34,6 @@
     }
   }
 
-  @media screen and (max-width: $break-lm) {
-    position: fixed;
-  }
-
   @media screen and (max-width: $break-sm) {
     gap: 4%;
   }
@@ -65,7 +59,7 @@
     position: fixed;
     height: 100%;
     width: 100%;
-    top: 80px;
+    top: $header-height;
     bottom: 0;
     left: -1000px;
     z-index: $z-index-4-sidebar;

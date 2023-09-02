@@ -307,6 +307,34 @@ export default function useAuth(
       .finally(() => setIsFetching(false))
   }
 
+  const editAddress = (addressId: string, address: Address) => {
+    setIsFetching(true)
+    if (!currentUser) return
+    const { id } = currentUser
+
+    apiRoot
+      .customers()
+      .withId({ ID: id })
+      .post({
+        body: {
+          version: currentUser.version,
+          actions: [
+            {
+              action: 'changeAddress',
+              addressId,
+              address,
+            },
+          ],
+        },
+      })
+      .execute()
+      .then(() => setSystMsg(SYSTEM_MESSAGES.EDIT_USER_SCSS, false))
+      .catch((res) =>
+        setSystMsg(res.body.message ?? SYSTEM_MESSAGES.DEFAULT_ERROR, true),
+      )
+      .finally(() => setIsFetching(false))
+  }
+
   const removeAddress = (addressId: string) => {
     setIsFetching(true)
     if (!currentUser) return
@@ -422,5 +450,6 @@ export default function useAuth(
     removeAddress,
     updateUserData,
     updatePassword,
+    editAddress,
   }
 }

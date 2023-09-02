@@ -57,6 +57,7 @@ export default function App() {
     // removeAddress,
     // updateUserData,
     // updatePassword,
+    // editAddress,
   } = useAuth(setupMsg, setIsFetching)
 
   const resetSystMsg = () => {

@@ -52,13 +52,12 @@ export default function App() {
     currentUser,
     logout,
     checkAuth,
-    // isLoggedIn,
     // setDefaultAddress,
     // setAddress,
     // addAddress,
     // removeAddress,
-    // updateUserData,
-    // updatePassword,
+    updateUserData,
+    updatePassword,
     // editAddress,
   } = useAuth(setupMsg, setIsFetching)
 
@@ -124,9 +123,12 @@ export default function App() {
         <Route
           path="/profile"
           element={
-            <ProtectedRoute condition={!currentUser}>
+            <ProtectedRoute condition={!!currentUser}>
               <Page header footer>
-                <UserProfile />
+                <UserProfile
+                  onUserUpdate={updateUserData}
+                  onPasswordChange={updatePassword}
+                />
               </Page>
             </ProtectedRoute>
           }

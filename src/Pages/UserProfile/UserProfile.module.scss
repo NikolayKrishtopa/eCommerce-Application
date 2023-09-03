@@ -73,6 +73,11 @@
   @include FormSection.ButtonActive;
 }
 
+.buttonDisabled {
+  opacity: 50%;
+  pointer-events: none;
+}
+
 .inputWith {
   margin-bottom: TextInput.$error-min-height;
   > *:not(:first-child) {

@@ -403,7 +403,10 @@ export default function useAuth(
         },
       })
       .execute()
-      .then(() => setSystMsg(SYSTEM_MESSAGES.EDIT_USER_SCSS, false))
+      .then((res) => {
+        setCurrentUser(res.body)
+        setSystMsg(SYSTEM_MESSAGES.EDIT_USER_SCSS, false)
+      })
       .catch((res) =>
         setSystMsg(res.body.message ?? SYSTEM_MESSAGES.DEFAULT_ERROR, true),
       )
@@ -427,7 +430,10 @@ export default function useAuth(
         },
       })
       .execute()
-      .then(() => setSystMsg(SYSTEM_MESSAGES.PASSWORD_CHANGE_SCSS, false))
+      .then((res) => {
+        setCurrentUser(res.body)
+        setSystMsg(SYSTEM_MESSAGES.PASSWORD_CHANGE_SCSS, false)
+      })
       .catch((res) =>
         setSystMsg(
           res.body.message ?? SYSTEM_MESSAGES.PASSWORD_CHANGE_ERR,

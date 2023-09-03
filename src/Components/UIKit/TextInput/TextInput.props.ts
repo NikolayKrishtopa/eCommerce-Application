@@ -1,5 +1,5 @@
 type TextInputProps = JSX.IntrinsicElements['input'] & {
-  type?: 'text' | 'email' | 'password'
+  type?: 'text' | 'email' | 'password' | 'date'
   id?: string | number
   label?: string
   error?: string

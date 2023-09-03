@@ -52,13 +52,14 @@ export default function App() {
     currentUser,
     logout,
     checkAuth,
-    // setDefaultAddress,
-    // setAddress,
-    // addAddress,
-    // removeAddress,
+    setDefaultAddress,
+    setAddress,
+    addAddress,
+    removeAddress,
     updateUserData,
     updatePassword,
-    // editAddress,
+    editAddress,
+    unsetAddress,
   } = useAuth(setupMsg, setIsFetching)
 
   const resetSystMsg = () => {
@@ -128,6 +129,12 @@ export default function App() {
                 <UserProfile
                   onUserUpdate={updateUserData}
                   onPasswordChange={updatePassword}
+                  onAddAddress={addAddress}
+                  onEditAddress={editAddress}
+                  onSetAddress={setAddress}
+                  onRemoveAddress={removeAddress}
+                  onSetDefaultAddress={setDefaultAddress}
+                  onUnsetAddress={unsetAddress}
                 />
               </Page>
             </ProtectedRoute>

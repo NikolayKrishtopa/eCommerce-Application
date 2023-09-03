@@ -81,7 +81,7 @@
 .inputWith {
   margin-bottom: TextInput.$error-min-height;
   > *:not(:first-child) {
-    margin: r(5px) 0 0 r(2px);
+    margin: r(10px) 0 0 0;
   }
 }
 
@@ -136,4 +136,60 @@
       --icon-size: #{r(45px)};
     }
   }
+}
+.inputBox {
+  position: relative;
+  flex-grow: 1;
+
+  label {
+    position: absolute;
+    top: -10px;
+    left: 10px;
+    background: $color-neutral-light;
+    padding: 0 5px;
+    font-size: 16px;
+  }
+
+  .inputFieldBox {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 64px;
+    border-radius: 10px;
+    border: 1.5px solid $color-on-neutral-light-pale;
+    width: 100%;
+
+    &.inputError {
+      border: 1.5px solid $color-error;
+      color: $color-error;
+      * {
+        color: $color-error;
+      }
+    }
+  }
+
+  input,
+  select {
+    border: none;
+    font-size: 16px;
+    flex-grow: 1;
+    padding: 10px;
+
+    &:focus {
+      outline: none;
+    }
+  }
+
+  select {
+    margin-right: 10px;
+  }
+
+  input::placeholder,
+  select option[disabled='true'] {
+    color: $color-neutral-light-additional;
+  }
+}
+
+.addressesWrapper {
+  gap: 20px;
 }

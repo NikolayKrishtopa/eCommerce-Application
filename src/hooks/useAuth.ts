@@ -22,8 +22,8 @@ export default function useAuth(
   const navigate = useNavigate()
 
   const checkAuth = () => {
-    setIsFetching(true)
     if (currentUser) return
+    setIsFetching(true)
     const id = localStorage.getItem('currentUser')
     if (!id) {
       return
@@ -217,17 +217,19 @@ export default function useAuth(
   const setDefaultAddress = (
     addressType: 'shipping' | 'billing',
     addressId: string,
+    userVersion?: number,
   ) => {
     setIsFetching(true)
     if (!currentUser) return
     const { id } = currentUser
+    const version = userVersion || currentUser.version
 
     apiRoot
       .customers()
       .withId({ ID: id })
       .post({
         body: {
-          version: currentUser.version,
+          version,
           actions: [
             {
               action:
@@ -240,7 +242,10 @@ export default function useAuth(
         },
       })
       .execute()
-      .then(() => setSystMsg(SYSTEM_MESSAGES.EDIT_USER_SCSS, false))
+      .then((res) => {
+        setCurrentUser(res.body)
+        setSystMsg(SYSTEM_MESSAGES.EDIT_USER_SCSS, false)
+      })
       .catch((res) =>
         setSystMsg(res.body.message ?? SYSTEM_MESSAGES.DEFAULT_ERROR, true),
       )
@@ -248,6 +253,44 @@ export default function useAuth(
   }
 
   const setAddress = (
+    addressType: 'shipping' | 'billing',
+    addressId: string,
+    userVersion?: number,
+  ) => {
+    setIsFetching(true)
+    if (!currentUser) return
+    const { id } = currentUser
+    const version = userVersion || currentUser.version
+
+    apiRoot
+      .customers()
+      .withId({ ID: id })
+      .post({
+        body: {
+          version,
+          actions: [
+            {
+              action:
+                addressType === 'billing'
+                  ? 'addBillingAddressId'
+                  : 'addShippingAddressId',
+              addressId,
+            },
+          ],
+        },
+      })
+      .execute()
+      .then((res) => {
+        setCurrentUser(res.body)
+        setSystMsg(SYSTEM_MESSAGES.EDIT_USER_SCSS, false)
+      })
+      .catch((res) =>
+        setSystMsg(res.body.message ?? SYSTEM_MESSAGES.DEFAULT_ERROR, true),
+      )
+      .finally(() => setIsFetching(false))
+  }
+
+  const unsetAddress = (
     addressType: 'shipping' | 'billing',
     addressId: string,
   ) => {
@@ -265,22 +308,29 @@ export default function useAuth(
             {
               action:
                 addressType === 'billing'
-                  ? 'addBillingAddressId'
-                  : 'addShippingAddressId',
+                  ? 'removeBillingAddressId'
+                  : 'removeShippingAddressId',
               addressId,
             },
           ],
         },
       })
       .execute()
-      .then(() => setSystMsg(SYSTEM_MESSAGES.EDIT_USER_SCSS, false))
+      .then((res) => {
+        setCurrentUser(res.body)
+        setSystMsg(SYSTEM_MESSAGES.EDIT_USER_SCSS, false)
+      })
       .catch((res) =>
         setSystMsg(res.body.message ?? SYSTEM_MESSAGES.DEFAULT_ERROR, true),
       )
       .finally(() => setIsFetching(false))
   }
 
-  const addAddress = (address: Address) => {
+  const addAddress = (
+    address: Address,
+    setDefaultShippingAddress: boolean,
+    setDefaultBillingAddress: boolean,
+  ) => {
     setIsFetching(true)
     if (!currentUser) return
     const { id } = currentUser
@@ -300,7 +350,53 @@ export default function useAuth(
         },
       })
       .execute()
-      .then(() => setSystMsg(SYSTEM_MESSAGES.EDIT_USER_SCSS, false))
+      .then((res) => {
+        setCurrentUser(res.body)
+        const newAddress = res?.body.addresses?.find(
+          (a) =>
+            a.city === address.city &&
+            a.streetName === address.streetName &&
+            a.streetNumber === address.streetNumber,
+        )
+        if (!newAddress?.id) return
+        if (setDefaultShippingAddress && !setDefaultBillingAddress) {
+          setDefaultAddress('shipping', newAddress.id, res.body.version)
+        } else if (setDefaultBillingAddress && !setDefaultShippingAddress) {
+          setDefaultAddress('billing', newAddress.id, res.body.version)
+        } else if (setDefaultBillingAddress && setDefaultShippingAddress) {
+          apiRoot
+            .customers()
+            .withId({ ID: id })
+            .post({
+              body: {
+                version: res.body.version,
+                actions: [
+                  {
+                    action: 'setDefaultBillingAddress',
+                    addressId: newAddress.id,
+                  },
+                  {
+                    action: 'setDefaultShippingAddress',
+                    addressId: newAddress.id,
+                  },
+                ],
+              },
+            })
+            .execute()
+            .then((res2) => {
+              setCurrentUser(res2.body)
+              setSystMsg(SYSTEM_MESSAGES.EDIT_USER_SCSS, false)
+            })
+            .catch((res2) =>
+              setSystMsg(
+                res2.body.message ?? SYSTEM_MESSAGES.DEFAULT_ERROR,
+                true,
+              ),
+            )
+            .finally(() => setIsFetching(false))
+        }
+        setSystMsg(SYSTEM_MESSAGES.EDIT_USER_SCSS, false)
+      })
       .catch((res) =>
         setSystMsg(res.body.message ?? SYSTEM_MESSAGES.DEFAULT_ERROR, true),
       )
@@ -328,7 +424,10 @@ export default function useAuth(
         },
       })
       .execute()
-      .then(() => setSystMsg(SYSTEM_MESSAGES.EDIT_USER_SCSS, false))
+      .then((res) => {
+        setCurrentUser(res.body)
+        setSystMsg(SYSTEM_MESSAGES.EDIT_USER_SCSS, false)
+      })
       .catch((res) =>
         setSystMsg(res.body.message ?? SYSTEM_MESSAGES.DEFAULT_ERROR, true),
       )
@@ -355,7 +454,10 @@ export default function useAuth(
         },
       })
       .execute()
-      .then(() => setSystMsg(SYSTEM_MESSAGES.EDIT_USER_SCSS, false))
+      .then((res) => {
+        setCurrentUser(res.body)
+        setSystMsg(SYSTEM_MESSAGES.EDIT_USER_SCSS, false)
+      })
       .catch((res) =>
         setSystMsg(res.body.message ?? SYSTEM_MESSAGES.DEFAULT_ERROR, true),
       )
@@ -457,5 +559,6 @@ export default function useAuth(
     updateUserData,
     updatePassword,
     editAddress,
+    unsetAddress,
   }
 }

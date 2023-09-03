@@ -1,0 +1,34 @@
+@use '@/styles/abstracts' as *;
+
+.address {
+  margin-top: 30px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  &:first-of-type {
+    margin-top: 0;
+  }
+}
+.addressText {
+  font-family: $font-stack-brand;
+  margin: 0;
+  font-size: 14px;
+}
+.btnWrapper {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  font-family: $font-stack-brand;
+}
+
+.button {
+  @include clickable;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  background-color: transparent;
+  font-size: 14px;
+  color: $color-info;
+  text-decoration: underline;
+}

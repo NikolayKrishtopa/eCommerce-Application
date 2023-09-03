@@ -6,6 +6,7 @@ type TextInputProps = JSX.IntrinsicElements['input'] & {
   errorJump?: boolean
   icon?: JSX.Element
   iconError?: JSX.Element
+  children?: JSX.Element
   onIconClick?: () => void
 }
 

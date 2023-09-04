@@ -1,4 +1,5 @@
 import { useNavigate } from 'react-router-dom'
+import { useEffect } from 'react'
 import { ProtectedRouteProps } from './ProtectedRoute.props'
 
 function ProtectedRoute(props: ProtectedRouteProps) {
@@ -6,10 +7,15 @@ function ProtectedRoute(props: ProtectedRouteProps) {
 
   const navigate = useNavigate()
 
+  useEffect(() => {
+    if (!condition) {
+      navigate('/')
+    }
+  }, [condition])
+
   if (condition) {
     return children
   }
-  navigate('/')
 }
 
 export default ProtectedRoute

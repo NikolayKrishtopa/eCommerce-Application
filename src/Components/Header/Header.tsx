@@ -77,7 +77,7 @@ export default function Header(props: HeaderProps) {
       {currentUser && (
         <div className={s.profileLink}>
           <NavLink
-            to="/"
+            to="/profile"
             onClick={() => setBurgerActive(false)}
             data-testid="profile-button"
           >

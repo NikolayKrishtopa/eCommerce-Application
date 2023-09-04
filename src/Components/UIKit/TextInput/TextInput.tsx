@@ -15,6 +15,7 @@ export default function TextInput(props: TextInputProps) {
     iconError,
     onIconClick,
     disabled,
+    children,
     ...inputProps
   } = props
 

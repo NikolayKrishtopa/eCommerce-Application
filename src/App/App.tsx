@@ -52,14 +52,14 @@ export default function App() {
     currentUser,
     logout,
     checkAuth,
-    // isLoggedIn,
-    // setDefaultAddress,
-    // setAddress,
-    // addAddress,
-    // removeAddress,
-    // updateUserData,
-    // updatePassword,
-    // editAddress,
+    setDefaultAddress,
+    setAddress,
+    addAddress,
+    removeAddress,
+    updateUserData,
+    updatePassword,
+    editAddress,
+    unsetAddress,
   } = useAuth(setupMsg, setIsFetching)
 
   const resetSystMsg = () => {
@@ -114,7 +114,7 @@ export default function App() {
           }
         />
         <Route
-          path="/catalog"
+          path="/catalog/*"
           element={
             <Page header footer>
               <ProductsPage />
@@ -124,9 +124,18 @@ export default function App() {
         <Route
           path="/profile"
           element={
-            <ProtectedRoute condition={!currentUser}>
+            <ProtectedRoute condition={!!currentUser}>
               <Page header footer>
-                <UserProfile />
+                <UserProfile
+                  onUserUpdate={updateUserData}
+                  onPasswordChange={updatePassword}
+                  onAddAddress={addAddress}
+                  onEditAddress={editAddress}
+                  onSetAddress={setAddress}
+                  onRemoveAddress={removeAddress}
+                  onSetDefaultAddress={setDefaultAddress}
+                  onUnsetAddress={unsetAddress}
+                />
               </Page>
             </ProtectedRoute>
           }

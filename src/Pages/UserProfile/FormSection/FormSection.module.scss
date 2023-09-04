@@ -16,9 +16,6 @@ $button-active-color: adjust-color($color-primary, $lightness: 20%);
   color: $color-on-neutral-light;
   background-color: $section-background;
   border-radius: $section-border-radius;
-  & {
-    --text-input-color-background: #{$section-background};
-  }
 }
 
 .fieldset {

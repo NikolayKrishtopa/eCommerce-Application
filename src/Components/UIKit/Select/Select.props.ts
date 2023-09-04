@@ -12,7 +12,6 @@ type SelectProps = Omit<
   'children' | 'icon' | 'iconError' | 'onIconClick' | 'htmlFor'
 > & {
   currentValue: SelectOptionProps['value']
-  id?: string | number
   children?: ReactElement<SelectOptionProps> | ReactElement<SelectOptionProps>[]
   open?: boolean
   onOptionChange?: (value: string) => void

@@ -22,25 +22,27 @@ export default function TextInput(props: TextInputProps) {
   const inputId = useMemoId(id)
 
   return (
-    <InputSlot
-      htmlFor={inputId}
-      className={className}
-      label={label}
-      error={error}
-      errorJump={errorJump}
-      icon={icon}
-      iconError={iconError}
-      onIconClick={onIconClick}
-      disabled={disabled}
-    >
-      <input
-        className="text-input"
-        type={type}
-        id={inputId}
+    <div className="text-input">
+      <InputSlot
+        htmlFor={inputId}
+        className={className}
+        label={label}
+        error={error}
+        errorJump={errorJump}
+        icon={icon}
+        iconError={iconError}
+        onIconClick={onIconClick}
         disabled={disabled}
-        /* eslint-disable-next-line react/jsx-props-no-spreading */
-        {...inputProps}
-      />
-    </InputSlot>
+      >
+        <input
+          className="text-input__input"
+          type={type}
+          id={inputId}
+          disabled={disabled}
+          /* eslint-disable-next-line react/jsx-props-no-spreading */
+          {...inputProps}
+        />
+      </InputSlot>
+    </div>
   )
 }

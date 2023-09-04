@@ -1,16 +1,22 @@
+import { ReactElement, ReactNode } from 'react'
 import InputSlotProps from '../InputSlot/InputSlot.props'
 
-type SelectProps = JSX.IntrinsicElements['select'] &
-  Omit<
-    InputSlotProps,
-    'children' | 'icon' | 'iconError' | 'onIconClick' | 'htmlFor'
-  > & {
-    id?: string | number
-    options?: JSX.Element
-    children?: React.ReactNode[]
-  }
+type SelectOptionProps = {
+  value: string
+  disabled?: boolean
+  children?: ReactNode
+}
 
-type SelectOptionProps = JSX.IntrinsicElements['option']
+type SelectProps = Omit<
+  InputSlotProps,
+  'children' | 'icon' | 'iconError' | 'onIconClick' | 'htmlFor'
+> & {
+  currentValue: SelectOptionProps['value']
+  id?: string | number
+  children?: ReactElement<SelectOptionProps> | ReactElement<SelectOptionProps>[]
+  open?: boolean
+  onOptionChange?: (value: string) => void
+}
 
 export default SelectProps
 export type { SelectOptionProps }

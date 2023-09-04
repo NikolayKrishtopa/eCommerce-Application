@@ -2,10 +2,15 @@
 @use '@/Components/UIKit/InputSlot/InputSlot';
 
 $css-variables: (
-  --select-option-background: $color-neutral-light,
+  --select-color-main: InputSlot.use-var(--input-slot-color-main),
+  --select-color-background: InputSlot.use-var(--input-slot-color-background),
   --select-inline-padding: InputSlot.use-var(--input-slot-label-base-line),
+  --select-border-width: InputSlot.use-var(--input-slot-border-width),
   --select-font-family: inherit,
   --select-font-size: 1em,
+  --select-option-inline-padding: r(10px),
+  --select-option-disabled-opacity:
+    InputSlot.use-var(--input-slot-disabled-opacity),
 );
 
 @function use-var($var-name) {
@@ -13,22 +18,66 @@ $css-variables: (
 }
 
 .select {
-  width: 100%;
+  position: relative;
+  font-size: use-var(--select-font-size);
+  font-family: use-var(--select-font-family);
+  color: use-var(--select-color-main);
 
-  &__select {
-    position: relative;
-    height: InputSlot.$box-min-height;
+  &__placeholder,
+  &__dropdown,
+  &__options-list,
+  &__option,
+  &__option-button {
     width: 100%;
+  }
+
+  &__placeholder,
+  &__option-button {
+    @include button-reset;
     padding-inline: use-var(--select-inline-padding);
-    font-size: use-var(--select-font-size);
-    font-family: use-var(--select-font-family);
-    font-weight: inherit;
-    color: currentColor;
-    outline: transparent;
-    background: transparent;
-    border: none;
-    border-radius: inherit;
-    appearance: none;
+    text-align: left;
+    user-select: none;
+  }
+
+  &__placeholder {
+    height: InputSlot.$box-min-height;
+  }
+
+  &__dropdown {
+    position: absolute;
+    z-index: $z-index-2-overlap;
+    top: InputSlot.$box-min-height;
+    text-align: left;
+    background-color: use-var(--select-color-background);
+    border-width: use-var(--select-border-width);
+    border-style: solid;
+    border-color: use-var(--select-color-main);
+    display: none;
+    &--open {
+      display: initial;
+    }
+  }
+  &__options-list {
+    @include list-reset;
+    list-style: none;
+  }
+  &__option {
+    &--disabled {
+      opacity: use-var(--select-option-disabled-opacity);
+      pointer-events: none;
+    }
+    &-button {
+      padding-block: use-var(--select-option-inline-padding);
+    }
+    &:not(:last-child) {
+      border-bottom-width: calc(#{use-var(--select-border-width)} / 2);
+      border-bottom-style: solid;
+      border-color: use-var(--select-color-main);
+    }
+    &:not(#{&}--disable):hover {
+      background-color: use-var(--select-color-main);
+      color: use-var(--select-color-background);
+    }
   }
   &__icon-container {
     position: absolute;

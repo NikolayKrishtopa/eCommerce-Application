@@ -1,3 +1,4 @@
+import React, { MouseEvent, useState } from 'react'
 import cn from 'classnames'
 import './Select.scss'
 import useMemoId from '@/hooks/useMemoId'
@@ -6,16 +7,7 @@ import InputSlot from '../InputSlot/InputSlot'
 import SelectProps, { SelectOptionProps } from './Select.props'
 
 export function Option(props: SelectOptionProps) {
-  const { children, className, ...optionProps } = props
-  return (
-    <option
-      className={cn('select__option', className)}
-      /* eslint-disable-next-line react/jsx-props-no-spreading */
-      {...optionProps}
-    >
-      {children}
-    </option>
-  )
+  return React.createElement('div', props)
 }
 
 export default function Select(props: SelectProps) {
@@ -25,37 +17,87 @@ export default function Select(props: SelectProps) {
     id,
     error,
     errorJump,
-    disabled,
-    children,
-    ...selectProps
+    disabled: selectDisabled,
+    children: optionElements,
+    currentValue: initCurrentValue = '',
+    onOptionChange,
+    open: initOpen = false,
   } = props
 
   const selectId = useMemoId(id)
 
+  const [currentValue, setCurrentValue] = useState(initCurrentValue)
+  const [open, setOpen] = useState(initOpen)
+
+  const options = (optionElements ? [optionElements].flat() : []).map(
+    ({ props: p }) => p,
+  )
+  const firstGlobOption = options.find(({ value }) => value === '*')
+  const exactOption = options.find(({ value }) => currentValue === value)
+  const currentOption = exactOption || firstGlobOption
+
+  const onOptionClick: (v: string, e: MouseEvent) => void = (value) => {
+    setOpen(false)
+    setCurrentValue(value)
+    if (onOptionChange) onOptionChange(value)
+  }
+
   return (
-    <InputSlot
-      htmlFor={selectId}
-      className={className}
-      label={label}
-      error={error}
-      errorJump={errorJump}
-      disabled={disabled}
-      selectLabelText
+    <div
+      className={cn('select', { 'select--disabled': selectDisabled })}
+      onBlur={(e) => {
+        if (!e.currentTarget.contains(e.relatedTarget)) {
+          setOpen(false)
+        }
+      }}
     >
-      <div className="select">
-        <select
-          className="select__select"
-          id={selectId}
-          disabled={disabled}
-          /* eslint-disable-next-line react/jsx-props-no-spreading */
-          {...selectProps}
+      <InputSlot
+        htmlFor={selectId}
+        className={className}
+        label={label}
+        error={error}
+        errorJump={errorJump}
+        disabled={selectDisabled}
+        selectLabelText
+      >
+        <button
+          type="button"
+          className="select__placeholder"
+          onClick={() => setOpen((p) => !p)}
         >
-          {children}
-        </select>
+          {currentOption?.children}
+        </button>
         <span className="select__icon-container">
           <SvgDropdown className="select__icon" />
         </span>
+      </InputSlot>
+      <div
+        className={cn('select__dropdown', { 'select__dropdown--open': open })}
+        id={selectId}
+      >
+        <ul className="select__options-list" id={selectId}>
+          {options.map(({ value, disabled, children }) => {
+            const isDisabled = selectDisabled || disabled
+            return (
+              <li
+                key={value}
+                className={cn('select__option', {
+                  'select__option--disabled': isDisabled,
+                })}
+              >
+                <button
+                  type="button"
+                  className="select__option-button"
+                  disabled={isDisabled}
+                  onClick={(e) => onOptionClick(value, e)}
+                >
+                  {children}
+                </button>
+              </li>
+            )
+          })}
+        </ul>
       </div>
-    </InputSlot>
+    </div>
   )
 }

@@ -17,7 +17,7 @@ import s from './ProductsPage.module.scss'
 const PRODS_ON_PAGE = 15
 
 export default function ProductsPage() {
-  const [products, setProducts] = useState<ProductProjection[]>([])
+  // const [products, setProducts] = useState<ProductProjection[]>([])
 
   const location = useLocation()
 
@@ -29,12 +29,13 @@ export default function ProductsPage() {
   const props = {
     limit: PRODS_ON_PAGE,
     offset: currentPage * PRODS_ON_PAGE,
-  })
-  const [products, setProducts] = useState<ProductProjection[]>(data)
-    filter: `categories.id:"${currentCategory?.id}"`,
   }
 
   const { data, loading, total } = useProducts(props)
+
+  const [products, setProducts] = useState<ProductProjection[]>(data)
+  //   filter: `categories.id:"${currentCategory?.id}"`,
+  // }
 
   const { ref, inView } = useInView({
     threshold: 1,
@@ -131,48 +132,31 @@ export default function ProductsPage() {
 
   return (
     <ProductsContext.Provider value={products}>
-      <Routes>
-        <Route
-          path="/"
-          element={
-            <section className={s.productsContainer}>
-              <div className={s.breadAndSearch}>
-                <Breadcrumbs />
-                <Search />
-              </div>
+      <section className={s.productPageContainer}>
+        <div className={s.breadAndSearch}>
+          <Breadcrumbs />
+          <Search />
+        </div>
 
-              <h2 className={s.prodHeader}>
-                Products {total && <span>[{total} products]</span>}
-              </h2>
-              {products && <ul className={s.prodList}>{prodList}</ul>}
-              {loading && isFetching && <Loader className={s.prodLoader} />}
-              {!loading && isFetching && (
-                <div ref={ref} className={s.pageBreak} />
-              )}
-            </section>
-          }
-        />
-        <Route path="/:slug" element={<ProductCard />} />
-      </Routes>
-    </ProductsContext.Provider>
-      <h2 className={s.prodHeader}>
-        {currentCategory ? currentCategory.name.en : 'Products'}{' '}
-        {total && <span>[{total} products]</span>}
-      </h2>
+        <h2 className={s.prodHeader}>
+          {currentCategory ? currentCategory.name.en : 'Products'}{' '}
+          {total && <span>[{total} products]</span>}
+        </h2>
 
-      <div className={s.catsAndFilter}>
-        <Categories callback={categoryCallback} />
-        <div className="filterAndSort" />
-      </div>
+        <div className={s.catsAndFilter}>
+          <Categories callback={categoryCallback} />
+          <div className="filterAndSort" />
+        </div>
 
-      <Outlet />
+        <Outlet />
 
-      <Routes>
-        <Route path="" element={prodOutput}>
+        <Routes>
+          <Route path="" element={prodOutput} />
           {catsList}
-        </Route>
-      </Routes>
-    </section>
+          <Route path=":slug" element={<ProductCard />} />
+        </Routes>
+      </section>
+    </ProductsContext.Provider>
   )
 }
 

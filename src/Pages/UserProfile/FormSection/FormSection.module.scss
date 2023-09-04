@@ -56,7 +56,7 @@ $button-active-color: adjust-color($color-primary, $lightness: 20%);
   column-gap: $section-col-gap;
   flex-direction: row;
   > * {
-    flex-grow: 1;
+    flex: 1;
   }
   @media screen and (max-width: $break-sm) {
     flex-direction: column;

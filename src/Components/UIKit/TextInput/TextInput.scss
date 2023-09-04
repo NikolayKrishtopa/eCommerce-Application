@@ -1,0 +1,37 @@
+@use '@/styles/abstracts' as *;
+@use '@/Components/UIKit/InputSlot/InputSlot';
+
+$css-variables: (
+  --text-input-inline-padding: InputSlot.use-var(--input-slot-label-base-line),
+  --text-input-placeholder-opacity: 0.75,
+  --text-input-font-family: inherit,
+  --text-input-font-size: 1em,
+);
+
+@function use-var($var-name) {
+  @return def-var($var-name, $css-variables);
+}
+
+.text-input {
+  height: InputSlot.$box-min-height;
+  width: 100%;
+  padding-inline: use-var(--text-input-inline-padding);
+  font-size: use-var(--text-input-font-size);
+  font-family: use-var(--text-input-font-family);
+  font-weight: inherit;
+  color: currentColor;
+  outline: transparent;
+  border: none;
+  border-radius: inherit;
+  background: transparent;
+  &::placeholder {
+    opacity: use-var(--text-input-placeholder-opacity);
+  }
+  &[type='password'] {
+    font-size: 0.75em;
+    letter-spacing: 1px;
+  }
+  #{InputSlot.$self-box--icon} & {
+    padding-right: InputSlot.$icon-offset;
+  }
+}

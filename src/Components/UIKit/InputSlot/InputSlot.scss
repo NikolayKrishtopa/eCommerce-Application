@@ -1,0 +1,153 @@
+@use 'sass:math';
+@use '@/styles/abstracts' as *;
+
+$css-variables: (
+  --input-slot-color-main: $color-primary-light,
+  --input-slot-color-error: $color-danger,
+  --input-slot-color-background: $color-neutral-light,
+  --input-slot-disabled-opacity: 0.5,
+  --input-slot-base-font-size: 1rem,
+  --input-slot-font-family: $font-stack-text,
+  --input-slot-border-radius: r(10px),
+  --input-slot-border-width: r(2px),
+  --input-slot-label-font-size: 1em,
+  --input-slot-label-base-line: 1.25rem,
+  --input-slot-box-font-size: 1em,
+  --input-slot-box-min-height: 3.25rem,
+  --input-slot-icon-width: 1.75rem,
+  --input-slot-icon-height: 1.75rem,
+  --input-slot-icon-inline-padding: 0.75rem,
+  --input-slot-error-font-size: 1em,
+  --input-slot-error-min-height: 1.5rem,
+);
+
+@function use-var($var-name) {
+  @return def-var($var-name, $css-variables);
+}
+
+@function label-offset($multiplier: +1) {
+  @return calc(#{$multiplier} * #{use-var(--input-slot-base-font-size)} / 2);
+}
+
+$label-offset: label-offset(+1);
+$error-min-height: use-var(--input-slot-error-min-height);
+$box-min-height: use-var(--input-slot-box-min-height);
+
+// prettier-ignore
+$icon-offset: calc(
+  #{use-var(--input-slot-icon-width)} +
+  #{use-var(--input-slot-icon-inline-padding)} * 2
+);
+
+$self: '.input-slot';
+$self--disabled: #{$self}--disabled;
+$self--error: #{$self}--error;
+$self-box--icon: #{$self}__box--icon;
+
+#{$self} {
+  font-size: use-var(--input-slot-base-font-size);
+  font-family: use-var(--input-slot-font-family);
+  color: use-var(--input-slot-color-main);
+
+  &__label,
+  &__input {
+    background-color: use-var(--input-slot-color-background);
+  }
+
+  &__label {
+    font-size: use-var(--input-slot-label-font-size);
+  }
+  &__box {
+    font-size: use-var(--input-slot-box-font-size);
+  }
+  &__error {
+    font-size: use-var(--input-slot-error-font-size);
+  }
+
+  &#{$self--error} {
+    color: use-var(--input-slot-color-error);
+  }
+
+  &#{$self--disabled} {
+    opacity: use-var(--input-slot-disabled-opacity);
+    pointer-events: none;
+  }
+
+  &__label {
+    $first-letter-offset: use-var(--input-slot-label-base-line);
+    $inline-padding: 0.4em;
+
+    display: block;
+    width: fit-content;
+    padding: 0 $inline-padding;
+    margin-inline: calc(1px + #{$first-letter-offset} - #{$inline-padding});
+    margin-bottom: label-offset(-1);
+    line-height: 1;
+    position: relative;
+    z-index: $z-index-1-overlap;
+    word-break: break-word;
+    border-radius: r(3px);
+    &--no-text-select {
+      user-select: none;
+    }
+  }
+
+  &__box {
+    min-height: $box-min-height;
+    position: relative;
+    border-width: use-var(--input-slot-border-width);
+    border-style: solid;
+    border-color: currentColor;
+    border-radius: use-var(--input-slot-border-radius);
+  }
+
+  &__children {
+    display: flex;
+  }
+
+  &__icon-btn {
+    @include button-reset;
+    height: use-var(--input-slot-icon-height);
+    width: use-var(--input-slot-icon-width);
+    position: absolute;
+    right: use-var(--input-slot-icon-inline-padding);
+    top: calc(50% - #{use-var(--input-slot-icon-height)} / 2);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    user-select: none;
+    &:disabled {
+      pointer-events: none;
+      cursor: default;
+    }
+  }
+
+  &__error {
+    $line-height: 1;
+
+    min-height: $error-min-height;
+    padding-inline: 0.3em;
+    display: grid;
+    align-items: center;
+    gap: 0.5ch;
+    grid-template-columns: auto 1fr;
+    box-sizing: border-box;
+    font-weight: bold;
+    line-height: $line-height;
+
+    &:empty::after {
+      content: '.';
+      visibility: hidden;
+    }
+    &-icon {
+      margin-top: math.div($line-height - 1, 2) + em;
+      width: use-var(--input-slot-error-font-size);
+      height: use-var(--input-slot-error-font-size);
+    }
+    &-msg {
+      margin: 0;
+      overflow: auto;
+      word-wrap: break-word;
+    }
+  }
+}

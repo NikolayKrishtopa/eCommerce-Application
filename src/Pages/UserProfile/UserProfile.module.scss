@@ -1,6 +1,6 @@
 @use 'sass:math';
 @use '@/styles/abstracts' as *;
-@use '@/Components/UIKit/TextInput/TextInput.module';
+@use '@/Components/UIKit/InputSlot/InputSlot';
 @use './FormSection/FormSection.module';
 
 .main {
@@ -79,7 +79,7 @@
 }
 
 .inputWith {
-  margin-bottom: TextInput.$error-min-height;
+  margin-bottom: InputSlot.$error-min-height;
   > *:not(:first-child) {
     margin: r(10px) 0 0 0;
   }

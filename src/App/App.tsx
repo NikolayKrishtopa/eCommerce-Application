@@ -114,7 +114,7 @@ export default function App() {
           }
         />
         <Route
-          path="/catalog"
+          path="/catalog/*"
           element={
             <Page header footer>
               <ProductsPage />

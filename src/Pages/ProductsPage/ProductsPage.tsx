@@ -1,9 +1,12 @@
 import { useEffect, useState } from 'react'
 import { useInView } from 'react-intersection-observer'
 import { ProductProjection } from '@commercetools/platform-sdk'
+import { Routes, Route } from 'react-router-dom'
+import ProductsContext from '@/contexts/ProductsContext'
 import useProducts from '@/hooks/useProducts'
 import ShoppingCard from '@/Components/ShoppingCard/ShoppingCard'
 import Loader from '@/Components/Loader/Loader'
+import ProductCard from '@/Components/ProductCard/ProductCard'
 import Breadcrumbs from '@/Components/Breadcrumbs/Breadcrumbs'
 import Search from '@/Components/Search/Search'
 import s from './ProductsPage.module.scss'
@@ -11,12 +14,12 @@ import s from './ProductsPage.module.scss'
 const PRODS_ON_PAGE = 15
 
 export default function ProductsPage() {
-  const [products, setProducts] = useState<ProductProjection[]>([])
   const [currentPage, setCurrentPage] = useState(0)
   const { data, loading, total } = useProducts({
     limit: PRODS_ON_PAGE,
     offset: currentPage * PRODS_ON_PAGE,
   })
+  const [products, setProducts] = useState<ProductProjection[]>(data)
 
   const { ref, inView } = useInView({
     threshold: 0.1,
@@ -29,7 +32,7 @@ export default function ProductsPage() {
     if (data && isFetching) {
       setProducts((prev) => [...prev, ...data])
     }
-  }, [data, isFetching])
+  }, [data, isFetching, loading])
 
   useEffect(() => {
     if (inView) {
@@ -75,18 +78,30 @@ export default function ProductsPage() {
   })
 
   return (
-    <section className={s.productsContainer}>
-      <div className={s.breadAndSearch}>
-        <Breadcrumbs />
-        <Search />
-      </div>
+    <ProductsContext.Provider value={products}>
+      <Routes>
+        <Route
+          path="/"
+          element={
+            <section className={s.productsContainer}>
+              <div className={s.breadAndSearch}>
+                <Breadcrumbs />
+                <Search />
+              </div>
 
-      <h2 className={s.prodHeader}>
-        Products {total && <span>[{total} products]</span>}
-      </h2>
-      {products && <ul className={s.prodList}>{prodList}</ul>}
-      {loading && isFetching && <Loader className={s.prodLoader} />}
-      {!loading && isFetching && <div ref={ref} className={s.pageBreak} />}
-    </section>
+              <h2 className={s.prodHeader}>
+                Products {total && <span>[{total} products]</span>}
+              </h2>
+              {products && <ul className={s.prodList}>{prodList}</ul>}
+              {loading && isFetching && <Loader className={s.prodLoader} />}
+              {!loading && isFetching && (
+                <div ref={ref} className={s.pageBreak} />
+              )}
+            </section>
+          }
+        />
+        <Route path="/:slug" element={<ProductCard />} />
+      </Routes>
+    </ProductsContext.Provider>
   )
 }

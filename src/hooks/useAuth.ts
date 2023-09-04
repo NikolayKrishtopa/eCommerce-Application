@@ -23,11 +23,11 @@ export default function useAuth(
 
   const checkAuth = () => {
     if (currentUser) return
-    setIsFetching(true)
     const id = localStorage.getItem('currentUser')
     if (!id) {
       return
     }
+    setIsFetching(true)
     apiRoot
       .customers()
       .withId({ ID: id })
@@ -39,7 +39,13 @@ export default function useAuth(
         }
         setCurrentUser(res.body)
       })
-      .finally(() => setIsFetching(false))
+      .catch((res) => {
+        setSystMsg(res.body.message ?? SYSTEM_MESSAGES.LOGIN_FAIL, true)
+        localStorage.clear()
+      })
+      .finally(() => {
+        setIsFetching(false)
+      })
   }
 
   const login = async (data: UserLoginPayloadType) => {

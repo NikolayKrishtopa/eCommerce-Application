@@ -10,20 +10,34 @@ import ProductCard from '@/Components/ProductCard/ProductCard'
 import Breadcrumbs from '@/Components/Breadcrumbs/Breadcrumbs'
 import Search from '@/Components/Search/Search'
 import Categories from '@/Components/Categories/Categories'
+import { Outlet, Route, Routes, useLocation } from 'react-router-dom'
+import useCategories from '@/hooks/useCategories'
 import s from './ProductsPage.module.scss'
 
 const PRODS_ON_PAGE = 15
 
-function ProductsPage() {
+export default function ProductsPage() {
+  const [products, setProducts] = useState<ProductProjection[]>([])
+
+  const location = useLocation()
+
+  const { data: cats, loading: catLoading } = useCategories()
+
+  const [currentCategory, setCurrentCategory] = useState<Category | null>(null)
   const [currentPage, setCurrentPage] = useState(0)
-  const { data, loading, total } = useProducts({
+
+  const props = {
     limit: PRODS_ON_PAGE,
     offset: currentPage * PRODS_ON_PAGE,
   })
   const [products, setProducts] = useState<ProductProjection[]>(data)
+    filter: `categories.id:"${currentCategory?.id}"`,
+  }
+
+  const { data, loading, total } = useProducts(props)
 
   const { ref, inView } = useInView({
-    threshold: 0.1,
+    threshold: 1,
     delay: 100,
   })
 
@@ -40,6 +54,26 @@ function ProductsPage() {
       setCurrentPage((prev) => prev + 1)
     }
   }, [inView])
+
+  const categoryCallback = (cat: Category | null) => {
+    setCurrentCategory(cat)
+  }
+
+  useEffect(() => {
+    const getCategoryFromLocation = () => {
+      const url = location.pathname.split('/').filter((item) => item !== '')
+      const path = url[url.length - 1]
+      console.log(`path from func: ${path}`)
+      const cat = cats.find((item) => item.slug.en === path)
+      console.log(`data from func: ${cat?.id}`)
+      return cat ? (cat as Category) : null
+    }
+
+    if (!catLoading) {
+      console.log(`Current location: ${location.pathname}`)
+      setCurrentCategory(getCategoryFromLocation())
+    }
+  }, [location, catLoading, cats])
 
   const prodList = products.map((product) => {
     const brandName = product.masterVariant.attributes?.find((attribute) =>
@@ -72,13 +106,28 @@ function ProductsPage() {
     }
 
     return (
-      <li key={product.id} className={s.prodListItem}>
+      <li
+        key={product.id + Math.random() * 99999999}
+        className={s.prodListItem}
+      >
         <Link to={`${product.slug.en.toString()}`}>
           {ShoppingCard(prodData)}
         </Link>
       </li>
     )
   })
+
+  const prodOutput = (
+    <>
+      {products && <ul className={s.prodList}>{prodList}</ul>}
+      {loading && isFetching && <Loader className={s.prodLoader} />}
+      {!loading && isFetching && <div ref={ref} className={s.pageBreak} />}
+    </>
+  )
+
+  const catsList = cats.map((cat) => (
+    <Route key={cat.id} path={`:${cat.slug.en}`} element={prodOutput} />
+  ))
 
   return (
     <ProductsContext.Provider value={products}>
@@ -106,6 +155,24 @@ function ProductsPage() {
         <Route path="/:slug" element={<ProductCard />} />
       </Routes>
     </ProductsContext.Provider>
+      <h2 className={s.prodHeader}>
+        {currentCategory ? currentCategory.name.en : 'Products'}{' '}
+        {total && <span>[{total} products]</span>}
+      </h2>
+
+      <div className={s.catsAndFilter}>
+        <Categories callback={categoryCallback} />
+        <div className="filterAndSort" />
+      </div>
+
+      <Outlet />
+
+      <Routes>
+        <Route path="" element={prodOutput}>
+          {catsList}
+        </Route>
+      </Routes>
+    </section>
   )
 }
 

@@ -10,18 +10,43 @@ export default function useProducts(props: ProductQueryParams) {
   const [total, setTotal] = useState(0)
 
   useEffect(() => {
+    setData([])
+  }, [props.filter])
+
+  useEffect(() => {
     setLoading(true)
-    apiRoot
-      .productProjections()
-      .get({ queryArgs: { limit: props.limit, offset: props.offset } })
-      .execute()
-      .then(({ body }) => {
-        setData(body.results)
-        setTotal(body.total ? body.total : 0)
-      })
-      .catch(setError)
-      .finally(() => setLoading(false))
-  }, [props.limit, props.offset])
+
+    if (!props.filter || props.filter === `categories.id:"undefined"`) {
+      apiRoot
+        .productProjections()
+        .get({ queryArgs: { limit: props.limit, offset: props.offset } })
+        .execute()
+        .then(({ body }) => {
+          setData(body.results)
+          setTotal(body.total ? body.total : 0)
+        })
+        .catch(setError)
+        .finally(() => setLoading(false))
+    } else {
+      apiRoot
+        .productProjections()
+        .search()
+        .get({
+          queryArgs: {
+            limit: props.limit,
+            offset: props.offset,
+            filter: props.filter,
+          },
+        })
+        .execute()
+        .then(({ body }) => {
+          setData(body.results)
+          setTotal(body.total ? body.total : 0)
+        })
+        .catch(setError)
+        .finally(() => setLoading(false))
+    }
+  }, [props.filter, props.limit, props.offset])
 
   return { loading, data, error, total }
 }

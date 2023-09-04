@@ -1,0 +1,44 @@
+@use '@/styles/abstracts' as *;
+@use '@/Components/UIKit/InputSlot/InputSlot';
+
+$css-variables: (
+  --select-option-background: $color-neutral-light,
+  --select-inline-padding: InputSlot.use-var(--input-slot-label-base-line),
+  --select-font-family: inherit,
+  --select-font-size: 1em,
+);
+
+@function use-var($var-name) {
+  @return def-var($var-name, $css-variables);
+}
+
+.select {
+  width: 100%;
+
+  &__select {
+    position: relative;
+    height: InputSlot.$box-min-height;
+    width: 100%;
+    padding-inline: use-var(--select-inline-padding);
+    font-size: use-var(--select-font-size);
+    font-family: use-var(--select-font-family);
+    font-weight: inherit;
+    color: currentColor;
+    outline: transparent;
+    background: transparent;
+    border: none;
+    border-radius: inherit;
+    appearance: none;
+  }
+  &__icon-container {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: InputSlot.$icon-offset;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    pointer-events: none;
+  }
+}

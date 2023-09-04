@@ -1,17 +1,6 @@
 @use '@/styles/abstracts' as *;
 @use '@/Components/UIKit/InputSlot/InputSlot';
 
-$css-variables: (
-  --text-input-inline-padding: InputSlot.use-var(--input-slot-label-base-line),
-  --text-input-placeholder-opacity: 0.75,
-  --text-input-font-family: inherit,
-  --text-input-font-size: 1em,
-);
-
-@function use-var($var-name) {
-  @return def-var($var-name, $css-variables);
-}
-
 .text-input {
   &__input {
     padding-inline: InputSlot.$label-first-letter-offset;

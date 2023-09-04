@@ -1,61 +1,45 @@
 @use '@/styles/abstracts' as *;
 
 $mark-svg-url: url('@/assets/icons/mark.svg');
-
-$css-variables: (
-  --checkbox-color-main: $color-primary-light,
-  --checkbox-disabled-opacity: 0.5,
-  --checkbox-gap: r(5px),
-  --checkbox-base-font-size: 1rem,
-  --checkbox-font-family: $font-stack-text,
-  --checkbox-input-border-width: 2px,
-  --checkbox-input-size: 1.3rem,
-  --checkbox-input-background-image-url: $mark-svg-url,
-  --checkbox-input-background-size: 90%,
-  --checkbox-input-background-color-on: currentColor,
-  --checkbox-input-background-color-off: transparent,
-  --checkbox-input-border-radius: 0.3em,
-);
-
-@function use-var($var-name) {
-  @return def-var($var-name, $css-variables);
-}
+$gap: r(5px);
+$input-background-color-on: currentColor;
+$input-background-color-off: transparent;
 
 .checkbox {
   display: flex;
   align-items: center;
-  font-size: use-var(--checkbox-base-font-size);
-  font-family: use-var(--checkbox-font-family);
-  color: use-var(--checkbox-color-main);
+  font-size: 1rem;
+  color: currentColor;
 
   $self: &;
 
   &--disabled {
-    opacity: use-var(--checkbox-disabled-opacity);
+    opacity: 0.5;
   }
 
   &__input {
     flex-shrink: 0;
     appearance: none;
     margin: 0;
-    width: use-var(--checkbox-input-size);
-    height: use-var(--checkbox-input-size);
-    border-radius: use-var(--checkbox-input-border-radius);
-    border: use-var(--checkbox-input-border-width) solid currentColor;
-    background-color: use-var(--checkbox-input-background-color-off);
+    $size: 1.3rem;
+    width: $size;
+    height: $size;
+    border-radius: 0.3em;
+    border: r(2px) solid currentColor;
+    background-color: $input-background-color-on;
     cursor: pointer;
     &::after {
       content: '';
       display: block;
       width: 100%;
       height: 100%;
-      background-image: use-var(--checkbox-input-background-image-url);
-      background-size: use-var(--checkbox-input-background-size);
+      background-image: $mark-svg-url;
+      background-size: 85%;
       background-position: center;
       background-repeat: no-repeat;
     }
     &:checked {
-      background-color: use-var(--checkbox-input-background-color-on);
+      background-color: $input-background-color-off;
     }
     #{$self}--disabled & {
       cursor: default;
@@ -63,7 +47,7 @@ $css-variables: (
   }
 
   &__label {
-    padding-left: use-var(--checkbox-gap);
+    padding-left: $gap;
     font-weight: bold;
     pointer-events: none;
     &--clickable {

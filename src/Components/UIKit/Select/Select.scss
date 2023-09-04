@@ -1,27 +1,17 @@
+@use 'sass:math';
 @use '@/styles/abstracts' as *;
 @use '@/Components/UIKit/InputSlot/InputSlot';
 
-$css-variables: (
-  --select-color-main: InputSlot.use-var(--input-slot-color-main),
-  --select-color-background: InputSlot.use-var(--input-slot-color-background),
-  --select-inline-padding: InputSlot.use-var(--input-slot-label-base-line),
-  --select-border-width: InputSlot.use-var(--input-slot-border-width),
-  --select-font-family: inherit,
-  --select-font-size: 1em,
-  --select-option-inline-padding: r(10px),
-  --select-option-disabled-opacity:
-    InputSlot.use-var(--input-slot-disabled-opacity),
-);
-
-@function use-var($var-name) {
-  @return def-var($var-name, $css-variables);
-}
+$color-main: InputSlot.$color-main;
+$background-color: InputSlot.$background-color;
+$placeholder-height: InputSlot.$min-height;
+$dropdown-border-width: InputSlot.$border-width;
+$option-padding-inline: InputSlot.$label-first-letter-offset;
+$option-padding-block: r(10px);
 
 .select {
   position: relative;
-  font-size: use-var(--select-font-size);
-  font-family: use-var(--select-font-family);
-  color: use-var(--select-color-main);
+  color: $color-main;
 
   &__placeholder,
   &__dropdown,
@@ -34,51 +24,53 @@ $css-variables: (
   &__placeholder,
   &__option-button {
     @include button-reset;
-    padding-inline: use-var(--select-inline-padding);
+    padding-inline: $option-padding-inline;
     text-align: left;
     user-select: none;
   }
 
   &__placeholder {
-    height: InputSlot.$box-min-height;
+    height: $placeholder-height;
   }
 
   &__dropdown {
     position: absolute;
     z-index: $z-index-2-overlap;
-    top: InputSlot.$box-min-height;
+    top: $placeholder-height;
     text-align: left;
-    background-color: use-var(--select-color-background);
-    border-width: use-var(--select-border-width);
+    background-color: $background-color;
+    border-width: $dropdown-border-width;
     border-style: solid;
-    border-color: use-var(--select-color-main);
+    border-color: currentColor;
     display: none;
     &--open {
       display: initial;
     }
   }
+
   &__options-list {
     @include list-reset;
     list-style: none;
   }
   &__option {
+    border-bottom: solid currentColor;
+    border-bottom-width: calc(#{$dropdown-border-width} / 2);
+    &:last-child {
+      border-bottom: none;
+    }
     &--disabled {
-      opacity: use-var(--select-option-disabled-opacity);
+      opacity: 0.5;
       pointer-events: none;
     }
     &-button {
-      padding-block: use-var(--select-option-inline-padding);
-    }
-    &:not(:last-child) {
-      border-bottom-width: calc(#{use-var(--select-border-width)} / 2);
-      border-bottom-style: solid;
-      border-color: use-var(--select-color-main);
+      padding-block: $option-padding-block;
     }
     &:not(#{&}--disable):hover {
-      background-color: use-var(--select-color-main);
-      color: use-var(--select-color-background);
+      background-color: $color-main;
+      color: $background-color;
     }
   }
+
   &__icon-container {
     position: absolute;
     top: 0;

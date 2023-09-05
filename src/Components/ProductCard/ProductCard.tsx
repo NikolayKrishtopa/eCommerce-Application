@@ -22,6 +22,7 @@ export default function ProductCard() {
   const [currentPicture, setCurrentPicture] = useState(1)
   const [currentPopupPicture, setCurrentPopupPicture] = useState(1)
   const [popupOpen, setPopupOpen] = useState(false)
+  const [initiated, setInitiated] = useState(false)
 
   const incCurPicture = () => {
     if (currentPicture === photoQty) return
@@ -53,7 +54,12 @@ export default function ProductCard() {
     setCurrentPopupPicture(currentPicture)
   }, [currentPicture])
 
-  if (product)
+  useEffect(() => {
+    const timer = setTimeout(() => setInitiated(true), 1000)
+    return () => clearTimeout(timer)
+  })
+
+  if (product) {
     return (
       <>
         {popupOpen && (
@@ -215,6 +221,8 @@ export default function ProductCard() {
         </div>
       </>
     )
-
-  return <NotFoundPage />
+  }
+  if (initiated) {
+    return <NotFoundPage />
+  }
 }

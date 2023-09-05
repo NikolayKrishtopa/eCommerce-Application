@@ -25,7 +25,16 @@ export default function ProductsPage() {
 
   const { data: cats, loading: catLoading } = useCategories()
 
-  const [currentCategory, setCurrentCategory] = useState<Category | null>(null)
+  const getCategoryFromLocation = () => {
+    const url = location.pathname.split('/').filter((item) => item !== '')
+    const path = url[url.length - 1]
+    const cat = cats.find((item) => item.slug.en === path)
+    return cat ? (cat as Category) : null
+  }
+
+  const [currentCategory, setCurrentCategory] = useState<Category | null>(
+    getCategoryFromLocation(),
+  )
 
   const props = currentCategory
     ? {
@@ -66,30 +75,19 @@ export default function ProductsPage() {
   }
 
   useEffect(() => {
-    const getCategoryFromLocation = () => {
-      const url = location.pathname.split('/').filter((item) => item !== '')
-      const path = url[url.length - 1]
-      console.log(`path from func: ${path}`)
-      const cat = cats.find((item) => item.slug.en === path)
-      console.log(`data from func: ${cat?.name.en}`)
-      return cat ? (cat as Category) : null
-    }
-
     if (!catLoading) {
-      console.log(`Current location: ${location.pathname}`)
       const c = getCategoryFromLocation()
       setCurrentCategory(c)
-      console.log(`currentCategory: ${currentCategory?.name.en}`)
       getProducts({
         limit: PRODS_ON_PAGE,
         offset: 0,
         filter: `categories.id:"${c?.id}"`,
       })?.then((res) => {
         setProducts(res.body.results)
-        console.log(`res.results: ${res.body.results}`)
         setCurrentPage(0)
       })
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [location, catLoading, cats])
 
   const prodList = products.map((product) => {

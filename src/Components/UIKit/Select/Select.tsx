@@ -40,7 +40,10 @@ export default function Select(props: SelectProps) {
 
   return (
     <div
-      className={cn('select', { 'select--disabled': selectDisabled })}
+      className={cn('select', {
+        'select--disabled': selectDisabled,
+        'select--open': open,
+      })}
       onBlur={(e) => {
         if (!e.currentTarget.contains(e.relatedTarget)) {
           setOpen(false)
@@ -66,9 +69,7 @@ export default function Select(props: SelectProps) {
           <SvgDropdown className="select__icon" />
         </span>
       </InputSlot>
-      <div
-        className={cn('select__dropdown', { 'select__dropdown--open': open })}
-      >
+      <div className="select__dropdown">
         <ul className="select__options-list">
           {options.map(({ value, disabled, children }) => {
             const isDisabled = selectDisabled || disabled

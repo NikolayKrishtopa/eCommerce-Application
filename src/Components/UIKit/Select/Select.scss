@@ -12,6 +12,16 @@ $option-padding-block: r(10px);
 .select {
   position: relative;
   color: $color-main;
+  border-radius: r(20px) r(20px) 0 0;
+
+  $self: &;
+
+  &--open {
+    #{$self}__dropdown {
+      display: initial;
+      box-shadow: 0 5px 20px -10px $color-neutral-dark;
+    }
+  }
 
   &__placeholder,
   &__dropdown,
@@ -43,9 +53,6 @@ $option-padding-block: r(10px);
     border-style: solid;
     border-color: currentColor;
     display: none;
-    &--open {
-      display: initial;
-    }
   }
 
   &__options-list {
@@ -75,7 +82,7 @@ $option-padding-block: r(10px);
     position: absolute;
     top: 0;
     right: 0;
-    width: InputSlot.$icon-offset;
+    width: InputSlot.$icon-offset-inline;
     height: 100%;
     display: flex;
     justify-content: center;

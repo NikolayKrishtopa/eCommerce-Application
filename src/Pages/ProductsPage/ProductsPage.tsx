@@ -17,6 +17,7 @@ const PRODS_ON_PAGE = 15
 
 export default function ProductsPage() {
   const [currentPage, setCurrentPage] = useState(0)
+  const [query, setQuery] = useState('')
 
   const location = useLocation()
 
@@ -87,47 +88,55 @@ export default function ProductsPage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [location, catLoading, cats])
 
-  const prodList = products.map((product) => {
-    const brandName = product.masterVariant.attributes?.find((attribute) =>
-      attribute.name.endsWith('-brand'),
-    )?.value.label
-
-    const discounted =
-      product.masterVariant.prices && product.masterVariant.prices[0].discounted
-        ? product.masterVariant.prices[0].discounted.value.centAmount / 100
-        : undefined
-
-    const prodData = {
-      className: '',
-      name: brandName,
-      description: product.name.en,
-      price: product.masterVariant.prices
-        ? product.masterVariant.prices[0].value.centAmount / 100
-        : 0,
-      currency: product.masterVariant.prices
-        ? product.masterVariant.prices[0].value.currencyCode
-        : 'EUR',
-      imageUrl: product.masterVariant.images
-        ? product.masterVariant.images[0].url
-        : '',
-      imageAlt: product.name.en,
-      discountPrice: discounted,
-      onNameClick: undefined,
-      toFixed: 2,
-      intlLocale: 'en-EN',
-    }
-
-    return (
-      <li
-        key={product.id + Math.random() * 99999999}
-        className={s.prodListItem}
-      >
-        <Link to={`${product.slug.en.toString()}`}>
-          {ShoppingCard(prodData)}
-        </Link>
-      </li>
+  const prodList = products
+    .filter(
+      (p) =>
+        p.description &&
+        (p?.description.en.toLowerCase().includes(query.toLowerCase()) ||
+          p?.name.en.toLowerCase().includes(query.toLowerCase())),
     )
-  })
+    .map((product) => {
+      const brandName = product.masterVariant.attributes?.find((attribute) =>
+        attribute.name.endsWith('-brand'),
+      )?.value.label
+
+      const discounted =
+        product.masterVariant.prices &&
+        product.masterVariant.prices[0].discounted
+          ? product.masterVariant.prices[0].discounted.value.centAmount / 100
+          : undefined
+
+      const prodData = {
+        className: '',
+        name: brandName,
+        description: product.name.en,
+        price: product.masterVariant.prices
+          ? product.masterVariant.prices[0].value.centAmount / 100
+          : 0,
+        currency: product.masterVariant.prices
+          ? product.masterVariant.prices[0].value.currencyCode
+          : 'EUR',
+        imageUrl: product.masterVariant.images
+          ? product.masterVariant.images[0].url
+          : '',
+        imageAlt: product.name.en,
+        discountPrice: discounted,
+        onNameClick: undefined,
+        toFixed: 2,
+        intlLocale: 'en-EN',
+      }
+
+      return (
+        <li
+          key={product.id + Math.random() * 99999999}
+          className={s.prodListItem}
+        >
+          <Link to={`${product.slug.en.toString()}`}>
+            {ShoppingCard(prodData)}
+          </Link>
+        </li>
+      )
+    })
 
   const prodOutput = (
     <>
@@ -149,7 +158,7 @@ export default function ProductsPage() {
           <section className={s.productPageContainer}>
             <div className={s.breadAndSearch}>
               <Breadcrumbs />
-              <Search />
+              <Search onSubmit={setQuery} />
             </div>
 
             <h2 className={s.prodHeader}>

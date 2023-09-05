@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useInView } from 'react-intersection-observer'
 import { ProductProjection } from '@commercetools/platform-sdk'
-import { Routes, Route } from 'react-router-dom'
+import { Routes, Route, Link } from 'react-router-dom'
 import ProductsContext from '@/contexts/ProductsContext'
 import useProducts from '@/hooks/useProducts'
 import ShoppingCard from '@/Components/ShoppingCard/ShoppingCard'
@@ -13,7 +13,7 @@ import s from './ProductsPage.module.scss'
 
 const PRODS_ON_PAGE = 15
 
-export default function ProductsPage() {
+function ProductsPage() {
   const [currentPage, setCurrentPage] = useState(0)
   const { data, loading, total } = useProducts({
     limit: PRODS_ON_PAGE,
@@ -72,7 +72,9 @@ export default function ProductsPage() {
 
     return (
       <li key={product.id} className={s.prodListItem}>
-        {ShoppingCard(prodData)}
+        <Link to={`${product.slug.en.toString()}`}>
+          {ShoppingCard(prodData)}
+        </Link>
       </li>
     )
   })
@@ -105,3 +107,5 @@ export default function ProductsPage() {
     </ProductsContext.Provider>
   )
 }
+
+export default ProductsPage

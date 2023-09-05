@@ -1,18 +1,20 @@
 import { useParams } from 'react-router-dom'
-import { useContext, useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import cn from 'classnames'
 import { ProductProjection } from '@commercetools/platform-sdk'
-import ProductsContext from '@/contexts/ProductsContext'
+// import ProductsContext from '@/contexts/ProductsContext'
 import leftArrIcon from '@/assets/img/chevron_left.svg'
 import rightArrIcon from '@/assets/img/chevron_right.svg'
 import cartIcon from '@/assets/img/Cart.svg'
 import closeIcon from '@/assets/img/X.svg'
+import useProduct from '@/hooks/useProduct'
 import s from './ProductCard.module.scss'
 import Breadcrumbs from '../Breadcrumbs/Breadcrumbs'
 
 export default function ProductCard() {
-  const products = useContext(ProductsContext)
+  // const products = useContext(ProductsContext)
   const { slug } = useParams()
+  const product = useProduct(slug)
   const [item, setItem] = useState<ProductProjection | null>(null)
   const [qty, setQty] = useState(1)
   const [photoQty, setPhotoQty] = useState(1)
@@ -41,10 +43,10 @@ export default function ProductCard() {
   }
 
   useEffect(() => {
-    const newItem = products?.find((p) => p.slug.en === slug)
+    const newItem = product
     setItem(newItem ?? null)
     setPhotoQty(newItem?.masterVariant?.images?.length ?? 1)
-  }, [products])
+  }, [product])
 
   useEffect(() => {
     setCurrentPopupPicture(currentPicture)

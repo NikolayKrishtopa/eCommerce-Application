@@ -14,6 +14,7 @@ import useCategories from '@/hooks/useCategories'
 import s from './ProductsPage.module.scss'
 // import NotFoundPage from '../NotFoundPage/NotFoundPage'
 import getProducts from './getProducts'
+import NotFoundPage from '../NotFoundPage/NotFoundPage'
 
 const PRODS_ON_PAGE = 15
 
@@ -173,8 +174,8 @@ export default function ProductsPage() {
           {catsList}
         </Route>
         <Route path="/:slug" element={<ProductCard />} />
-        {/* <Route path="catalog/:category?/:slug" element={<ProductCard />} /> */}
-        {/* <Route path="*" element={<NotFoundPage />} /> */}
+        <Route path="/:category?/:slug" element={<ProductCard />} />
+        <Route path="/*" element={<NotFoundPage />} />
       </Routes>
     </ProductsContext.Provider>
   )

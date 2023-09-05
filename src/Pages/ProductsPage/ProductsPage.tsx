@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useInView } from 'react-intersection-observer'
-import { ProductProjection } from '@commercetools/platform-sdk'
-import { Routes, Route, Link } from 'react-router-dom'
+import { Category, ProductProjection } from '@commercetools/platform-sdk'
 import ProductsContext from '@/contexts/ProductsContext'
 import useProducts from '@/hooks/useProducts'
 import ShoppingCard from '@/Components/ShoppingCard/ShoppingCard'
@@ -10,10 +9,10 @@ import ProductCard from '@/Components/ProductCard/ProductCard'
 import Breadcrumbs from '@/Components/Breadcrumbs/Breadcrumbs'
 import Search from '@/Components/Search/Search'
 import Categories from '@/Components/Categories/Categories'
-import { Outlet, Route, Routes, useLocation } from 'react-router-dom'
+import { Outlet, Route, Routes, Link, useLocation } from 'react-router-dom'
 import useCategories from '@/hooks/useCategories'
 import s from './ProductsPage.module.scss'
-import NotFoundPage from '../NotFoundPage/NotFoundPage'
+// import NotFoundPage from '../NotFoundPage/NotFoundPage'
 import getProducts from './getProducts'
 
 const PRODS_ON_PAGE = 15
@@ -173,11 +172,10 @@ export default function ProductsPage() {
           <Route index element={prodOutput} />
           {catsList}
         </Route>
-        <Route path="/slug" element={<ProductCard />} />
-        <Route path="*" element={<NotFoundPage />} />
+        <Route path="/:slug" element={<ProductCard />} />
+        {/* <Route path="catalog/:category?/:slug" element={<ProductCard />} /> */}
+        {/* <Route path="*" element={<NotFoundPage />} /> */}
       </Routes>
     </ProductsContext.Provider>
   )
 }
-
-export default ProductsPage

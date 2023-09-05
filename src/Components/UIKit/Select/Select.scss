@@ -6,8 +6,8 @@ $color-main: InputSlot.$color-main;
 $background-color: InputSlot.$background-color;
 $placeholder-height: InputSlot.$min-height;
 $dropdown-border-width: InputSlot.$border-width;
-$option-padding-inline: InputSlot.$label-first-letter-offset;
 $option-padding-block: r(10px);
+$option-padding-inline: InputSlot.$label-first-letter-offset;
 
 .select {
   position: relative;
@@ -41,6 +41,7 @@ $option-padding-block: r(10px);
 
   &__placeholder {
     height: $placeholder-height;
+    padding-right: InputSlot.$icon-slot-width;
   }
 
   &__dropdown {
@@ -78,11 +79,11 @@ $option-padding-block: r(10px);
     }
   }
 
-  &__icon-container {
+  &__icon {
     position: absolute;
-    top: 0;
     right: 0;
-    width: InputSlot.$icon-offset-inline;
+    top: 0;
+    width: InputSlot.$icon-slot-width;
     height: 100%;
     display: flex;
     justify-content: center;

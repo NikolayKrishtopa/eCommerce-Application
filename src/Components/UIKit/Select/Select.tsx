@@ -65,8 +65,8 @@ export default function Select(props: SelectProps) {
         >
           {currentOption?.children}
         </button>
-        <span className="select__icon-container">
-          <SvgDropdown className="select__icon" />
+        <span className="select__icon">
+          <SvgDropdown className="select__icon-img" />
         </span>
       </InputSlot>
       <div className="select__dropdown">

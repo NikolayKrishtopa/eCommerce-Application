@@ -46,14 +46,16 @@ export default function InputSlot(props: InputSlotProps) {
       >
         <div className="input-slot__children">{children}</div>
         {icon && (
-          <button
-            type="button"
-            className="input-slot__icon-btn"
-            onClick={onIconClick}
-            disabled={disabled || !onIconClick}
-          >
-            {error ? iconError || icon : icon}
-          </button>
+          <div className="input-slot__icon">
+            <button
+              type="button"
+              className="input-slot__icon-btn"
+              onClick={onIconClick}
+              disabled={disabled || !onIconClick}
+            >
+              {error ? iconError || icon : icon}
+            </button>
+          </div>
         )}
       </div>
       {(error || !errorJump) && (

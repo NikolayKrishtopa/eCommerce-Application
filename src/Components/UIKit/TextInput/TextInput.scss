@@ -21,10 +21,10 @@
       letter-spacing: 1px;
     }
     &[type='date'] {
-      padding-right: InputSlot.$icon-padding-inline;
+      padding-right: InputSlot.$icon-offset-inline;
     }
     #{InputSlot.$self-box--icon} & {
-      padding-right: InputSlot.$icon-offset;
+      padding-right: InputSlot.$icon-slot-width;
     }
   }
 }

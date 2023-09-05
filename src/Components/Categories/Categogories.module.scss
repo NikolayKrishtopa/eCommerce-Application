@@ -1,0 +1,21 @@
+@use '@/styles/abstracts' as *;
+
+.categories-menu {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 30px;
+  font-family: $font-stack-text;
+  font-size: 20px;
+  font-weight: bold;
+
+  color: $color-neutral-light-additional;
+}
+
+.category-link {
+  &:hover,
+  &:active {
+    color: $color-neutral-light;
+    text-decoration: underline;
+  }
+}

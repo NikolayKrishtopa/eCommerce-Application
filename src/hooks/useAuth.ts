@@ -25,6 +25,7 @@ export default function useAuth(
     if (currentUser) return
     const id = localStorage.getItem('currentUser')
     if (!id) {
+      setIsFetching(false)
       return
     }
     setIsFetching(true)

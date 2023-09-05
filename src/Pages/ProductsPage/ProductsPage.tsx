@@ -1,28 +1,55 @@
 import { useEffect, useState } from 'react'
 import { useInView } from 'react-intersection-observer'
-import { ProductProjection } from '@commercetools/platform-sdk'
-import { Routes, Route, Link } from 'react-router-dom'
-import ProductsContext from '@/contexts/ProductsContext'
+import { Category, ProductProjection } from '@commercetools/platform-sdk'
 import useProducts from '@/hooks/useProducts'
 import ShoppingCard from '@/Components/ShoppingCard/ShoppingCard'
 import Loader from '@/Components/Loader/Loader'
 import ProductCard from '@/Components/ProductCard/ProductCard'
 import Breadcrumbs from '@/Components/Breadcrumbs/Breadcrumbs'
 import Search from '@/Components/Search/Search'
+import Categories from '@/Components/Categories/Categories'
+import { Outlet, Route, Routes, Link, useLocation } from 'react-router-dom'
+import useCategories from '@/hooks/useCategories'
 import s from './ProductsPage.module.scss'
+import getProducts from './getProducts'
 
 const PRODS_ON_PAGE = 15
 
-function ProductsPage() {
+export default function ProductsPage() {
   const [currentPage, setCurrentPage] = useState(0)
-  const { data, loading, total } = useProducts({
-    limit: PRODS_ON_PAGE,
-    offset: currentPage * PRODS_ON_PAGE,
-  })
-  const [products, setProducts] = useState<ProductProjection[]>(data)
+
+  const location = useLocation()
+
+  const { data: cats, loading: catLoading } = useCategories()
+
+  const getCategoryFromLocation = () => {
+    const url = location.pathname.split('/').filter((item) => item !== '')
+    const path = url[url.length - 1]
+    const cat = cats.find((item) => item.slug.en === path)
+    return cat ? (cat as Category) : null
+  }
+
+  const [currentCategory, setCurrentCategory] = useState<Category | null>(
+    getCategoryFromLocation(),
+  )
+
+  const props = currentCategory
+    ? {
+        limit: PRODS_ON_PAGE,
+        offset: currentPage * PRODS_ON_PAGE,
+        filter: `categories.id:"${currentCategory.id}"`,
+      }
+    : {
+        limit: PRODS_ON_PAGE,
+        offset: currentPage * PRODS_ON_PAGE,
+      }
+
+  const { data, loading, total } = useProducts(props)
+
+  const [products, setProducts] = useState<ProductProjection[]>([])
 
   const { ref, inView } = useInView({
-    threshold: 0.1,
+    threshold: 1,
     delay: 100,
   })
 
@@ -39,6 +66,26 @@ function ProductsPage() {
       setCurrentPage((prev) => prev + 1)
     }
   }, [inView])
+
+  const categoryCallback = (cat: Category | null) => {
+    setCurrentCategory(cat)
+  }
+
+  useEffect(() => {
+    if (!catLoading) {
+      const c = getCategoryFromLocation()
+      setCurrentCategory(c)
+      getProducts({
+        limit: PRODS_ON_PAGE,
+        offset: 0,
+        filter: `categories.id:"${c?.id}"`,
+      })?.then((res) => {
+        setProducts(res.body.results)
+        setCurrentPage(0)
+      })
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [location, catLoading, cats])
 
   const prodList = products.map((product) => {
     const brandName = product.masterVariant.attributes?.find((attribute) =>
@@ -71,7 +118,10 @@ function ProductsPage() {
     }
 
     return (
-      <li key={product.id} className={s.prodListItem}>
+      <li
+        key={product.id + Math.random() * 99999999}
+        className={s.prodListItem}
+      >
         <Link to={`${product.slug.en.toString()}`}>
           {ShoppingCard(prodData)}
         </Link>
@@ -79,33 +129,48 @@ function ProductsPage() {
     )
   })
 
-  return (
-    <ProductsContext.Provider value={products}>
-      <Routes>
-        <Route
-          path="/"
-          element={
-            <section className={s.productsContainer}>
-              <div className={s.breadAndSearch}>
-                <Breadcrumbs />
-                <Search />
-              </div>
+  const prodOutput = (
+    <>
+      {products && <ul className={s.prodList}>{prodList}</ul>}
+      {loading && isFetching && <Loader className={s.prodLoader} />}
+      {!loading && isFetching && <div ref={ref} className={s.pageBreak} />}
+    </>
+  )
 
-              <h2 className={s.prodHeader}>
-                Products {total && <span>[{total} products]</span>}
-              </h2>
-              {products && <ul className={s.prodList}>{prodList}</ul>}
-              {loading && isFetching && <Loader className={s.prodLoader} />}
-              {!loading && isFetching && (
-                <div ref={ref} className={s.pageBreak} />
-              )}
-            </section>
-          }
-        />
-        <Route path="/:slug" element={<ProductCard />} />
-      </Routes>
-    </ProductsContext.Provider>
+  const catsList = cats.map((cat) => (
+    <Route key={cat.id} path={`${cat.slug.en}`} element={prodOutput} />
+  ))
+
+  return (
+    <Routes>
+      <Route
+        path="/"
+        element={
+          <section className={s.productPageContainer}>
+            <div className={s.breadAndSearch}>
+              <Breadcrumbs />
+              <Search />
+            </div>
+
+            <h2 className={s.prodHeader}>
+              {currentCategory ? currentCategory.name.en : 'Products'}{' '}
+              {total && <span>[{total} products]</span>}
+            </h2>
+
+            <div className={s.catsAndFilter}>
+              <Categories callback={categoryCallback} />
+              <div className="filterAndSort" />
+            </div>
+
+            <Outlet />
+          </section>
+        }
+      >
+        <Route index element={prodOutput} />
+        {catsList}
+      </Route>
+      <Route path="/:slug" element={<ProductCard />} />
+      <Route path="/:category?/:slug" element={<ProductCard />} />
+    </Routes>
   )
 }
-
-export default ProductsPage

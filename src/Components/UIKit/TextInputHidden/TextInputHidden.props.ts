@@ -1,4 +1,4 @@
-import TextInputProps from '../TextInput.props'
+import TextInputProps from '../TextInput/TextInput.props'
 
 type TextInputHiddenProps = Omit<
   TextInputProps,

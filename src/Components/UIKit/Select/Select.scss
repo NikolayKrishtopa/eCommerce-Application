@@ -1,0 +1,93 @@
+@use 'sass:math';
+@use '@/styles/abstracts' as *;
+@use '@/Components/UIKit/InputSlot/InputSlot';
+
+$color-main: InputSlot.$color-main;
+$background-color: InputSlot.$background-color;
+$placeholder-height: InputSlot.$min-height;
+$dropdown-border-width: InputSlot.$border-width;
+$option-padding-block: r(10px);
+$option-padding-inline: InputSlot.$label-first-letter-offset;
+
+.select {
+  position: relative;
+  color: $color-main;
+  border-radius: r(20px) r(20px) 0 0;
+
+  $self: &;
+
+  &--open {
+    #{$self}__dropdown {
+      display: initial;
+      box-shadow: 0 5px 20px -10px $color-neutral-dark;
+    }
+  }
+
+  &__placeholder,
+  &__dropdown,
+  &__options-list,
+  &__option,
+  &__option-button {
+    width: 100%;
+  }
+
+  &__placeholder,
+  &__option-button {
+    @include button-reset;
+    padding-inline: $option-padding-inline;
+    text-align: left;
+    user-select: none;
+  }
+
+  &__placeholder {
+    height: $placeholder-height;
+    padding-right: InputSlot.$icon-slot-width;
+  }
+
+  &__dropdown {
+    position: absolute;
+    z-index: $z-index-2-overlap;
+    top: $placeholder-height;
+    text-align: left;
+    background-color: $background-color;
+    border-width: $dropdown-border-width;
+    border-style: solid;
+    border-color: currentColor;
+    display: none;
+  }
+
+  &__options-list {
+    @include list-reset;
+    list-style: none;
+  }
+  &__option {
+    border-bottom: solid currentColor;
+    border-bottom-width: calc(#{$dropdown-border-width} / 2);
+    &:last-child {
+      border-bottom: none;
+    }
+    &--disabled {
+      opacity: 0.5;
+      pointer-events: none;
+    }
+    &-button {
+      padding-block: $option-padding-block;
+    }
+    &:not(#{&}--disable):hover {
+      background-color: $color-main;
+      color: $background-color;
+    }
+  }
+
+  &__icon {
+    position: absolute;
+    right: 0;
+    top: 0;
+    width: InputSlot.$icon-slot-width;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    pointer-events: none;
+  }
+}

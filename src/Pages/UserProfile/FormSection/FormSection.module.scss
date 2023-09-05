@@ -16,9 +16,6 @@ $button-active-color: adjust-color($color-primary, $lightness: 20%);
   color: $color-on-neutral-light;
   background-color: $section-background;
   border-radius: $section-border-radius;
-  & {
-    --text-input-color-background: #{$section-background};
-  }
 }
 
 .fieldset {
@@ -56,7 +53,7 @@ $button-active-color: adjust-color($color-primary, $lightness: 20%);
   column-gap: $section-col-gap;
   flex-direction: row;
   > * {
-    flex-grow: 1;
+    flex: 1;
   }
   @media screen and (max-width: $break-sm) {
     flex-direction: column;

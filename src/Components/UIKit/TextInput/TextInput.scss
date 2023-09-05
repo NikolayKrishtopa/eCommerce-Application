@@ -1,0 +1,30 @@
+@use '@/styles/abstracts' as *;
+@use '@/Components/UIKit/InputSlot/InputSlot';
+
+.text-input {
+  &__input {
+    padding-inline: InputSlot.$label-first-letter-offset;
+    height: InputSlot.$min-height;
+    width: 100%;
+    font-size: 1rem;
+    font-family: inherit;
+    color: currentColor;
+    outline: transparent;
+    border: none;
+    border-radius: inherit;
+    background: transparent;
+    &::placeholder {
+      opacity: 0.75;
+    }
+    &[type='password'] {
+      font-size: 0.75em;
+      letter-spacing: 1px;
+    }
+    &[type='date'] {
+      padding-right: InputSlot.$icon-offset-inline;
+    }
+    #{InputSlot.$self-box--icon} & {
+      padding-right: InputSlot.$icon-slot-width;
+    }
+  }
+}

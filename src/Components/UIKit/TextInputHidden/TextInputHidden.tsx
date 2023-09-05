@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { ReactComponent as SvgEye } from '@/assets/icons/eye.svg'
 import { ReactComponent as SvgEyeSlash } from '@/assets/icons/eye-slash.svg'
 import TextInputHiddenProps from './TextInputHidden.props'
-import TextInput from '../TextInput'
+import TextInput from '../TextInput/TextInput'
 
 export default function TextInputHidden(props: TextInputHiddenProps) {
   const { visible: initVisible = false, onIconClick, ...textInputProps } = props

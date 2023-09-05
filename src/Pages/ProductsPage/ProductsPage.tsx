@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useInView } from 'react-intersection-observer'
 import { Category, ProductProjection } from '@commercetools/platform-sdk'
-import ProductsContext from '@/contexts/ProductsContext'
 import useProducts from '@/hooks/useProducts'
 import ShoppingCard from '@/Components/ShoppingCard/ShoppingCard'
 import Loader from '@/Components/Loader/Loader'
@@ -12,9 +11,7 @@ import Categories from '@/Components/Categories/Categories'
 import { Outlet, Route, Routes, Link, useLocation } from 'react-router-dom'
 import useCategories from '@/hooks/useCategories'
 import s from './ProductsPage.module.scss'
-// import NotFoundPage from '../NotFoundPage/NotFoundPage'
 import getProducts from './getProducts'
-import NotFoundPage from '../NotFoundPage/NotFoundPage'
 
 const PRODS_ON_PAGE = 15
 
@@ -145,38 +142,35 @@ export default function ProductsPage() {
   ))
 
   return (
-    <ProductsContext.Provider value={products}>
-      <Routes>
-        <Route
-          path="/"
-          element={
-            <section className={s.productPageContainer}>
-              <div className={s.breadAndSearch}>
-                <Breadcrumbs />
-                <Search />
-              </div>
+    <Routes>
+      <Route
+        path="/"
+        element={
+          <section className={s.productPageContainer}>
+            <div className={s.breadAndSearch}>
+              <Breadcrumbs />
+              <Search />
+            </div>
 
-              <h2 className={s.prodHeader}>
-                {currentCategory ? currentCategory.name.en : 'Products'}{' '}
-                {total && <span>[{total} products]</span>}
-              </h2>
+            <h2 className={s.prodHeader}>
+              {currentCategory ? currentCategory.name.en : 'Products'}{' '}
+              {total && <span>[{total} products]</span>}
+            </h2>
 
-              <div className={s.catsAndFilter}>
-                <Categories callback={categoryCallback} />
-                <div className="filterAndSort" />
-              </div>
+            <div className={s.catsAndFilter}>
+              <Categories callback={categoryCallback} />
+              <div className="filterAndSort" />
+            </div>
 
-              <Outlet />
-            </section>
-          }
-        >
-          <Route index element={prodOutput} />
-          {catsList}
-        </Route>
-        <Route path="/:slug" element={<ProductCard />} />
-        <Route path="/:category?/:slug" element={<ProductCard />} />
-        <Route path="/*" element={<NotFoundPage />} />
-      </Routes>
-    </ProductsContext.Provider>
+            <Outlet />
+          </section>
+        }
+      >
+        <Route index element={prodOutput} />
+        {catsList}
+      </Route>
+      <Route path="/:slug" element={<ProductCard />} />
+      <Route path="/:category?/:slug" element={<ProductCard />} />
+    </Routes>
   )
 }

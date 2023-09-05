@@ -13,29 +13,34 @@ import Categories from '@/Components/Categories/Categories'
 import { Outlet, Route, Routes, useLocation } from 'react-router-dom'
 import useCategories from '@/hooks/useCategories'
 import s from './ProductsPage.module.scss'
+import NotFoundPage from '../NotFoundPage/NotFoundPage'
+import getProducts from './getProducts'
 
 const PRODS_ON_PAGE = 15
 
 export default function ProductsPage() {
-  // const [products, setProducts] = useState<ProductProjection[]>([])
+  const [currentPage, setCurrentPage] = useState(0)
 
   const location = useLocation()
 
   const { data: cats, loading: catLoading } = useCategories()
 
   const [currentCategory, setCurrentCategory] = useState<Category | null>(null)
-  const [currentPage, setCurrentPage] = useState(0)
 
-  const props = {
-    limit: PRODS_ON_PAGE,
-    offset: currentPage * PRODS_ON_PAGE,
-  }
+  const props = currentCategory
+    ? {
+        limit: PRODS_ON_PAGE,
+        offset: currentPage * PRODS_ON_PAGE,
+        filter: `categories.id:"${currentCategory.id}"`,
+      }
+    : {
+        limit: PRODS_ON_PAGE,
+        offset: currentPage * PRODS_ON_PAGE,
+      }
 
   const { data, loading, total } = useProducts(props)
 
-  const [products, setProducts] = useState<ProductProjection[]>(data)
-  //   filter: `categories.id:"${currentCategory?.id}"`,
-  // }
+  const [products, setProducts] = useState<ProductProjection[]>([])
 
   const { ref, inView } = useInView({
     threshold: 1,
@@ -66,13 +71,24 @@ export default function ProductsPage() {
       const path = url[url.length - 1]
       console.log(`path from func: ${path}`)
       const cat = cats.find((item) => item.slug.en === path)
-      console.log(`data from func: ${cat?.id}`)
+      console.log(`data from func: ${cat?.name.en}`)
       return cat ? (cat as Category) : null
     }
 
     if (!catLoading) {
       console.log(`Current location: ${location.pathname}`)
-      setCurrentCategory(getCategoryFromLocation())
+      const c = getCategoryFromLocation()
+      setCurrentCategory(c)
+      console.log(`currentCategory: ${currentCategory?.name.en}`)
+      getProducts({
+        limit: PRODS_ON_PAGE,
+        offset: 0,
+        filter: `categories.id:"${c?.id}"`,
+      })?.then((res) => {
+        setProducts(res.body.results)
+        console.log(`res.results: ${res.body.results}`)
+        setCurrentPage(0)
+      })
     }
   }, [location, catLoading, cats])
 
@@ -127,35 +143,41 @@ export default function ProductsPage() {
   )
 
   const catsList = cats.map((cat) => (
-    <Route key={cat.id} path={`:${cat.slug.en}`} element={prodOutput} />
+    <Route key={cat.id} path={`${cat.slug.en}`} element={prodOutput} />
   ))
 
   return (
     <ProductsContext.Provider value={products}>
-      <section className={s.productPageContainer}>
-        <div className={s.breadAndSearch}>
-          <Breadcrumbs />
-          <Search />
-        </div>
+      <Routes>
+        <Route
+          path="/"
+          element={
+            <section className={s.productPageContainer}>
+              <div className={s.breadAndSearch}>
+                <Breadcrumbs />
+                <Search />
+              </div>
 
-        <h2 className={s.prodHeader}>
-          {currentCategory ? currentCategory.name.en : 'Products'}{' '}
-          {total && <span>[{total} products]</span>}
-        </h2>
+              <h2 className={s.prodHeader}>
+                {currentCategory ? currentCategory.name.en : 'Products'}{' '}
+                {total && <span>[{total} products]</span>}
+              </h2>
 
-        <div className={s.catsAndFilter}>
-          <Categories callback={categoryCallback} />
-          <div className="filterAndSort" />
-        </div>
+              <div className={s.catsAndFilter}>
+                <Categories callback={categoryCallback} />
+                <div className="filterAndSort" />
+              </div>
 
-        <Outlet />
-
-        <Routes>
-          <Route path="" element={prodOutput} />
+              <Outlet />
+            </section>
+          }
+        >
+          <Route index element={prodOutput} />
           {catsList}
-          <Route path=":slug" element={<ProductCard />} />
-        </Routes>
-      </section>
+        </Route>
+        <Route path="/slug" element={<ProductCard />} />
+        <Route path="*" element={<NotFoundPage />} />
+      </Routes>
     </ProductsContext.Provider>
   )
 }

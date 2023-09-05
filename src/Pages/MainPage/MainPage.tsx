@@ -30,19 +30,19 @@ const categoriesData = [
     id: 1,
     name: 'Full Skateboards',
     image: skateboardImage,
-    link: '/no-route',
+    link: '/catalog',
   },
   {
     id: 2,
     name: 'Decks',
     image: decksImage,
-    link: '/no-route',
+    link: '/catalog',
   },
   {
     id: 3,
     name: 'Wheels',
     image: wheelsImage,
-    link: '/no-route',
+    link: '/catalog',
   },
 ]
 
@@ -52,14 +52,14 @@ const trendingData = [
     name: 'New in',
     description: 'Apparel from Carhartt',
     image: newInImage,
-    link: '/no-route',
+    link: '/catalog',
   },
   {
     id: 2,
     name: 'Latest',
     description: 'Chocolate skateboards',
     image: latestImage,
-    link: '/no-route',
+    link: '/catalog',
   },
 ]
 
@@ -73,7 +73,7 @@ const sellersData = Object.values(
     'Polar Herrington Chain smoker 2.0 wheel well 8.5” Skateboard deck (white)',
   price: 69.99,
   currency: 'EUR',
-  link: '/no-route',
+  link: '/catalog',
 }))
 
 export default function MainPage() {
@@ -97,7 +97,7 @@ export default function MainPage() {
             <h1 className={h.heading}>
               Skateboards and <br /> Streetwear
             </h1>
-            <Link to="/no-route" className={h.button}>
+            <Link to="/catalog" className={h.button}>
               Shop now
             </Link>
           </div>
@@ -128,7 +128,7 @@ export default function MainPage() {
             </li>
           ))}
         </ul>
-        <Link to="/no-route" className={c.button}>
+        <Link to="/catalog" className={c.button}>
           Shop
         </Link>
       </section>

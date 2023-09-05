@@ -5,7 +5,7 @@ import useAuth from '@/hooks/useAuth'
 import ProtectedRoute from '@/hok/ProtectedRoute/ProtectedRoute'
 import { FullPageLoader } from '@/Components/Loader/Loader'
 import SystMsgAlert from '../Components/SystMsgAlert/SystMsgAlert'
-import './App.scss'
+import s from './App.module.scss'
 import MainPage from '../Pages/MainPage/MainPage'
 import LoginPage from '../Pages/AuthPage/LoginPage'
 import RegistrationPage from '../Pages/AuthPage/RegistrationPage'
@@ -25,13 +25,13 @@ function PageBuilder(build: {
     footer?: boolean
     children: JSX.Element
   }) {
-    const { header = false, children, footer = false } = props
+    const { header = false, footer = false, children } = props
     return (
-      <>
+      <div className={s.page}>
         {header && HeaderJSX}
-        {children}
+        <div className={s.pageMain}>{children}</div>
         {footer && FooterJSX}
-      </>
+      </div>
     )
   }
 }

@@ -14,8 +14,8 @@ import Breadcrumbs from '../Breadcrumbs/Breadcrumbs'
 
 export default function ProductCard() {
   // const products = useContext(ProductsContext)
-  const { slug } = useParams()
-  const product = useProduct(slug)
+  const { productSlug } = useParams()
+  const product = useProduct(productSlug)
   const [item, setItem] = useState<ProductProjection | null>(null)
   const [qty, setQty] = useState(1)
   const [photoQty, setPhotoQty] = useState(1)

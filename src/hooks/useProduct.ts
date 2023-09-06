@@ -5,7 +5,6 @@ import { useState, useEffect } from 'react'
 const useProduct = (productSlug?: string) => {
   const [product, setProduct] = useState<ProductProjection>()
   useEffect(() => {
-    console.log(`I got this slug: ${productSlug}`)
     if (productSlug) {
       apiRoot
         .productProjections()
@@ -19,7 +18,6 @@ const useProduct = (productSlug?: string) => {
         })
     }
   }, [productSlug])
-  console.log(`I return this product: ${product?.name.en}`)
   return product
 }
 

@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { useInView } from 'react-intersection-observer'
 import { Category, ProductProjection } from '@commercetools/platform-sdk'
 import useProducts from '@/hooks/useProducts'
@@ -8,60 +8,89 @@ import ProductCard from '@/Components/ProductCard/ProductCard'
 import Breadcrumbs from '@/Components/Breadcrumbs/Breadcrumbs'
 import Search from '@/Components/Search/Search'
 import Categories from '@/Components/Categories/Categories'
-import { Outlet, Route, Routes, Link, useLocation } from 'react-router-dom'
-import useCategories from '@/hooks/useCategories'
+import { Route, Routes, Link, useParams } from 'react-router-dom'
 import { ReactComponent as SvgFilter } from '@/assets/icons/filter.svg'
+import { apiRoot } from '@/eComMerchant/client'
 import s from './ProductsPage.module.scss'
-import getProducts from './getProducts'
 
 const PRODS_ON_PAGE = 15
 
-export default function ProductsPage() {
+const HARDCODED_FILTERS = [
+  // {
+  //   name: 'medium-length',
+  //   filter: 'variants.attributes.skateboard-length:"range (1 to 2)"',
+  // },
+]
+
+const useCategorySlug = (categorySlug?: string) => {
+  const [category, setCategory] = useState<Category>()
+  useEffect(() => {
+    if (categorySlug) {
+      apiRoot
+        .categories()
+        .get({ queryArgs: { where: `slug(en="${categorySlug}")`, limit: 1 } })
+        .execute()
+        .then((resp) => {
+          if (resp.statusCode === 200) {
+            setCategory(resp.body.results.at(0))
+          }
+        })
+    }
+  }, [categorySlug])
+  return category
+}
+
+export function ProductsPage() {
   const [currentPage, setCurrentPage] = useState(0)
   const [query, setQuery] = useState('')
+  const { categorySlug } = useParams()
+  const currentCategory = useCategorySlug(categorySlug)
+  // const { data: categories } = useCategories()
 
-  const location = useLocation()
+  // Filter logic
+  const [filters, setFilters] =
+    useState<{ name: string; filter: string }[]>(HARDCODED_FILTERS)
 
-  const { data: cats, loading: catLoading } = useCategories()
-
-  const getCategoryFromLocation = () => {
-    const url = location.pathname.split('/').filter((item) => item !== '')
-    const path = url[url.length - 1]
-    const cat = cats.find((item) => item.slug.en === path)
-    return cat ? (cat as Category) : null
+  const onCancelFilterClick = (name: string) => () => {
+    setFilters((fs) => fs.filter((f) => f.name !== name))
+  }
+  const onClearFiltersClick = () => {
+    setFilters([])
   }
 
-  const [currentCategory, setCurrentCategory] = useState<Category | null>(
-    getCategoryFromLocation(),
+  const propsFilter = useMemo(
+    () => filters.map((f) => f.filter),
+    [JSON.stringify(filters)],
   )
 
-  const props = currentCategory
-    ? {
-        limit: PRODS_ON_PAGE,
-        offset: currentPage * PRODS_ON_PAGE,
-        filter: `categories.id:"${currentCategory.id}"`,
-      }
-    : {
-        limit: PRODS_ON_PAGE,
-        offset: currentPage * PRODS_ON_PAGE,
-      }
+  const {
+    data: fetchedProducts,
+    loading,
+    total,
+  } = useProducts({
+    limit: PRODS_ON_PAGE,
+    offset: currentPage * PRODS_ON_PAGE,
+    filter: propsFilter,
+    categoryId: currentCategory?.id,
+  })
+  const [listedProducts, setListedProducts] = useState<ProductProjection[]>([])
 
-  const { data, loading, total } = useProducts(props)
-
-  const [products, setProducts] = useState<ProductProjection[]>([])
+  useEffect(() => {
+    // console.log(fetchedProducts)
+  }, [fetchedProducts])
 
   const { ref, inView } = useInView({
     threshold: 1,
     delay: 100,
   })
 
-  const isFetching = Number(total) > products.length
+  const isFetching = Number(total) > listedProducts.length
 
   useEffect(() => {
-    if (data && isFetching) {
-      setProducts((prev) => [...prev, ...data])
+    if (fetchedProducts && isFetching) {
+      setListedProducts((prev) => [...prev, ...fetchedProducts])
     }
-  }, [data, isFetching, loading])
+  }, [fetchedProducts, isFetching, loading])
 
   useEffect(() => {
     if (inView) {
@@ -69,27 +98,7 @@ export default function ProductsPage() {
     }
   }, [inView])
 
-  const categoryCallback = (cat: Category | null) => {
-    setCurrentCategory(cat)
-  }
-
-  useEffect(() => {
-    if (!catLoading) {
-      const c = getCategoryFromLocation()
-      setCurrentCategory(c)
-      getProducts({
-        limit: PRODS_ON_PAGE,
-        offset: 0,
-        filter: `categories.id:"${c?.id}"`,
-      })?.then((res) => {
-        setProducts(res.body.results)
-        setCurrentPage(0)
-      })
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [location, catLoading, cats])
-
-  const prodList = products
+  const prodList = listedProducts
     .filter(
       (p) =>
         p.description &&
@@ -127,113 +136,90 @@ export default function ProductsPage() {
         intlLocale: 'en-EN',
       }
 
+      const link = `/catalog/${currentCategory?.slug.en || 'all-products'}/${
+        product.slug.en
+      }`
+
       return (
         <li
-          key={product.id + Math.random() * 99999999}
+          key={product.id + Math.random() * 9999999}
           className={s.prodListItem}
         >
-          <Link to={`${product.slug.en.toString()}`}>
-            {ShoppingCard(prodData)}
-          </Link>
+          <Link to={link}>{ShoppingCard(prodData)}</Link>
         </li>
       )
     })
 
-  const prodOutput = (
-    <>
-      {products && <ul className={s.prodList}>{prodList}</ul>}
-      {loading && isFetching && <Loader className={s.prodLoader} />}
-      {!loading && isFetching && <div ref={ref} className={s.pageBreak} />}
-    </>
-  )
-
-  const catsList = cats.map((cat) => (
-    <Route key={cat.id} path={`${cat.slug.en}`} element={prodOutput} />
-  ))
-
-  // Filter logic
-  const [filters, setFilters] = useState([])
-
-  const onCancelFilterClick = (name: string) => () => {
-    filters.filter((f) => f !== name)
-  }
-  const onClearFiltersClick = () => {
-    setFilters([])
-  }
-
   return (
-    <Routes>
-      <Route
-        path="/"
-        element={
-          <section className={s.productPageContainer}>
-            <div className={s.breadAndSearch}>
-              <Breadcrumbs />
-              <Search onSubmit={setQuery} />
-            </div>
+    <section className={s.productPageContainer}>
+      <div className={s.breadAndSearch}>
+        <Breadcrumbs />
+        <Search onSubmit={setQuery} />
+      </div>
 
-            <h2 className={s.prodHeader}>
-              {currentCategory ? currentCategory.name.en : 'Products'}{' '}
-              {total && <span>[{total} products]</span>}
-            </h2>
+      <h2 className={s.prodHeader}>
+        {currentCategory ? currentCategory.name.en : 'Products'}{' '}
+        {total && <span>[{total} products]</span>}
+      </h2>
 
-            <div className={s.row}>
-              <div className={s.cancelFilterGroup}>
-                {!!filters.length && (
-                  <>
-                    <ul className={s.cancelFilterList}>
-                      {filters.map((name) => (
-                        <li key={name} className={s.cancelFilterItem}>
-                          <button
-                            type="button"
-                            className={s.cancelFilterItemButton}
-                            onClick={onCancelFilterClick(name)}
-                          >
-                            <span className={s.cancelFilterItemButtonName}>
-                              {name}
-                            </span>
-                            <span className={s.cancelFilterItemButtonIcon}>
-                              𝕏
-                            </span>
-                          </button>
-                        </li>
-                      ))}
-                    </ul>
+      <div className={s.row}>
+        <div className={s.cancelFilterGroup}>
+          {!!filters.length && (
+            <>
+              <ul className={s.cancelFilterList}>
+                {filters.map(({ name }) => (
+                  <li key={name} className={s.cancelFilterItem}>
                     <button
                       type="button"
-                      className={s.clearFiltersButton}
-                      onClick={onClearFiltersClick}
+                      className={s.cancelFilterItemButton}
+                      onClick={onCancelFilterClick(name)}
                     >
-                      <span className={s.clearFiltersButtonIcon}>×</span>
-                      <span className={s.clearFiltersButtonText}>
-                        Clear filters
+                      <span className={s.cancelFilterItemButtonName}>
+                        {name}
                       </span>
+                      <span className={s.cancelFilterItemButtonIcon}>𝕏</span>
                     </button>
-                  </>
-                )}
-              </div>
-              <div className={s.openSidebarGroup}>
-                <button type="button" className={s.openSidebarButton}>
-                  <span className={s.openSidebarButtonText}>Filters</span>
-                  <span className={s.openSidebarButtonIcon}>
-                    <SvgFilter />
-                  </span>
-                </button>
-              </div>
-            </div>
+                  </li>
+                ))}
+              </ul>
+              <button
+                type="button"
+                className={s.clearFiltersButton}
+                onClick={onClearFiltersClick}
+              >
+                <span className={s.clearFiltersButtonIcon}>×</span>
+                <span className={s.clearFiltersButtonText}>Clear filters</span>
+              </button>
+            </>
+          )}
+        </div>
+        <div className={s.openSidebarGroup}>
+          <button type="button" className={s.openSidebarButton}>
+            <span className={s.openSidebarButtonText}>Filters</span>
+            <span className={s.openSidebarButtonIcon}>
+              <SvgFilter />
+            </span>
+          </button>
+        </div>
+      </div>
 
-            <div className={s.catsAndFilter}>
-              <Categories callback={categoryCallback} />
-            </div>
-            <Outlet />
-          </section>
-        }
-      >
-        <Route index element={prodOutput} />
-        {catsList}
-      </Route>
-      <Route path="/:slug" element={<ProductCard />} />
-      <Route path="/:category?/:slug" element={<ProductCard />} />
+      <div className={s.catsAndFilter}>
+        <Categories activeCategorySlug={categorySlug} />
+      </div>
+      <div className={s.products}>
+        {listedProducts && <ul className={s.prodList}>{prodList}</ul>}
+        {loading && isFetching && <Loader className={s.prodLoader} />}
+        {!loading && isFetching && <div ref={ref} className={s.pageBreak} />}
+      </div>
+    </section>
+  )
+}
+
+export default function ProductCardRoutes() {
+  return (
+    <Routes>
+      <Route path="/:categorySlug/:productSlug" element={<ProductCard />} />
+      <Route path="/:categorySlug?" element={<ProductsPage />} />
     </Routes>
   )
 }

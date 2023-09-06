@@ -41,6 +41,7 @@ export interface UserLoggedIn {
 export interface ProductQueryParams {
   limit: number
   offset: number
-  filter?: string
+  filter?: string | string[]
   sort?: string
+  categoryId?: string
 }

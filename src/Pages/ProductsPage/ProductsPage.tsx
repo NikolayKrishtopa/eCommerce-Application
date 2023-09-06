@@ -10,6 +10,7 @@ import Search from '@/Components/Search/Search'
 import Categories from '@/Components/Categories/Categories'
 import { Outlet, Route, Routes, Link, useLocation } from 'react-router-dom'
 import useCategories from '@/hooks/useCategories'
+import { ReactComponent as SvgFilter } from '@/assets/icons/filter.svg'
 import s from './ProductsPage.module.scss'
 import getProducts from './getProducts'
 
@@ -150,6 +151,16 @@ export default function ProductsPage() {
     <Route key={cat.id} path={`${cat.slug.en}`} element={prodOutput} />
   ))
 
+  // Filter logic
+  const [filters, setFilters] = useState([])
+
+  const onCancelFilterClick = (name: string) => () => {
+    filters.filter((f) => f !== name)
+  }
+  const onClearFiltersClick = () => {
+    setFilters([])
+  }
+
   return (
     <Routes>
       <Route
@@ -166,11 +177,54 @@ export default function ProductsPage() {
               {total && <span>[{total} products]</span>}
             </h2>
 
-            <div className={s.catsAndFilter}>
-              <Categories callback={categoryCallback} />
-              <div className="filterAndSort" />
+            <div className={s.row}>
+              <div className={s.cancelFilterGroup}>
+                {!!filters.length && (
+                  <>
+                    <ul className={s.cancelFilterList}>
+                      {filters.map((name) => (
+                        <li key={name} className={s.cancelFilterItem}>
+                          <button
+                            type="button"
+                            className={s.cancelFilterItemButton}
+                            onClick={onCancelFilterClick(name)}
+                          >
+                            <span className={s.cancelFilterItemButtonName}>
+                              {name}
+                            </span>
+                            <span className={s.cancelFilterItemButtonIcon}>
+                              𝕏
+                            </span>
+                          </button>
+                        </li>
+                      ))}
+                    </ul>
+                    <button
+                      type="button"
+                      className={s.clearFiltersButton}
+                      onClick={onClearFiltersClick}
+                    >
+                      <span className={s.clearFiltersButtonIcon}>×</span>
+                      <span className={s.clearFiltersButtonText}>
+                        Clear filters
+                      </span>
+                    </button>
+                  </>
+                )}
+              </div>
+              <div className={s.openSidebarGroup}>
+                <button type="button" className={s.openSidebarButton}>
+                  <span className={s.openSidebarButtonText}>Filters</span>
+                  <span className={s.openSidebarButtonIcon}>
+                    <SvgFilter />
+                  </span>
+                </button>
+              </div>
             </div>
 
+            <div className={s.catsAndFilter}>
+              <Categories callback={categoryCallback} />
+            </div>
             <Outlet />
           </section>
         }

@@ -10,6 +10,7 @@ import Categories from '@/Components/Categories/Categories'
 import { Route, Routes, Link, useParams } from 'react-router-dom'
 import { ReactComponent as SvgFilter } from '@/assets/icons/filter.svg'
 import { apiRoot } from '@/eComMerchant/client'
+import useCategories from '@/hooks/useCategories'
 import s from './ProductsPage.module.scss'
 
 const PRODS_ON_PAGE = 30
@@ -44,6 +45,7 @@ export function ProductsPage() {
   const [query, setQuery] = useState('')
   const { categorySlug } = useParams()
   const currentCategory = useCategorySlug(categorySlug)
+  const { data: categoriesList } = useCategories()
 
   // Filter logic
   const [filters, setFilters] =
@@ -68,7 +70,7 @@ export function ProductsPage() {
     searchText: query,
   })
 
-  const MAX_PAGES = Math.ceil(total / PRODS_ON_PAGE)
+  const MAX_PAGES = Math.ceil(total / PRODS_ON_PAGE) - 1
   const isMaxPage = currentPage >= MAX_PAGES
 
   const [products, setProducts] = useState<typeof fetchedProducts>([])
@@ -126,8 +128,12 @@ export function ProductsPage() {
       </div>
 
       <h2 className={s.prodHeader}>
-        {currentCategory ? currentCategory.name.en : 'Products'}{' '}
-        {total && <span>[{total} products]</span>}
+        {!loading && (
+          <>
+            {!currentCategory ? 'Products' : currentCategory.name.en}{' '}
+            {!total ? null : <span>[{total} products]</span>}
+          </>
+        )}
       </h2>
 
       <div className={s.row}>
@@ -172,7 +178,10 @@ export function ProductsPage() {
       </div>
 
       <div className={s.catsAndFilter}>
-        <Categories activeCategorySlug={categorySlug} />
+        <Categories
+          categories={categoriesList}
+          activeCategorySlug={categorySlug}
+        />
       </div>
       <div className={s.products}>
         <ul className={s.prodList}>{prodList}</ul>

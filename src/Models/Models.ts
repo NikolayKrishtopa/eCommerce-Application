@@ -44,4 +44,5 @@ export interface ProductQueryParams {
   filter?: string | string[]
   sort?: string
   categoryId?: string
+  searchText?: string
 }

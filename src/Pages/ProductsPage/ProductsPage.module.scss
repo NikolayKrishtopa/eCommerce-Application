@@ -76,6 +76,24 @@ li.prod-list-item {
   }
 }
 
+.loadMore {
+  @include button-reset;
+  display: block;
+  width: 100%;
+  max-width: r(250px);
+  margin-inline: auto;
+  margin-top: r(50px);
+  background-color: $color-neutral-light;
+  color: $color-on-neutral-light;
+  padding: r(10px);
+  border-radius: r(5px);
+  user-select: none;
+  &:disabled {
+    opacity: 0.5;
+    pointer-events: none;
+  }
+}
+
 /* Sort and filters */
 
 $col-gap: r(10px);

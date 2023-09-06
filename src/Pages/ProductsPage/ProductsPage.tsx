@@ -1,6 +1,5 @@
-import { useEffect, useMemo, useState } from 'react'
-import { useInView } from 'react-intersection-observer'
-import { Category, ProductProjection } from '@commercetools/platform-sdk'
+import { useEffect, useState } from 'react'
+import { Category } from '@commercetools/platform-sdk'
 import useProducts from '@/hooks/useProducts'
 import ShoppingCard from '@/Components/ShoppingCard/ShoppingCard'
 import Loader from '@/Components/Loader/Loader'
@@ -13,13 +12,13 @@ import { ReactComponent as SvgFilter } from '@/assets/icons/filter.svg'
 import { apiRoot } from '@/eComMerchant/client'
 import s from './ProductsPage.module.scss'
 
-const PRODS_ON_PAGE = 15
+const PRODS_ON_PAGE = 30
 
 const HARDCODED_FILTERS = [
-  // {
-  //   name: 'medium-length',
-  //   filter: 'variants.attributes.skateboard-length:"range (1 to 2)"',
-  // },
+  {
+    name: 'medium-length',
+    filter: 'variants.attributes.skateboard-length:"range (1 to *)"',
+  },
 ]
 
 const useCategorySlug = (categorySlug?: string) => {
@@ -41,11 +40,10 @@ const useCategorySlug = (categorySlug?: string) => {
 }
 
 export function ProductsPage() {
-  const [currentPage, setCurrentPage] = useState(0)
+  const [currentPage, setCurrentPage] = useState(1)
   const [query, setQuery] = useState('')
   const { categorySlug } = useParams()
   const currentCategory = useCategorySlug(categorySlug)
-  // const { data: categories } = useCategories()
 
   // Filter logic
   const [filters, setFilters] =
@@ -58,11 +56,6 @@ export function ProductsPage() {
     setFilters([])
   }
 
-  const propsFilter = useMemo(
-    () => filters.map((f) => f.filter),
-    [JSON.stringify(filters)],
-  )
-
   const {
     data: fetchedProducts,
     loading,
@@ -70,85 +63,60 @@ export function ProductsPage() {
   } = useProducts({
     limit: PRODS_ON_PAGE,
     offset: currentPage * PRODS_ON_PAGE,
-    filter: propsFilter,
+    filter: filters.map((f) => f.filter),
     categoryId: currentCategory?.id,
-  })
-  const [listedProducts, setListedProducts] = useState<ProductProjection[]>([])
-
-  useEffect(() => {
-    // console.log(fetchedProducts)
-  }, [fetchedProducts])
-
-  const { ref, inView } = useInView({
-    threshold: 1,
-    delay: 100,
+    searchText: query,
   })
 
-  const isFetching = Number(total) > listedProducts.length
+  const MAX_PAGES = Math.ceil(total / PRODS_ON_PAGE)
+  const isMaxPage = currentPage >= MAX_PAGES
+
+  const [products, setProducts] = useState<typeof fetchedProducts>([])
 
   useEffect(() => {
-    if (fetchedProducts && isFetching) {
-      setListedProducts((prev) => [...prev, ...fetchedProducts])
-    }
-  }, [fetchedProducts, isFetching, loading])
+    setProducts((prev) => [...prev, ...fetchedProducts])
+  }, [JSON.stringify(fetchedProducts)])
 
-  useEffect(() => {
-    if (inView) {
-      setCurrentPage((prev) => prev + 1)
-    }
-  }, [inView])
+  const prodList = products.map((product) => {
+    const brandName = product.masterVariant.attributes?.find((attribute) =>
+      attribute.name.endsWith('-brand'),
+    )?.value.label
 
-  const prodList = listedProducts
-    .filter(
-      (p) =>
-        p.description &&
-        (p?.description.en.toLowerCase().includes(query.toLowerCase()) ||
-          p?.name.en.toLowerCase().includes(query.toLowerCase())),
+    const discounted =
+      product.masterVariant.prices && product.masterVariant.prices[0].discounted
+        ? product.masterVariant.prices[0].discounted.value.centAmount / 100
+        : undefined
+
+    const prodData = {
+      className: '',
+      name: brandName,
+      description: product.name.en,
+      price: product.masterVariant.prices
+        ? product.masterVariant.prices[0].value.centAmount / 100
+        : 0,
+      currency: product.masterVariant.prices
+        ? product.masterVariant.prices[0].value.currencyCode
+        : 'EUR',
+      imageUrl: product.masterVariant.images
+        ? product.masterVariant.images[0].url
+        : '',
+      imageAlt: product.name.en,
+      discountPrice: discounted,
+      onNameClick: undefined,
+      toFixed: 2,
+      intlLocale: 'en-EN',
+    }
+
+    const link = `/catalog/${currentCategory?.slug.en || 'all-products'}/${
+      product.slug.en
+    }`
+
+    return (
+      <li key={product.id + Math.random() * 9999999} className={s.prodListItem}>
+        <Link to={link}>{ShoppingCard(prodData)}</Link>
+      </li>
     )
-    .map((product) => {
-      const brandName = product.masterVariant.attributes?.find((attribute) =>
-        attribute.name.endsWith('-brand'),
-      )?.value.label
-
-      const discounted =
-        product.masterVariant.prices &&
-        product.masterVariant.prices[0].discounted
-          ? product.masterVariant.prices[0].discounted.value.centAmount / 100
-          : undefined
-
-      const prodData = {
-        className: '',
-        name: brandName,
-        description: product.name.en,
-        price: product.masterVariant.prices
-          ? product.masterVariant.prices[0].value.centAmount / 100
-          : 0,
-        currency: product.masterVariant.prices
-          ? product.masterVariant.prices[0].value.currencyCode
-          : 'EUR',
-        imageUrl: product.masterVariant.images
-          ? product.masterVariant.images[0].url
-          : '',
-        imageAlt: product.name.en,
-        discountPrice: discounted,
-        onNameClick: undefined,
-        toFixed: 2,
-        intlLocale: 'en-EN',
-      }
-
-      const link = `/catalog/${currentCategory?.slug.en || 'all-products'}/${
-        product.slug.en
-      }`
-
-      return (
-        <li
-          key={product.id + Math.random() * 9999999}
-          className={s.prodListItem}
-        >
-          <Link to={link}>{ShoppingCard(prodData)}</Link>
-        </li>
-      )
-    })
+  })
 
   return (
     <section className={s.productPageContainer}>
@@ -207,9 +175,18 @@ export function ProductsPage() {
         <Categories activeCategorySlug={categorySlug} />
       </div>
       <div className={s.products}>
-        {listedProducts && <ul className={s.prodList}>{prodList}</ul>}
-        {loading && isFetching && <Loader className={s.prodLoader} />}
-        {!loading && isFetching && <div ref={ref} className={s.pageBreak} />}
+        <ul className={s.prodList}>{prodList}</ul>
+        {loading && <Loader className={s.prodLoader} />}
+        <button
+          type="button"
+          className={s.loadMore}
+          disabled={isMaxPage}
+          onClick={() => {
+            setCurrentPage((prev) => Math.min(MAX_PAGES, prev + 1))
+          }}
+        >
+          Load more
+        </button>
       </div>
     </section>
   )

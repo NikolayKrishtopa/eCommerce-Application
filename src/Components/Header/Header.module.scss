@@ -4,6 +4,7 @@ $header-height: $global-header-height;
 
 .header {
   position: relative;
+  z-index: $z-index-1-overlap;
   height: $header-height;
   display: flex;
   justify-content: flex-end;

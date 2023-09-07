@@ -1,10 +1,11 @@
 @use 'sass:math';
 @use '@/styles/abstracts' as *;
 
-$footer-width: 1450px;
+$footer-max-width: 1450px;
+$footer-margin-top: r(75px);
 
 .footer {
-  margin-top: r(75px);
+  margin-top: $footer-margin-top;
   max-width: 1450px;
   padding-block: r(45px);
   padding-inline: max(20px, 2.5%);

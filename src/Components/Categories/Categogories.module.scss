@@ -1,17 +1,18 @@
 @use '@/styles/abstracts' as *;
 
-.categories-menu {
+.categoriesMenu {
   display: flex;
-  justify-content: space-between;
+  justify-content: start;
   align-items: center;
-  gap: 30px;
+  gap: r(15px) r(30px);
+  flex-wrap: wrap;
   font-family: $font-stack-text;
-  font-size: 20px;
+  font-size: 1.5rem;
   font-weight: bold;
   color: $color-neutral-light-additional;
 }
 
-.category-link {
+.categoryLink {
   &:hover,
   &.active,
   &:active {

@@ -14,6 +14,7 @@ import Categories from '@/Components/Categories/Categories'
 import { Route, Routes, Link, useParams } from 'react-router-dom'
 import { ReactComponent as SvgFilter } from '@/assets/icons/filter.svg'
 import { ReactComponent as SvgSort } from '@/assets/icons/sort.svg'
+import { ReactComponent as SvgClose } from '@/assets/icons/close.svg'
 import { apiRoot } from '@/eComMerchant/client'
 import useCategories from '@/hooks/useCategories'
 import Checkbox from '@/Components/UIKit/Checkbox/Checkbox'
@@ -138,8 +139,7 @@ const useFilters = () => {
 }
 
 type Sort = {
-  name: 'asc' | 'desc'
-  price: 'asc' | 'desc'
+  sorting: 'price asc' | 'price desc' | 'name.en asc' | 'name.en desc'
 }
 
 export function ProductsPage() {
@@ -150,15 +150,15 @@ export function ProductsPage() {
   const { data: categoriesList } = useCategories()
   const globalFilters = useGlobalFilters()
   const [sidebar, setSidebar] = useState<'filters' | 'sort' | null>()
+  const [currentFilterType, setCurrentFilterType] = useState('')
 
-  const SORTS = {
-    name: (v: string) => `name.en ${v}`,
-    price: (v: string) => `price ${v}`,
-  }
+  // const SORTS = {
+  //   name: (v: string) => `name.en ${v}`,
+  //   price: (v: string) => `price ${v}`,
+  // }
 
   const [sort, setSort] = useState<Sort>({
-    name: 'asc',
-    price: 'asc',
+    sorting: 'price asc',
   })
 
   // Filter logic
@@ -175,7 +175,7 @@ export function ProductsPage() {
         ? ''
         : `variants.attributes.${name}.key:"${values.join(`","`)}"`,
     ),
-    sort: (['price', 'name'] as const).map((n) => SORTS[n](sort[n])),
+    sort: [sort.sorting],
     categoryId: currentCategory?.id,
     searchText: query,
   })
@@ -233,9 +233,9 @@ export function ProductsPage() {
   })
 
   const onSortClick =
-    (key: keyof Sort) => (e: React.ChangeEvent<HTMLInputElement>) => {
+    (value: Sort) => (e: React.ChangeEvent<HTMLInputElement>) => {
       if (e.target.value) {
-        setSort((p) => ({ ...p, [key]: e.target.value }))
+        setSort(value)
       }
     }
 
@@ -245,38 +245,56 @@ export function ProductsPage() {
         <div className={b.sidebar}>
           <div className={b.mask} />
           <div className={b.head}>
-            <h3 className={b.heading}>Filters</h3>
+            <h3 className={b.heading}>
+              Filter <SvgFilter className={b.headingIcon} />
+            </h3>
+
             <button
               type="button"
               className={b.closeButton}
               onClick={() => {
                 setSidebar(null)
+                setCurrentFilterType('')
               }}
             >
-              X
+              <SvgClose />
             </button>
           </div>
           <div className={b.main}>
             <ul className={b.list}>
               {globalFilters.map(({ name: groupName, attributes }) => (
                 <li key={crypto.randomUUID()} className={b.group}>
-                  <span className={s.groupName}>{groupName}</span>
-                  <ul className={s.groupList}>
-                    {attributes?.map((attribute) => (
-                      <FilterOption
-                        key={crypto.randomUUID()}
-                        attribute={attribute}
-                        currentFilters={currentFilters}
-                        onChange={({ key, value, checked }) => {
-                          if (checked) {
-                            putFilter(key, value)
-                          } else {
-                            removeFilter(key, value)
-                          }
-                        }}
-                      />
-                    ))}
-                  </ul>
+                  <button
+                    type="button"
+                    className={b.groupName}
+                    onClick={() => {
+                      if (groupName === currentFilterType) {
+                        setCurrentFilterType('')
+                      } else {
+                        setCurrentFilterType(groupName)
+                      }
+                    }}
+                  >
+                    {groupName}
+                  </button>
+                  {currentFilterType === groupName && (
+                    <ul className={b.groupList}>
+                      {attributes?.map((attribute) => (
+                        <FilterOption
+                          key={crypto.randomUUID()}
+                          attribute={attribute}
+                          currentFilters={currentFilters}
+                          onChange={({ key, value, checked }) => {
+                            if (checked) {
+                              putFilter(key, value)
+                            } else {
+                              removeFilter(key, value)
+                            }
+                          }}
+                        />
+                      ))}
+                    </ul>
+                  )}
                 </li>
               ))}
             </ul>
@@ -287,7 +305,9 @@ export function ProductsPage() {
         <div className={b.sidebar}>
           <div className={b.mask} />
           <div className={b.head}>
-            <h3 className={b.heading}>Sort</h3>
+            <h3 className={b.heading}>
+              Sort <SvgSort className={b.headingIcon} />
+            </h3>
             <button
               type="button"
               className={b.closeButton}
@@ -295,63 +315,56 @@ export function ProductsPage() {
                 setSidebar(null)
               }}
             >
-              X
+              <SvgClose />
             </button>
           </div>
           <div className={b.main}>
-            <ul className={b.list}>
-              <li className={b.item}>
-                <fieldset>
-                  <legend>Sort price: </legend>
-                  <div>
-                    <label htmlFor="sort-price-asc">Asc</label>
-                    <input
-                      id="sort-price-asc"
-                      name="price"
-                      type="radio"
-                      value="asc"
-                      checked={sort.price === 'asc'}
-                      onChange={onSortClick('price')}
-                    />
-                    <label htmlFor="sort-price-desc">Dsc</label>
-                    <input
-                      id="sort-price-desc"
-                      name="price"
-                      type="radio"
-                      value="desc"
-                      checked={sort.price === 'desc'}
-                      onChange={onSortClick('price')}
-                    />
-                  </div>
-                </fieldset>
-              </li>
-              <br />
-              <li className={b.item}>
-                <fieldset>
-                  <legend>Sort name: </legend>
-                  <div>
-                    <label htmlFor="sort-name-asc">A - z</label>
-                    <input
-                      id="sort-name-asc"
-                      name="name"
-                      type="radio"
-                      value="asc"
-                      checked={sort.name === 'asc'}
-                      onChange={onSortClick('name')}
-                    />
-                    <label htmlFor="sort-name-desc">Z - a</label>
-                    <input
-                      id="sort-name-desc"
-                      name="name"
-                      type="radio"
-                      value="desc"
-                      checked={sort.name === 'desc'}
-                      onChange={onSortClick('name')}
-                    />
-                  </div>
-                </fieldset>
-              </li>
-            </ul>
+            <div className={b.list}>
+              <div className={b.checkBoxContainer}>
+                <label htmlFor="sort-price-asc">Price Asc</label>
+                <input
+                  id="sort-price-asc"
+                  name="price"
+                  type="radio"
+                  value="price asc"
+                  checked={sort.sorting === 'price asc'}
+                  onChange={onSortClick({ sorting: 'price asc' })}
+                />
+              </div>
+              <div className={b.checkBoxContainer}>
+                <label htmlFor="sort-price-desc">Price Dsc</label>
+                <input
+                  id="sort-price-desc"
+                  name="price"
+                  type="radio"
+                  value="price desc"
+                  checked={sort.sorting === 'price desc'}
+                  onChange={onSortClick({ sorting: 'price desc' })}
+                />
+              </div>
+              <div className={b.checkBoxContainer}>
+                <label htmlFor="sort-name-asc">Name asc</label>
+                <input
+                  id="sort-name-asc"
+                  name="name"
+                  type="radio"
+                  value="name asc"
+                  checked={sort.sorting === 'name.en asc'}
+                  onChange={onSortClick({ sorting: 'name.en asc' })}
+                />
+              </div>
+              <div className={b.checkBoxContainer}>
+                <label htmlFor="sort-name-desc">Name desc</label>
+                <input
+                  id="sort-name-desc"
+                  name="name"
+                  type="radio"
+                  value="name desc"
+                  checked={sort.sorting === 'name.en desc'}
+                  onChange={onSortClick({ sorting: 'name.en desc' })}
+                />
+              </div>
+            </div>
           </div>
         </div>
       )}

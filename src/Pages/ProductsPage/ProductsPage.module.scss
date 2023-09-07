@@ -115,6 +115,8 @@ $col-gap: r(10px);
 
 .openSidebarGroup {
   margin-block: r(20px);
+  display: flex;
+  gap: r(20px);
 }
 
 /* Filters */
@@ -173,10 +175,15 @@ $col-gap: r(10px);
   @include button-reset;
   @include hoverBorderDecoration;
   display: flex;
+  align-items: center;
   gap: r(5px);
   font-weight: bold;
   color: $color-on-primary;
   &:active {
     color: $color-info;
+  }
+  &Icon {
+    display: flex;
+    align-items: center;
   }
 }

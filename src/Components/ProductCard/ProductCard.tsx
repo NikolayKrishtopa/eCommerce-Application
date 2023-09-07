@@ -208,11 +208,7 @@ export default function ProductCard() {
                     +
                   </button>
                 </div>
-                <button
-                  type="button"
-                  className={s.btn}
-                  onClick={() => console.log(item)}
-                >
+                <button type="button" className={s.btn}>
                   Add to shopping cart <img src={cartIcon} alt="cart" />
                 </button>
               </div>

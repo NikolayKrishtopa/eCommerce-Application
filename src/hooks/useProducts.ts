@@ -12,12 +12,12 @@ export default function useProducts(props: ProductQueryParams) {
 
   const filtersStringArray: string[] = []
 
-  if (categoryId) {
+  if (categoryId && !filter?.length) {
     filtersStringArray.push(`categories.id:"${categoryId}"`)
   }
 
   if (filter) {
-    filtersStringArray.concat(filter)
+    filtersStringArray.push(...filter)
   }
 
   useEffect(() => {
@@ -31,15 +31,15 @@ export default function useProducts(props: ProductQueryParams) {
           offset,
           filter: filtersStringArray,
           sort,
-          'text.en': searchText,
+          'text.en': searchText || undefined,
         },
       })
       .execute()
       .then(({ body }) => {
-        if (body.count) {
-          setData(body.results)
-          setTotal(body.total || 0)
-        }
+        // if (body.count) {
+        setData(body.results)
+        setTotal(body.total || 0)
+        // }
       })
       .catch(setError)
       .finally(() => setLoading(false))

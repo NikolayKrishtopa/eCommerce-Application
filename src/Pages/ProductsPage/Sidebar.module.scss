@@ -93,11 +93,18 @@ svg.heading-icon {
 }
 
 .option {
+  list-style: none;
+  padding-bottom: 16px;
   &Name {
+    margin: 10px 0;
+    font-size: 20px;
+    font-weight: 700;
   }
   &VariantGroup {
     display: grid;
     gap: r(2px);
+    list-style: none;
+    padding-left: 10px;
   }
   &Variant {
   }

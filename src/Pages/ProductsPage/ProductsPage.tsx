@@ -76,7 +76,7 @@ function FilterOption(props: {
   if (type.name === 'enum') {
     return (
       <li key={crypto.randomUUID()} className={b.option}>
-        <span className={b.optionName}>{attributeLabel}</span>
+        <div className={b.optionName}>{attributeLabel}</div>
         <ul className={b.optionVariantGroup}>
           {type.values.map(({ key, label }) => (
             <li key={crypto.randomUUID()} className={b.optionVariant}>

@@ -42,7 +42,7 @@ export interface ProductQueryParams {
   limit?: number
   offset?: number
   filter?: string[]
-  sort?: string
+  sort?: string[]
   categoryId?: string
   searchText?: string
 }

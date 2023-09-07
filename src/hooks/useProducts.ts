@@ -36,14 +36,19 @@ export default function useProducts(props: ProductQueryParams) {
       })
       .execute()
       .then(({ body }) => {
-        // if (body.count) {
         setData(body.results)
         setTotal(body.total || 0)
-        // }
       })
       .catch(setError)
       .finally(() => setLoading(false))
-  }, [JSON.stringify(filter), limit, offset, sort, searchText, categoryId])
+  }, [
+    JSON.stringify(filter),
+    JSON.stringify(sort),
+    limit,
+    offset,
+    searchText,
+    categoryId,
+  ])
 
   return { loading, data, error, total }
 }

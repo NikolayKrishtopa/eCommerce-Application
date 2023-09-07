@@ -137,6 +137,11 @@ const useFilters = () => {
   }
 }
 
+type Sort = {
+  name: 'asc' | 'desc'
+  price: 'asc' | 'desc'
+}
+
 export function ProductsPage() {
   const [currentPage, setCurrentPage] = useState(1)
   const [query, setQuery] = useState('')
@@ -145,6 +150,16 @@ export function ProductsPage() {
   const { data: categoriesList } = useCategories()
   const globalFilters = useGlobalFilters()
   const [sidebar, setSidebar] = useState<'filters' | 'sort' | null>()
+
+  const SORTS = {
+    name: (v: string) => `name.en ${v}`,
+    price: (v: string) => `price ${v}`,
+  }
+
+  const [sort, setSort] = useState<Sort>({
+    name: 'asc',
+    price: 'asc',
+  })
 
   // Filter logic
   const { currentFilters, putFilter, removeFilter, clearFilters } = useFilters()
@@ -160,6 +175,7 @@ export function ProductsPage() {
         ? ''
         : `variants.attributes.${name}.key:"${values.join(`","`)}"`,
     ),
+    sort: (['price', 'name'] as const).map((n) => SORTS[n](sort[n])),
     categoryId: currentCategory?.id,
     searchText: query,
   })
@@ -213,6 +229,13 @@ export function ProductsPage() {
       </li>
     )
   })
+
+  const onSortClick =
+    (key: keyof Sort) => (e: React.ChangeEvent<HTMLInputElement>) => {
+      if (e.target.value) {
+        setSort((p) => ({ ...p, [key]: e.target.value }))
+      }
+    }
 
   return (
     <section className={s.productPageContainer}>
@@ -275,12 +298,57 @@ export function ProductsPage() {
           </div>
           <div className={b.main}>
             <ul className={b.list}>
-              {[].map(() => (
-                <li key={crypto.randomUUID()} className={b.item}>
-                  <input type="radio" />
-                  <input type="radio" />
-                </li>
-              ))}
+              <li className={b.item}>
+                <fieldset>
+                  <legend>Sort price: </legend>
+                  <div>
+                    <label htmlFor="sort-price-asc">Asc</label>
+                    <input
+                      id="sort-price-asc"
+                      name="price"
+                      type="radio"
+                      value="asc"
+                      checked={sort.price === 'asc'}
+                      onChange={onSortClick('price')}
+                    />
+                    <label htmlFor="sort-price-desc">Dsc</label>
+                    <input
+                      id="sort-price-desc"
+                      name="price"
+                      type="radio"
+                      value="desc"
+                      checked={sort.price === 'desc'}
+                      onChange={onSortClick('price')}
+                    />
+                  </div>
+                </fieldset>
+              </li>
+              <br />
+              <li className={b.item}>
+                <fieldset>
+                  <legend>Sort name: </legend>
+                  <div>
+                    <label htmlFor="sort-name-asc">A - z</label>
+                    <input
+                      id="sort-name-asc"
+                      name="name"
+                      type="radio"
+                      value="asc"
+                      checked={sort.name === 'asc'}
+                      onChange={onSortClick('name')}
+                    />
+                    <label htmlFor="sort-name-desc">Z - a</label>
+                    <input
+                      id="sort-name-desc"
+                      name="name"
+                      type="radio"
+                      value="desc"
+                      checked={sort.name === 'desc'}
+                      onChange={onSortClick('name')}
+                    />
+                  </div>
+                </fieldset>
+              </li>
             </ul>
           </div>
         </div>

@@ -26,7 +26,7 @@ $input-background-color-off: transparent;
     height: $size;
     border-radius: 0.3em;
     border: r(2px) solid currentColor;
-    background-color: $input-background-color-on;
+    background-color: $input-background-color-off;
     cursor: pointer;
     &::after {
       content: '';
@@ -39,7 +39,7 @@ $input-background-color-off: transparent;
       background-repeat: no-repeat;
     }
     &:checked {
-      background-color: $input-background-color-off;
+      background-color: $input-background-color-on;
     }
     #{$self}--disabled & {
       cursor: default;

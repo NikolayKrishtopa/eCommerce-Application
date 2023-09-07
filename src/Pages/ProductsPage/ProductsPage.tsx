@@ -1,6 +1,9 @@
 import { useEffect, useState } from 'react'
-import { useInView } from 'react-intersection-observer'
-import { Category, ProductProjection } from '@commercetools/platform-sdk'
+import {
+  AttributeDefinition,
+  Category,
+  ProductType,
+} from '@commercetools/platform-sdk'
 import useProducts from '@/hooks/useProducts'
 import ShoppingCard from '@/Components/ShoppingCard/ShoppingCard'
 import Loader from '@/Components/Loader/Loader'
@@ -8,178 +11,456 @@ import ProductCard from '@/Components/ProductCard/ProductCard'
 import Breadcrumbs from '@/Components/Breadcrumbs/Breadcrumbs'
 import Search from '@/Components/Search/Search'
 import Categories from '@/Components/Categories/Categories'
-import { Outlet, Route, Routes, Link, useLocation } from 'react-router-dom'
+import { Route, Routes, Link, useParams } from 'react-router-dom'
+import { ReactComponent as SvgFilter } from '@/assets/icons/filter.svg'
+import { ReactComponent as SvgSort } from '@/assets/icons/sort.svg'
+import { apiRoot } from '@/eComMerchant/client'
 import useCategories from '@/hooks/useCategories'
+import Checkbox from '@/Components/UIKit/Checkbox/Checkbox'
 import s from './ProductsPage.module.scss'
-import getProducts from './getProducts'
+import b from './Sidebar.module.scss'
 
-const PRODS_ON_PAGE = 15
+const PRODS_ON_PAGE = 10
 
-export default function ProductsPage() {
-  const [currentPage, setCurrentPage] = useState(0)
-  const [query, setQuery] = useState('')
+const useCategorySlug = (categorySlug?: string) => {
+  const [category, setCategory] = useState<Category>()
+  useEffect(() => {
+    if (categorySlug) {
+      apiRoot
+        .categories()
+        .get({ queryArgs: { where: `slug(en="${categorySlug}")`, limit: 1 } })
+        .execute()
+        .then((resp) => {
+          if (resp.statusCode === 200) {
+            setCategory(resp.body.results.at(0))
+          }
+        })
+    }
+  }, [categorySlug])
+  return category
+}
 
-  const location = useLocation()
+const useGlobalFilters = () => {
+  const [enumFilters, setEnumFilters] = useState<ProductType[]>([])
+  useEffect(() => {
+    apiRoot
+      .productTypes()
+      .get()
+      .execute()
+      .then((resp) => {
+        if (resp.statusCode === 200) {
+          setEnumFilters(resp.body.results)
+        }
+      })
+  }, [])
+  return enumFilters
+}
 
-  const { data: cats, loading: catLoading } = useCategories()
+type Filter = {
+  name: string
+  values: string[]
+}
 
-  const getCategoryFromLocation = () => {
-    const url = location.pathname.split('/').filter((item) => item !== '')
-    const path = url[url.length - 1]
-    const cat = cats.find((item) => item.slug.en === path)
-    return cat ? (cat as Category) : null
+function FilterOption(props: {
+  attribute: AttributeDefinition
+  currentFilters: Filter[]
+  onChange: (p: { key: string; value: string; checked: boolean }) => void
+}) {
+  const { attribute, currentFilters, onChange } = props
+  const {
+    label: { en: attributeLabel },
+    name,
+    type,
+  } = attribute
+  if (type.name === 'enum') {
+    return (
+      <li key={crypto.randomUUID()} className={b.option}>
+        <span className={b.optionName}>{attributeLabel}</span>
+        <ul className={b.optionVariantGroup}>
+          {type.values.map(({ key, label }) => (
+            <li key={crypto.randomUUID()} className={b.optionVariant}>
+              <Checkbox
+                label={label}
+                checked={currentFilters.some(
+                  (f) => f.name === name && f.values.some((v) => v === key),
+                )}
+                onChange={(e) => {
+                  onChange({
+                    key: name,
+                    value: key,
+                    checked: e.target.checked,
+                  })
+                }}
+              />
+            </li>
+          ))}
+        </ul>
+      </li>
+    )
   }
 
-  const [currentCategory, setCurrentCategory] = useState<Category | null>(
-    getCategoryFromLocation(),
-  )
+  return null
+}
 
-  const props = currentCategory
-    ? {
-        limit: PRODS_ON_PAGE,
-        offset: currentPage * PRODS_ON_PAGE,
-        filter: `categories.id:"${currentCategory.id}"`,
+const useFilters = () => {
+  const [filters, setFilters] = useState<Filter[]>([])
+  const put = (name: string, value: string) => {
+    const index = filters.findIndex((f) => f.name === name)
+    if (index === -1) {
+      setFilters([...filters, { name, values: [value] }])
+    } else {
+      const updated = [...filters]
+      updated[index].values.push(value)
+      setFilters(updated)
+    }
+  }
+  const remove = (name: string, value?: string) => {
+    const index = filters.findIndex((f) => f.name === name)
+    if (index !== -1) {
+      let updated = [...filters]
+      if (value) {
+        updated[index].values = updated[index].values.filter((v) => v !== value)
+      } else {
+        updated = updated.filter((_, i) => i !== index)
       }
-    : {
-        limit: PRODS_ON_PAGE,
-        offset: currentPage * PRODS_ON_PAGE,
-      }
+      setFilters(updated)
+    }
+  }
+  const clear = () => {
+    setFilters([])
+  }
+  return {
+    currentFilters: filters,
+    putFilter: put,
+    removeFilter: remove,
+    clearFilters: clear,
+  }
+}
 
-  const { data, loading, total } = useProducts(props)
+type Sort = {
+  name: 'asc' | 'desc'
+  price: 'asc' | 'desc'
+}
 
-  const [products, setProducts] = useState<ProductProjection[]>([])
+export function ProductsPage() {
+  const [currentPage, setCurrentPage] = useState(1)
+  const [query, setQuery] = useState('')
+  const { categorySlug } = useParams()
+  const currentCategory = useCategorySlug(categorySlug)
+  const { data: categoriesList } = useCategories()
+  const globalFilters = useGlobalFilters()
+  const [sidebar, setSidebar] = useState<'filters' | 'sort' | null>()
 
-  const { ref, inView } = useInView({
-    threshold: 1,
-    delay: 100,
+  const SORTS = {
+    name: (v: string) => `name.en ${v}`,
+    price: (v: string) => `price ${v}`,
+  }
+
+  const [sort, setSort] = useState<Sort>({
+    name: 'asc',
+    price: 'asc',
   })
 
-  const isFetching = Number(total) > products.length
+  // Filter logic
+  const { currentFilters, putFilter, removeFilter, clearFilters } = useFilters()
+
+  const {
+    data: fetchedProducts,
+    loading,
+    total,
+  } = useProducts({
+    limit: currentFilters.length ? undefined : currentPage * PRODS_ON_PAGE,
+    filter: currentFilters.map(({ name, values }) =>
+      !values.length
+        ? ''
+        : `variants.attributes.${name}.key:"${values.join(`","`)}"`,
+    ),
+    sort: (['price', 'name'] as const).map((n) => SORTS[n](sort[n])),
+    categoryId: currentCategory?.id,
+    searchText: query,
+  })
+
+  const MAX_PAGES = Math.ceil(total / PRODS_ON_PAGE) - 1
+  const isMaxPage = currentPage >= MAX_PAGES
+
+  const [products, setProducts] = useState<typeof fetchedProducts>([])
 
   useEffect(() => {
-    if (data && isFetching) {
-      setProducts((prev) => [...prev, ...data])
+    setProducts(fetchedProducts)
+  }, [JSON.stringify(fetchedProducts)])
+
+  const prodList = products.map((product) => {
+    const brandName = product.masterVariant.attributes?.find((attribute) =>
+      attribute.name.endsWith('-brand'),
+    )?.value.label
+
+    const discounted =
+      product.masterVariant.prices && product.masterVariant.prices[0].discounted
+        ? product.masterVariant.prices[0].discounted.value.centAmount / 100
+        : undefined
+
+    const prodData = {
+      className: '',
+      name: brandName,
+      description: product.name.en,
+      price: product.masterVariant.prices
+        ? product.masterVariant.prices[0].value.centAmount / 100
+        : 0,
+      currency: product.masterVariant.prices
+        ? product.masterVariant.prices[0].value.currencyCode
+        : 'EUR',
+      imageUrl: product.masterVariant.images
+        ? product.masterVariant.images[0].url
+        : '',
+      imageAlt: product.name.en,
+      discountPrice: discounted,
+      onNameClick: undefined,
+      toFixed: 2,
+      intlLocale: 'en-EN',
     }
-  }, [data, isFetching, loading])
 
-  useEffect(() => {
-    if (inView) {
-      setCurrentPage((prev) => prev + 1)
-    }
-  }, [inView])
+    const link = `/catalog/${currentCategory?.slug.en || 'all-products'}/${
+      product.slug.en
+    }`
 
-  const categoryCallback = (cat: Category | null) => {
-    setCurrentCategory(cat)
-  }
-
-  useEffect(() => {
-    if (!catLoading) {
-      const c = getCategoryFromLocation()
-      setCurrentCategory(c)
-      getProducts({
-        limit: PRODS_ON_PAGE,
-        offset: 0,
-        filter: `categories.id:"${c?.id}"`,
-      })?.then((res) => {
-        setProducts(res.body.results)
-        setCurrentPage(0)
-      })
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [location, catLoading, cats])
-
-  const prodList = products
-    .filter(
-      (p) =>
-        p.description &&
-        (p?.description.en.toLowerCase().includes(query.toLowerCase()) ||
-          p?.name.en.toLowerCase().includes(query.toLowerCase())),
+    return (
+      <li key={crypto.randomUUID()} className={s.prodListItem}>
+        <Link to={link}>{ShoppingCard(prodData)}</Link>
+      </li>
     )
-    .map((product) => {
-      const brandName = product.masterVariant.attributes?.find((attribute) =>
-        attribute.name.endsWith('-brand'),
-      )?.value.label
+  })
 
-      const discounted =
-        product.masterVariant.prices &&
-        product.masterVariant.prices[0].discounted
-          ? product.masterVariant.prices[0].discounted.value.centAmount / 100
-          : undefined
-
-      const prodData = {
-        className: '',
-        name: brandName,
-        description: product.name.en,
-        price: product.masterVariant.prices
-          ? product.masterVariant.prices[0].value.centAmount / 100
-          : 0,
-        currency: product.masterVariant.prices
-          ? product.masterVariant.prices[0].value.currencyCode
-          : 'EUR',
-        imageUrl: product.masterVariant.images
-          ? product.masterVariant.images[0].url
-          : '',
-        imageAlt: product.name.en,
-        discountPrice: discounted,
-        onNameClick: undefined,
-        toFixed: 2,
-        intlLocale: 'en-EN',
+  const onSortClick =
+    (key: keyof Sort) => (e: React.ChangeEvent<HTMLInputElement>) => {
+      if (e.target.value) {
+        setSort((p) => ({ ...p, [key]: e.target.value }))
       }
-
-      return (
-        <li
-          key={product.id + Math.random() * 99999999}
-          className={s.prodListItem}
-        >
-          <Link to={`${product.slug.en.toString()}`}>
-            {ShoppingCard(prodData)}
-          </Link>
-        </li>
-      )
-    })
-
-  const prodOutput = (
-    <>
-      {products && <ul className={s.prodList}>{prodList}</ul>}
-      {loading && isFetching && <Loader className={s.prodLoader} />}
-      {!loading && isFetching && <div ref={ref} className={s.pageBreak} />}
-    </>
-  )
-
-  const catsList = cats.map((cat) => (
-    <Route key={cat.id} path={`${cat.slug.en}`} element={prodOutput} />
-  ))
+    }
 
   return (
+    <section className={s.productPageContainer}>
+      {sidebar === 'filters' && (
+        <div className={b.sidebar}>
+          <div className={b.mask} />
+          <div className={b.head}>
+            <h3 className={b.heading}>Filters</h3>
+            <button
+              type="button"
+              className={b.closeButton}
+              onClick={() => {
+                setSidebar(null)
+              }}
+            >
+              X
+            </button>
+          </div>
+          <div className={b.main}>
+            <ul className={b.list}>
+              {globalFilters.map(({ name: groupName, attributes }) => (
+                <li key={crypto.randomUUID()} className={b.group}>
+                  <span className={s.groupName}>{groupName}</span>
+                  <ul className={s.groupList}>
+                    {attributes?.map((attribute) => (
+                      <FilterOption
+                        key={crypto.randomUUID()}
+                        attribute={attribute}
+                        currentFilters={currentFilters}
+                        onChange={({ key, value, checked }) => {
+                          if (checked) {
+                            putFilter(key, value)
+                          } else {
+                            removeFilter(key, value)
+                          }
+                        }}
+                      />
+                    ))}
+                  </ul>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+      )}
+      {sidebar === 'sort' && (
+        <div className={b.sidebar}>
+          <div className={b.mask} />
+          <div className={b.head}>
+            <h3 className={b.heading}>Sort</h3>
+            <button
+              type="button"
+              className={b.closeButton}
+              onClick={() => {
+                setSidebar(null)
+              }}
+            >
+              X
+            </button>
+          </div>
+          <div className={b.main}>
+            <ul className={b.list}>
+              <li className={b.item}>
+                <fieldset>
+                  <legend>Sort price: </legend>
+                  <div>
+                    <label htmlFor="sort-price-asc">Asc</label>
+                    <input
+                      id="sort-price-asc"
+                      name="price"
+                      type="radio"
+                      value="asc"
+                      checked={sort.price === 'asc'}
+                      onChange={onSortClick('price')}
+                    />
+                    <label htmlFor="sort-price-desc">Dsc</label>
+                    <input
+                      id="sort-price-desc"
+                      name="price"
+                      type="radio"
+                      value="desc"
+                      checked={sort.price === 'desc'}
+                      onChange={onSortClick('price')}
+                    />
+                  </div>
+                </fieldset>
+              </li>
+              <br />
+              <li className={b.item}>
+                <fieldset>
+                  <legend>Sort name: </legend>
+                  <div>
+                    <label htmlFor="sort-name-asc">A - z</label>
+                    <input
+                      id="sort-name-asc"
+                      name="name"
+                      type="radio"
+                      value="asc"
+                      checked={sort.name === 'asc'}
+                      onChange={onSortClick('name')}
+                    />
+                    <label htmlFor="sort-name-desc">Z - a</label>
+                    <input
+                      id="sort-name-desc"
+                      name="name"
+                      type="radio"
+                      value="desc"
+                      checked={sort.name === 'desc'}
+                      onChange={onSortClick('name')}
+                    />
+                  </div>
+                </fieldset>
+              </li>
+            </ul>
+          </div>
+        </div>
+      )}
+
+      <div className={s.breadAndSearch}>
+        <Breadcrumbs />
+        <Search onSubmit={setQuery} />
+      </div>
+
+      <h2 className={s.prodHeader}>
+        {!loading && (
+          <>
+            {!currentCategory ? 'Products' : currentCategory.name.en}{' '}
+            {!total ? null : <span>[{total} products]</span>}
+          </>
+        )}
+      </h2>
+
+      <div className={s.row}>
+        <div className={s.cancelFilterGroup}>
+          {!!currentFilters.length && (
+            <>
+              <ul className={s.cancelFilterList}>
+                {currentFilters.map(({ name, values }) =>
+                  values.map((value) => (
+                    <li
+                      key={crypto.randomUUID()}
+                      className={s.cancelFilterItem}
+                    >
+                      <button
+                        type="button"
+                        className={s.cancelFilterItemButton}
+                        onClick={() => {
+                          removeFilter(name, value)
+                        }}
+                      >
+                        <span className={s.cancelFilterItemButtonName}>
+                          {`${name}: ${value}`}
+                        </span>
+                        <span className={s.cancelFilterItemButtonIcon}>𝕏</span>
+                      </button>
+                    </li>
+                  )),
+                )}
+              </ul>
+              <button
+                type="button"
+                className={s.clearFiltersButton}
+                onClick={() => {
+                  clearFilters()
+                }}
+              >
+                <span className={s.clearFiltersButtonIcon}>×</span>
+                <span className={s.clearFiltersButtonText}>Clear filters</span>
+              </button>
+            </>
+          )}
+        </div>
+        <div className={s.openSidebarGroup}>
+          <button
+            type="button"
+            className={s.openSidebarButton}
+            onClick={() => setSidebar('filters')}
+          >
+            <span className={s.openSidebarButtonText}>Filters</span>
+            <span className={s.openSidebarButtonIcon}>
+              <SvgFilter />
+            </span>
+          </button>
+          <button
+            type="button"
+            className={s.openSidebarButton}
+            onClick={() => setSidebar('sort')}
+          >
+            <span className={s.openSidebarButtonText}>Sort</span>
+            <span className={s.openSidebarButtonIcon}>
+              <SvgSort />
+            </span>
+          </button>
+        </div>
+      </div>
+
+      <div className={s.catsAndFilter}>
+        <Categories
+          categories={categoriesList}
+          activeCategorySlug={categorySlug}
+        />
+      </div>
+      <div className={s.products}>
+        <ul className={s.prodList}>{prodList}</ul>
+        {loading && <Loader className={s.prodLoader} />}
+        <button
+          type="button"
+          className={s.loadMore}
+          disabled={isMaxPage}
+          onClick={() => {
+            setCurrentPage((prev) => Math.min(MAX_PAGES, prev + 1))
+          }}
+        >
+          Load more
+        </button>
+      </div>
+    </section>
+  )
+}
+
+export default function ProductCardRoutes() {
+  return (
     <Routes>
-      <Route
-        path="/"
-        element={
-          <section className={s.productPageContainer}>
-            <div className={s.breadAndSearch}>
-              <Breadcrumbs />
-              <Search onSubmit={setQuery} />
-            </div>
-
-            <h2 className={s.prodHeader}>
-              {currentCategory ? currentCategory.name.en : 'Products'}{' '}
-              {total && <span>[{total} products]</span>}
-            </h2>
-
-            <div className={s.catsAndFilter}>
-              <Categories callback={categoryCallback} />
-              <div className="filterAndSort" />
-            </div>
-
-            <Outlet />
-          </section>
-        }
-      >
-        <Route index element={prodOutput} />
-        {catsList}
-      </Route>
-      <Route path="/:slug" element={<ProductCard />} />
-      <Route path="/:category?/:slug" element={<ProductCard />} />
+      <Route path="/:categorySlug/:productSlug" element={<ProductCard />} />
+      <Route path="/:categorySlug?" element={<ProductsPage />} />
     </Routes>
   )
 }

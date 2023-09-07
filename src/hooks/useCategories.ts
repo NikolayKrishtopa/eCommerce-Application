@@ -13,7 +13,7 @@ export default function useCategories() {
     setLoading(true)
     apiRoot
       .categories()
-      .get({ queryArgs: {} })
+      .get()
       .execute()
       .then(({ body }) => {
         setData(body.results)

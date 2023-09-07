@@ -1,0 +1,49 @@
+@use '@/styles/abstracts' as *;
+
+.sidebar {
+  padding: r(10px) r(20px);
+  position: absolute;
+  top: $global-header-height;
+  right: 0;
+  z-index: $z-index-4-sidebar;
+  background-color: $color-neutral-light;
+  color: $color-on-neutral-light;
+  border-radius: r(10px);
+  max-height: 100vh;
+  overflow-y: auto;
+}
+
+.head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.heading {
+}
+
+.closeButton {
+  @include button-reset;
+  padding: r(5px) r(10px);
+  border: 1px solid $color-primary;
+}
+
+.list {
+}
+
+.item {
+  overflow: hidden;
+  &List {
+  }
+}
+
+.option {
+  &Name {
+  }
+  &VariantGroup {
+    display: grid;
+    gap: r(2px);
+  }
+  &Variant {
+  }
+}

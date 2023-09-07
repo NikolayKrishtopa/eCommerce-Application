@@ -75,3 +75,115 @@ li.prod-list-item {
     --prod-columns: 2;
   }
 }
+
+.loadMore {
+  @include button-reset;
+  display: block;
+  width: 100%;
+  max-width: r(250px);
+  margin-inline: auto;
+  margin-top: r(50px);
+  background-color: $color-neutral-light;
+  color: $color-on-neutral-light;
+  padding: r(10px);
+  border-radius: r(5px);
+  user-select: none;
+  &:disabled {
+    opacity: 0.5;
+    pointer-events: none;
+  }
+}
+
+/* Sort and filters */
+
+$col-gap: r(10px);
+
+.row {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  column-gap: r(50px);
+}
+
+.cancelFilterGroup {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: $col-gap;
+}
+
+.openSidebarGroup {
+  margin-block: r(20px);
+  display: flex;
+  gap: r(20px);
+}
+
+/* Filters */
+
+@mixin hoverBorderDecoration {
+  border-bottom: 1px solid transparent;
+  &:hover {
+    border-bottom: 1px solid currentColor;
+  }
+}
+
+.cancelFilterList {
+  @include list-reset;
+  display: inline-flex;
+  align-items: center;
+  justify-content: start;
+  flex-wrap: wrap;
+  gap: $col-gap;
+}
+
+.cancelFilterItem {
+  &Button {
+    @include button-reset;
+    padding: r(5px) r(10px);
+    display: inline-flex;
+    align-items: center;
+    justify-content: space-between;
+    column-gap: r(20px);
+    color: $color-on-neutral-light-pale;
+    background-color: $color-neutral-light;
+    border-radius: r(10px);
+    user-select: none;
+    &:hover &Icon {
+      color: $color-danger;
+    }
+    &:active {
+      opacity: 0.75;
+    }
+  }
+}
+
+.clearFiltersButton {
+  @include button-reset;
+  @include hoverBorderDecoration;
+  width: max-content;
+  display: inline-flex;
+  gap: r(5px);
+  font-weight: bold;
+  color: $color-on-primary;
+  &:active {
+    color: $color-info;
+  }
+}
+
+.openSidebarButton {
+  @include button-reset;
+  @include hoverBorderDecoration;
+  display: flex;
+  align-items: center;
+  gap: r(5px);
+  font-weight: bold;
+  color: $color-on-primary;
+  &:active {
+    color: $color-info;
+  }
+  &Icon {
+    display: flex;
+    align-items: center;
+  }
+}

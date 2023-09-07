@@ -8,14 +8,17 @@
   font-family: $font-stack-text;
   font-size: 20px;
   font-weight: bold;
-
   color: $color-neutral-light-additional;
 }
 
 .category-link {
   &:hover,
+  &.active,
   &:active {
     color: $color-neutral-light;
     text-decoration: underline;
+  }
+  &.active {
+    pointer-events: none;
   }
 }

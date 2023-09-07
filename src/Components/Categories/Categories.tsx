@@ -1,38 +1,37 @@
+import cn from 'classnames'
 import { NavLink } from 'react-router-dom'
-import useCategories from '@/hooks/useCategories'
 import { Category } from '@commercetools/platform-sdk'
-import { useEffect, useState } from 'react'
 import s from './Categogories.module.scss'
 
-interface CatCallback {
-  callback: (cat: Category | null) => void
+interface CategoriesProps {
+  categories: Category[]
+  activeCategorySlug?: string
 }
 
-export default function Categories(props: CatCallback) {
-  const { callback } = props
-  const { data } = useCategories()
-  const [categories, setCategories] = useState<Category[]>([])
+export default function Categories(props: CategoriesProps) {
+  const { categories, activeCategorySlug } = props
 
-  useEffect(() => {
-    if (data) {
-      setCategories(data)
-    }
-  }, [data])
+  const matchingCategory = categories.find(
+    (c) => c.slug.en === activeCategorySlug,
+  )
 
   return (
     <nav className={s.categoriesMenu}>
-      <NavLink className={s.categoryLink} to="" onClick={() => callback(null)}>
+      <NavLink
+        className={cn(s.categoryLink, {
+          [s.active]: !matchingCategory,
+        })}
+        to="/catalog"
+      >
         All products
       </NavLink>
       {categories.map((category) => (
         <NavLink
           key={category.id}
-          className={s.categoryLink}
-          to={category.slug.en}
-          onClick={() => {
-            // e.preventDefault()
-            callback(category)
-          }}
+          className={cn(s.categoryLink, {
+            [s.active]: matchingCategory === category,
+          })}
+          to={`/catalog/${category.slug.en}`}
         >
           {category.name.en}
         </NavLink>

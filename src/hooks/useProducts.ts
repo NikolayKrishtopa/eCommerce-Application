@@ -4,49 +4,51 @@ import { ProductQueryParams } from '@/Models/Models'
 import { apiRoot } from '../eComMerchant/client'
 
 export default function useProducts(props: ProductQueryParams) {
+  const { searchText, limit, offset, filter, categoryId, sort } = props
   const [data, setData] = useState<ProductProjection[]>([])
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState()
   const [total, setTotal] = useState(0)
 
-  useEffect(() => {
-    setData([])
-  }, [props.filter])
+  const filtersStringArray: string[] = []
+
+  if (categoryId && !filter?.length) {
+    filtersStringArray.push(`categories.id:"${categoryId}"`)
+  }
+
+  if (filter) {
+    filtersStringArray.push(...filter)
+  }
 
   useEffect(() => {
     setLoading(true)
-
-    if (!props.filter || props.filter === `categories.id:"undefined"`) {
-      apiRoot
-        .productProjections()
-        .get({ queryArgs: { limit: props.limit, offset: props.offset } })
-        .execute()
-        .then(({ body }) => {
-          setData(body.results)
-          setTotal(body.total ? body.total : 0)
-        })
-        .catch(setError)
-        .finally(() => setLoading(false))
-    } else {
-      apiRoot
-        .productProjections()
-        .search()
-        .get({
-          queryArgs: {
-            limit: props.limit,
-            offset: props.offset,
-            filter: props.filter,
-          },
-        })
-        .execute()
-        .then(({ body }) => {
-          setData(body.results)
-          setTotal(body.total ? body.total : 0)
-        })
-        .catch(setError)
-        .finally(() => setLoading(false))
-    }
-  }, [props.filter, props.limit, props.offset])
+    apiRoot
+      .productProjections()
+      .search()
+      .get({
+        queryArgs: {
+          limit,
+          offset,
+          filter: filtersStringArray,
+          sort,
+          'text.en': searchText || undefined,
+        },
+      })
+      .execute()
+      .then(({ body }) => {
+        setData(body.results)
+        setTotal(body.total || 0)
+      })
+      .catch(setError)
+      .finally(() => setLoading(false))
+  }, [
+    JSON.stringify(filter),
+    JSON.stringify(sort),
+    limit,
+    offset,
+    searchText,
+    categoryId,
+  ])
 
   return { loading, data, error, total }
 }

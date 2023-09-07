@@ -14,8 +14,8 @@ import Breadcrumbs from '../Breadcrumbs/Breadcrumbs'
 
 export default function ProductCard() {
   // const products = useContext(ProductsContext)
-  const { slug } = useParams()
-  const product = useProduct(slug)
+  const { productSlug } = useParams()
+  const product = useProduct(productSlug)
   const [item, setItem] = useState<ProductProjection | null>(null)
   const [qty, setQty] = useState(1)
   const [photoQty, setPhotoQty] = useState(1)
@@ -208,11 +208,7 @@ export default function ProductCard() {
                     +
                   </button>
                 </div>
-                <button
-                  type="button"
-                  className={s.btn}
-                  onClick={() => console.log(item)}
-                >
+                <button type="button" className={s.btn}>
                   Add to shopping cart <img src={cartIcon} alt="cart" />
                 </button>
               </div>

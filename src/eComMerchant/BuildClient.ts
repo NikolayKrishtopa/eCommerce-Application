@@ -31,7 +31,7 @@ const httpMiddlewareOptions: HttpMiddlewareOptions = {
 const ctpClient = new ClientBuilder()
   .withClientCredentialsFlow(authMiddlewareOptions)
   .withHttpMiddleware(httpMiddlewareOptions)
-  .withLoggerMiddleware() // Include middleware for logging
+  // .withLoggerMiddleware()
   .build()
 
 export default ctpClient

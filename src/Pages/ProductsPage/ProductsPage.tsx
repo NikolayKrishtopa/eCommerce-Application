@@ -225,7 +225,9 @@ export function ProductsPage() {
 
     return (
       <li key={crypto.randomUUID()} className={s.prodListItem}>
-        <Link to={link}>{ShoppingCard(prodData)}</Link>
+        <Link className={s.prodListItemLink} to={link}>
+          {ShoppingCard(prodData)}
+        </Link>
       </li>
     )
   })

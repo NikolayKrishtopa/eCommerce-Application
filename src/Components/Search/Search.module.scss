@@ -1,10 +1,11 @@
 @use '@/styles/abstracts' as *;
 
-.search-container {
+.searchContainer {
+  margin-left: r(15px);
   display: flex;
   justify-content: flex-start;
   align-items: center;
-  min-width: 432px;
+  flex-basis: 432px;
   height: 32px;
   padding: 0px 10px;
   border-radius: 10px;
@@ -12,14 +13,14 @@
   background: $color-neutral-light;
 }
 
-.search-img {
+.searchImg {
   color: $color-on-neutral-light-pale;
   width: 18px;
   height: 18px;
   margin-right: 6px;
 }
 
-.search-input {
+.searchInput {
   border: none;
   outline: none;
   flex-grow: 1;

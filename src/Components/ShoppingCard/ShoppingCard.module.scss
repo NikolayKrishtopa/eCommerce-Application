@@ -1,5 +1,9 @@
 @use '@/styles/abstracts' as *;
 
+:root {
+  --shopping-card-image-aspect-ratio: initial;
+}
+
 .singleSeller {
   position: relative;
   display: flex;
@@ -12,8 +16,12 @@
   flex-grow: 1;
 
   &Image {
+    aspect-ratio: var(--shopping-card-image-aspect-ratio);
     width: 100%;
     object-fit: contain;
+    display: flex;
+    align-items: center;
+    text-align: center;
   }
 
   &InfoContainer {
@@ -78,13 +86,5 @@
 
   &DiscountPrice {
     color: $color-danger;
-  }
-}
-
-@media screen and (max-width: $break-sm) {
-  .singleSeller {
-    &Image {
-      min-height: r(350px);
-    }
   }
 }

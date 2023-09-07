@@ -69,6 +69,10 @@
     height: 100%;
   }
   --shopping-card-image-aspect-ratio: #{math.div(270, 315)};
+  &:hover {
+    transform: scale(1.03);
+    transition: all 0.3s ease-out;
+  }
 }
 
 .pageBreak {

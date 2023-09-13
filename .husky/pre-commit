@@ -1,7 +1,0 @@
-#!/usr/bin/env sh
-
-__dirname=$(dirname -- "$0")
-
-source "$__dirname/_/husky.sh"
-
-npx lint-staged

@@ -1,0 +1,203 @@
+@use 'sass:math';
+@use '@/styles/abstracts' as *;
+@use '@/Components/Footer/Footer.module';
+
+.productPageContainer {
+  max-width: 1512px;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+.breadAndSearch {
+  width: 100%;
+  min-height: r(52px);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.prodHeader {
+  display: flex;
+  justify-content: flex-start;
+  align-items: first baseline;
+  font-family: $font-stack-heading;
+  font-size: 3rem;
+  margin: 0;
+  min-height: 80px;
+
+  span {
+    font-size: 20px;
+    margin-left: 10px;
+  }
+}
+
+.prodList {
+  --prod-columns: 5;
+}
+
+.prodList {
+  @include list-reset;
+  padding: 0;
+  margin: 32px 0 0 0;
+  list-style: none;
+
+  display: grid;
+  gap: 1.52rem;
+  justify-content: center;
+  grid-template-columns: repeat(var(--prod-columns), minmax(190px, 270px));
+
+  @media screen and (max-width: $break-xl) {
+    --prod-columns: 4;
+  }
+  @media screen and (max-width: $break-lg) {
+    --prod-columns: 3;
+  }
+  @media screen and (max-width: $break-md) {
+    --prod-columns: 2;
+  }
+  @media screen and (max-width: $break-sm) {
+    --prod-columns: 1;
+    margin-inline: auto;
+    max-width: r(325px);
+  }
+}
+
+.prodListItem {
+  display: block;
+  &Link {
+    display: flex;
+    height: 100%;
+  }
+  --shopping-card-image-aspect-ratio: #{math.div(270, 315)};
+  &:hover {
+    transform: scale(1.03);
+    transition: all 0.3s ease-out;
+  }
+}
+
+.pageBreak {
+  width: 100%;
+  height: 1px;
+  border: none;
+  background: none;
+}
+
+.prodLoader {
+  display: block;
+  margin: 15px auto;
+}
+
+$col-gap: r(10px);
+
+.row {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  column-gap: r(50px);
+}
+
+.cancelFilterGroup {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: $col-gap;
+}
+
+.openSidebarGroup {
+  margin-block: r(10px) r(30px);
+  display: flex;
+  column-gap: $col-gap;
+}
+
+@mixin hoverBorderDecoration {
+  border-bottom: 1px solid transparent;
+  &:hover {
+    border-bottom: 1px solid currentColor;
+  }
+}
+
+.cancelFilterList {
+  @include list-reset;
+  display: inline-flex;
+  align-items: center;
+  justify-content: start;
+  flex-wrap: wrap;
+  gap: $col-gap;
+}
+
+.cancelFilterItem {
+  &Button {
+    @include button-reset;
+    padding: r(5px) r(10px);
+    display: inline-flex;
+    align-items: center;
+    justify-content: space-between;
+    column-gap: r(20px);
+    color: $color-on-neutral-light-pale;
+    background-color: $color-neutral-light;
+    border-radius: r(10px);
+    user-select: none;
+    &:hover &Icon {
+      color: $color-danger;
+    }
+    &:active {
+      opacity: 0.75;
+    }
+  }
+}
+
+.clearFiltersButton {
+  @include button-reset;
+  @include hoverBorderDecoration;
+  width: max-content;
+  display: inline-flex;
+  gap: r(5px);
+  font-weight: bold;
+  color: $color-on-primary;
+  &:active {
+    color: $color-info;
+  }
+}
+
+.openSidebarButton {
+  @include button-reset;
+  @include hoverBorderDecoration;
+  display: flex;
+  align-items: center;
+  gap: r(5px);
+  font-size: 1.4rem;
+  font-weight: bold;
+  color: $color-on-primary;
+  &:active {
+    color: $color-info;
+  }
+  &Icon {
+    display: flex;
+    align-items: center;
+  }
+}
+
+.loadMore {
+  @include button-reset;
+  display: block;
+  width: 100%;
+  max-width: r(250px);
+  margin-top: calc(#{Footer.$footer-margin-top} - 0.75rem);
+  margin-inline: auto;
+  background-color: $color-neutral-light;
+  color: $color-on-neutral-light;
+  padding: r(10px);
+  border-radius: r(5px);
+  user-select: none;
+  font-family: $font-stack-heading;
+  font-weight: bold;
+  font-size: 1.5rem;
+  &:active {
+    opacity: 0.75;
+  }
+  &:disabled {
+    opacity: 0.5;
+    pointer-events: none;
+  }
+}

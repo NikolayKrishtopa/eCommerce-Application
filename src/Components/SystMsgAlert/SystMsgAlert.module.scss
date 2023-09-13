@@ -1,0 +1,91 @@
+@use '@/styles/abstracts' as *;
+
+.popup {
+  width: 100%;
+  max-width: r(556px);
+  display: flex;
+  align-items: center;
+  position: fixed;
+  top: r(100px);
+  left: r(100px);
+  right: r(100px);
+  padding: r(42px) r(27px);
+  gap: r(18px);
+  background-color: $color-neutral-light;
+  border: r(4px) solid $color-primary;
+  border-radius: r(25px);
+  justify-content: space-between;
+  transform: translateY(-700px);
+  transition: transform 0.5s ease;
+  z-index: 400;
+
+  @media (max-width: $break-md) {
+    padding: r(24px) r(16px);
+    max-width: calc(100vw - 100px);
+    left: r(50px);
+    right: r(50px);
+  }
+  @media (max-width: $break-sm) {
+    padding: r(12px) r(8px);
+    max-width: calc(100vw - 40px);
+    left: r(20px);
+    right: r(20px);
+    gap: r(10px);
+  }
+}
+
+.shown {
+  transform: none;
+}
+
+.success {
+  background-color: $color-success;
+}
+
+.fail {
+  background-color: $color-danger;
+}
+
+.icon {
+  width: r(72px);
+  height: r(72px);
+  @media (max-width: $break-sm) {
+    width: r(40px);
+    height: r(40px);
+  }
+}
+
+.msgText {
+  font-size: 2rem;
+  font-weight: 700;
+  color: $color-text-alert;
+
+  @media (max-width: $break-md) {
+    font-size: 1.5rem;
+  }
+  @media (max-width: $break-sm) {
+    font-size: 1rem;
+  }
+}
+
+.closeBtn {
+  @include clickable;
+  width: r(30px);
+  height: r(30px);
+  border: none;
+  background: transparent;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  @media (max-width: $break-sm) {
+    width: r(20px);
+    height: r(20px);
+  }
+}
+
+.closeIcon {
+  @media (max-width: $break-sm) {
+    width: r(15px);
+    height: r(15px);
+  }
+}

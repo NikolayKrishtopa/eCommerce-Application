@@ -1,0 +1,120 @@
+@use '@/styles/abstracts' as *;
+@use './MainPage.module.scss' as mainPage;
+
+.container {
+  @include mainPage.containerMedium;
+  margin-inline: auto;
+  padding-inline: r(35px);
+  box-sizing: content-box;
+}
+
+.heading {
+  @include mainPage.subHeading;
+}
+
+.categories {
+  --categories-cols: 3;
+  --category-max-width: 400px;
+  --category-min-width: 250px;
+  --category-font-size: 2.5rem;
+  --category-font-size: calc(1.5rem + 2.5cqw);
+  --category-aspect-ratio: 1;
+  --category-span: 1;
+}
+
+.categories {
+  @include mainPage.resetList;
+
+  display: grid;
+  gap: max(20px, 2%);
+  grid-template-columns: repeat(
+    var(--categories-cols),
+    minmax(var(--category-min-width), var(--category-max-width))
+  );
+  justify-content: center;
+}
+
+.singleCategory {
+  aspect-ratio: var(--category-aspect-ratio);
+  grid-column: span var(--category-span);
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+  border-radius: r(10px);
+  container-type: inline-size;
+
+  &,
+  &LinkWrapper {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+
+  &Name {
+    margin: 0;
+    position: absolute;
+    inset-inline: calc(8% / var(--category-span));
+    bottom: 4%;
+    z-index: $z-index-1-overlap;
+    font-family: $font-stack-text;
+    font-weight: bold;
+    font-size: var(--category-font-size);
+  }
+
+  @include mainPage.gradientMask;
+
+  &Image {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    inset: 0;
+    object-fit: cover;
+  }
+}
+
+.button {
+  @include mainPage.button;
+  @include mainPage.buttonExtendSmall;
+  display: block;
+  width: max-content;
+  margin-top: r(40px);
+  margin-inline: auto;
+}
+
+$category-font-size-lg: max(1.5rem, calc(1rem + 2.5vw));
+
+@media screen and (max-width: $break-lg) {
+  .container {
+    padding-inline: r(25px);
+  }
+  .categories {
+    --categories-cols: 2;
+    --category-max-width: 320px;
+    --category-min-width: 250px;
+    --category-font-size: 2.5rem;
+    --category-font-size: #{$category-font-size-lg};
+  }
+
+  @media screen and (min-width: $break-sm) {
+    .categories {
+      --category-max-width: 100%;
+      --category-aspect-ratio: 1.5;
+    }
+    .singleCategory:first-child {
+      --category-span: 2;
+      --category-aspect-ratio: 2.5;
+    }
+  }
+}
+
+@media screen and (max-width: $break-sm) {
+  .categories {
+    --categories-cols: 1;
+    --category-font-size: 1.3rem;
+    --category-font-size: #{$category-font-size-lg};
+    --category-max-width: 100%;
+    --category-span: 2;
+    --category-aspect-ratio: 2;
+    gap: r(20px);
+  }
+}

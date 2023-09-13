@@ -1,0 +1,133 @@
+@use 'sass:math';
+@use '@/styles/abstracts' as *;
+
+$color-main: $color-primary-light;
+$color-error: $color-danger;
+$background-color: $color-neutral-light;
+$min-height: 3.25rem;
+$base-font-size: 1rem;
+$border-radius: r(10px);
+$border-width: r(2px);
+$icon-offset-inline: 0.75rem;
+$icon-slot-actual-width: 1.75rem + $icon-offset-inline * 2;
+$icon-slot-width: $icon-slot-actual-width;
+$error-min-height: 1.5rem;
+$label-padding-inline: 0.4em;
+$label-first-letter-offset: 1.25rem;
+$label-offset: math.div($base-font-size, 2);
+
+$self: '.input-slot';
+$self--disabled: #{$self}--disabled;
+$self--error: #{$self}--error;
+$self-box--icon: #{$self}__box--icon;
+
+#{$self} {
+  font-size: 1rem;
+  color: $color-main;
+
+  &__label,
+  &__box {
+    background-color: $background-color;
+  }
+
+  &#{$self--error} {
+    color: $color-error;
+  }
+
+  &#{$self--disabled} {
+    opacity: 0.5;
+    pointer-events: none;
+  }
+
+  &__label {
+    $padding-inline: 0.4em;
+
+    display: block;
+    width: fit-content;
+    padding: 0 $padding-inline;
+    margin-inline: calc(
+      1px + #{$label-first-letter-offset} - #{$padding-inline}
+    );
+    margin-bottom: -$label-offset;
+    line-height: 1;
+    position: relative;
+    z-index: $z-index-1-overlap;
+    word-break: break-word;
+    border-radius: r(3px);
+    &--no-text-select {
+      user-select: none;
+    }
+  }
+
+  &__box {
+    position: relative;
+    border-width: $border-width;
+    border-style: solid;
+    border-color: currentColor;
+    border-radius: $border-radius;
+  }
+
+  &__children {
+    min-height: $min-height;
+    display: flex;
+    align-items: center;
+  }
+
+  &__icon {
+    position: absolute;
+    right: 0;
+    top: 0;
+    width: $icon-slot-actual-width;
+    height: $min-height;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  &__icon-btn {
+    @include button-reset;
+    padding-inline: $icon-offset-inline;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    user-select: none;
+    &:disabled {
+      pointer-events: none;
+      cursor: default;
+    }
+    > * {
+      width: 100%;
+      height: 100%;
+    }
+  }
+
+  &__error {
+    $error-line-height: 1;
+    $error-icon-size: 0.5rem;
+
+    min-height: $error-min-height;
+    padding-inline: 0.3em;
+    display: grid;
+    align-items: center;
+    gap: 0.5ch;
+    grid-template-columns: auto 1fr;
+    box-sizing: border-box;
+    font-weight: bold;
+    line-height: $error-line-height;
+    &:empty::after {
+      content: '.';
+      visibility: hidden;
+    }
+    &-icon {
+      margin-top: math.div($error-line-height - 1, 2) + em;
+      width: $error-icon-size;
+      height: $error-icon-size;
+    }
+    &-msg {
+      margin: 0;
+      overflow: auto;
+      word-wrap: break-word;
+    }
+  }
+}

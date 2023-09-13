@@ -1,0 +1,25 @@
+@use '@/styles/abstracts' as *;
+
+.categoriesMenu {
+  display: flex;
+  justify-content: start;
+  align-items: center;
+  gap: r(15px) r(30px);
+  flex-wrap: wrap;
+  font-family: $font-stack-text;
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: $color-neutral-light-additional;
+}
+
+.categoryLink {
+  &:hover,
+  &.active,
+  &:active {
+    color: $color-neutral-light;
+    text-decoration: underline;
+  }
+  &.active {
+    pointer-events: none;
+  }
+}

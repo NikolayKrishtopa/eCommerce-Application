@@ -1,0 +1,193 @@
+@use '@/styles/abstracts' as *;
+
+.pageContainer {
+  max-width: 1530px;
+  margin: auto;
+  display: flex;
+  flex-direction: column;
+  padding: 40px;
+  gap: 40px;
+  box-sizing: border-box;
+  @media (max-width: $break-lm) {
+    padding: 32px;
+    gap: 22px;
+  }
+}
+.productCard {
+  display: flex;
+  gap: 72px;
+  position: relative;
+  @media (max-width: $break-lg) {
+    gap: 24px;
+  }
+  @media (max-width: $break-lm) {
+    flex-direction: column;
+    gap: 40px;
+  }
+}
+.imageBlock {
+  width: 446px;
+  position: relative;
+  flex-shrink: 0;
+  @media (max-width: $break-lg) {
+    width: 355px;
+  }
+  @media (max-width: $break-md) {
+    width: 446px;
+  }
+  @media (max-width: $break-sm) {
+    width: 100%;
+    max-width: 446px;
+  }
+}
+.image {
+  max-width: 100%;
+}
+@mixin price {
+  margin: 0;
+  font-family: $font-stack-heading;
+  font-size: 32px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: normal;
+  @media (max-width: $break-md) {
+    font-size: 28px;
+  }
+}
+.price {
+  @include price;
+}
+.crossed {
+  text-decoration: line-through;
+}
+.pricePromo {
+  @include price;
+  color: $color-danger;
+}
+.textBlock {
+  max-width: 574px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  flex-shrink: 1;
+}
+.itemTitle {
+  margin: 0;
+  font-family: $font-stack-heading;
+  color: $color-neutral-light;
+  font-size: 28px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 32px;
+  text-transform: capitalize;
+  @media (max-width: $break-md) {
+    font-size: 24px;
+  }
+}
+.priceBlock {
+  display: flex;
+  gap: 16px;
+}
+.description {
+  margin: 0;
+  color: $color-neutral-light;
+  font-family: $font-stack-text;
+  font-size: 20px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+  @media (max-width: $break-md) {
+    font-size: 16px;
+  }
+}
+.tools {
+  display: flex;
+  gap: 16px;
+  @media (max-width: $break-sm) {
+    flex-direction: column;
+  }
+}
+@mixin toolsItem {
+  display: flex;
+  padding: 16px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 10px;
+  gap: 16px;
+  background-color: $color-neutral-light;
+  color: $color-neutral-dark;
+  font-family: $font-stack-text;
+  font-size: 20px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: normal;
+}
+.qtyWrapper {
+  @include toolsItem;
+}
+.qtyBtn {
+  @include clickable;
+  background-color: transparent;
+  border: none;
+}
+
+.btn {
+  @include toolsItem;
+  @include clickable;
+}
+.qty {
+  margin: 0;
+  color: $color-neutral-dark;
+}
+.navButton {
+  @include clickable;
+  position: absolute;
+  top: 50%;
+  border: none;
+  background-color: transparent;
+}
+.leftNavBtn {
+  left: 6px;
+}
+.rightNavBtn {
+  right: 6px;
+}
+.popup {
+  z-index: 10;
+  position: fixed;
+  display: flex;
+  top: 0;
+  right: 0;
+  left: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  align-items: center;
+  justify-content: center;
+  & > .imageBlock {
+    min-width: 200px;
+    width: 100%;
+    flex-grow: 1;
+    flex-shrink: 0;
+  }
+  & > .productCard {
+    position: relative;
+    background-color: $color-neutral-light;
+    padding: 100px;
+    width: 90%;
+    max-width: 1015px;
+    align-items: center;
+    justify-content: center;
+    & > .image {
+      width: 100%;
+      flex-grow: 1;
+    }
+  }
+}
+.closeBtn {
+  @include clickable;
+  position: absolute;
+  top: 23px;
+  right: 14px;
+  background-color: transparent;
+  border: none;
+}

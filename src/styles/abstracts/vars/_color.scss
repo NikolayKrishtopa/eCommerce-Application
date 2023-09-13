@@ -1,0 +1,26 @@
+$_neutral-100: #ffffff;
+$_neutral-200: #f6f6f6;
+$_neutral-300: #a6a6a6;
+$_neutral-500: #545454;
+$_neutral-800: #343333;
+$_neutral-900: #000000;
+
+$primary: #151515;
+$success: #447604;
+$danger: #ec4e20;
+$error: #f59a9a;
+$info: #2983b8;
+
+$primary-light: $_neutral-800;
+
+$neutral-light: $_neutral-100;
+$neutral-light-accent: $_neutral-200;
+$neutral-light-additional: $_neutral-300;
+$neutral-dark: $_neutral-900;
+
+$on-primary: $_neutral-100;
+$on-neutral-light: $primary;
+$on-neutral-light-pale: $_neutral-500;
+$text-link: $info;
+$text-alert: $_neutral-100;
+$btn-hover: $_neutral-800;

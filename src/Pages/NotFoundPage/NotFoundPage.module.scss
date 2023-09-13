@@ -1,0 +1,56 @@
+@use '@/styles/abstracts' as *;
+
+.page {
+  background-color: $color-primary;
+  width: 100%;
+  padding: r(306px) r(47px) 0;
+  display: flex;
+  flex-direction: column;
+  gap: r(30px);
+  align-items: center;
+  color: $color-on-primary;
+  font-weight: 400;
+  @media (max-width: $break-md) {
+    padding-top: r(163px);
+  }
+}
+
+.img {
+  width: r(462px);
+  height: r(240px);
+  @media (max-width: $break-md) {
+    width: r(245px);
+    height: r(133px);
+  }
+}
+
+.mainText {
+  font-size: 2.25rem;
+  font-style: normal;
+  margin: 0;
+  max-width: r(500px);
+  text-align: center;
+  @media (max-width: $break-md) {
+    font-size: 1.5rem;
+  }
+}
+
+.supplText {
+  font-size: 1.5rem;
+  font-style: normal;
+  margin: 0;
+  max-width: r(500px);
+  text-align: center;
+  @media (max-width: $break-md) {
+    font-size: 1.25rem;
+    margin-top: r(-7px);
+  }
+}
+
+.link {
+  @include clickable;
+  font-weight: 700;
+  color: $color-text-link;
+  margin: 0;
+  text-decoration: underline;
+}

@@ -1,0 +1,306 @@
+@use '@/styles/abstracts' as *;
+
+.auth-page {
+  margin-top: -$global-header-height;
+  display: flex;
+  width: 100%;
+  min-height: 100vh;
+  height: max-content;
+
+  @media screen and (max-width: $break-lg) {
+    flex-direction: column;
+  }
+}
+
+// -------------------------------------------------
+
+.auth-promo {
+  position: relative;
+  text-align: left;
+  color: $color-neutral-light;
+  text-shadow:
+    2px 0 2px $color-primary,
+    0 2px 2px $color-primary,
+    -2px 0 2px $color-primary,
+    0 -2px 2px $color-primary;
+  padding-top: 370px;
+  padding-left: 57px;
+  height: 100%;
+  margin-left: auto;
+
+  max-width: 500px;
+
+  @media screen and (max-width: $break-xl) {
+    max-width: 340px;
+    padding-top: 310px;
+    padding-left: 32px;
+  }
+
+  @media screen and (max-width: $break-lg) {
+    max-width: unset;
+    width: 100%;
+    padding-top: 124px;
+    padding-left: 32px;
+    min-height: 400px;
+  }
+
+  @media screen and (max-width: $break-sm) {
+    padding-top: 148px;
+    padding-left: 21px;
+    min-height: 353px;
+  }
+
+  h2 {
+    font-family: $font-stack-heading;
+    font-size: 96px;
+    line-height: 90px;
+    text-transform: uppercase;
+    margin: 0 0 20px 0;
+    position: relative;
+
+    @media screen and (max-width: $break-xl) {
+      font-size: 68px;
+      line-height: 60px;
+    }
+
+    @media screen and (max-width: $break-sm) {
+      font-size: 48px;
+      line-height: 44px;
+      margin-bottom: 14px;
+    }
+  }
+
+  p {
+    font-size: 36px;
+    position: relative;
+    margin: 0;
+
+    @media screen and (max-width: $break-xl) {
+      font-size: 28px;
+    }
+
+    @media screen and (max-width: $break-sm) {
+      font-size: 20px;
+    }
+  }
+
+  .skatepic {
+    position: absolute;
+    right: -130px;
+    top: 100px;
+
+    @media screen and (max-width: $break-xl) {
+      width: 200px;
+      right: -100px;
+      top: 100px;
+    }
+
+    @media screen and (max-width: $break-lg) {
+      width: 146px;
+      transform: rotate(90deg);
+      left: calc((100vw - 146px) / 2);
+      top: unset;
+      bottom: -221px;
+    }
+
+    @media screen and (max-width: $break-sm) {
+      width: 78px;
+      transform: rotate(90deg);
+      left: calc((100vw - 78px) / 2);
+      top: unset;
+      bottom: -118px;
+    }
+  }
+}
+
+// ------------------------------------------------------------------
+
+.auth-form-container {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  background-color: $color-neutral-light;
+  color: $color-on-neutral-light-pale;
+  padding: 120px 100px 100px 180px;
+  border-radius: 40px 0 0 40px;
+  min-height: 100%;
+  max-width: 1600px;
+
+  @media screen and (max-width: $break-xl) {
+    padding: 120px 75px 100px 155px;
+  }
+
+  @media screen and (max-width: $break-lg) {
+    border-radius: 40px 40px 0 0;
+    padding: 80px 15% 80px 15%;
+  }
+
+  h3 {
+    font-family: $font-stack-heading;
+    font-size: 40px;
+    color: $color-primary;
+    line-height: 1;
+    padding: 0;
+    margin: 0 0 44px 0;
+  }
+
+  .input-box {
+    position: relative;
+    margin-bottom: 48px;
+    flex-grow: 1;
+
+    label {
+      position: absolute;
+      top: -10px;
+      left: 10px;
+      background: $color-neutral-light;
+      padding: 0 5px;
+      font-size: 16px;
+    }
+
+    .input-field-box {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      height: 64px;
+      border-radius: 10px;
+      border: 1.5px solid $color-on-neutral-light-pale;
+      width: 100%;
+
+      &.input-error {
+        border: 1.5px solid $color-error;
+        color: $color-error;
+        * {
+          color: $color-error;
+        }
+      }
+    }
+
+    .input-field-control {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: transparent;
+      border: none;
+      width: min-content;
+      color: inherit;
+      padding: 0 10px;
+    }
+
+    .input-error-msg {
+      color: $color-error;
+    }
+
+    input,
+    select {
+      border: none;
+      font-size: 16px;
+      flex-grow: 1;
+      padding: 10px;
+
+      &:focus {
+        outline: none;
+      }
+    }
+
+    select {
+      margin-right: 10px;
+    }
+
+    input::placeholder,
+    select option[disabled='true'] {
+      color: $color-neutral-light-additional;
+    }
+
+    p {
+      margin: 4px 0 0 8px;
+      font-size: 16px;
+      font-weight: bold;
+    }
+  }
+
+  .name-fields {
+    display: flex;
+    gap: 24px;
+
+    @media screen and (max-width: $break-xl) {
+      flex-direction: column;
+      gap: 0;
+    }
+  }
+
+  .name-fields,
+  .shipping-address,
+  .billing-address {
+    border: none;
+    padding: 0;
+
+    legend {
+      font-size: larger;
+      font-weight: bold;
+      padding: 30px 0;
+    }
+  }
+
+  .shipping-address,
+  .billing-address {
+    .input-box-closing {
+      margin-bottom: 0;
+    }
+  }
+
+  .billing-address:disabled {
+    display: none;
+  }
+
+  .checkbox-container {
+    display: flex;
+    align-items: center;
+    color: $color-on-neutral-light-pale;
+    font-size: 16px;
+    font-weight: bold;
+    margin-top: 6px;
+
+    input {
+      width: 20px;
+      height: 20px;
+      margin-right: 8px;
+    }
+  }
+
+  .checkbox-container-closing {
+    margin-bottom: 48px;
+  }
+
+  button {
+    padding: 10px;
+    border-radius: 10px;
+    border: none;
+    background-color: $color-primary;
+    color: $color-neutral-light;
+    width: 100%;
+    height: 64px;
+    font-size: 28px;
+    font-weight: bold;
+
+    &:hover {
+      background-color: $color-btn-hover;
+    }
+
+    &:active {
+      background-color: $color-btn-hover;
+      box-shadow: 0px 10px 40px 0px rgba(0, 0, 0, 0.25);
+    }
+  }
+
+  .auth-redirect {
+    font-size: 16px;
+    font-weight: bold;
+    margin: 8px;
+
+    a {
+      color: $color-text-link;
+      text-decoration-line: underline;
+    }
+  }
+}

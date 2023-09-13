@@ -1,0 +1,35 @@
+@use '@/styles/abstracts' as *;
+
+.fullPageMask {
+  position: fixed;
+  inset: 0;
+  z-index: $z-index-3-mask;
+  background-color: rgba($color-neutral-dark, 0.5);
+  display: grid;
+  place-content: center;
+
+  --loader-size: clamp(90px, 25px + 8vw, 150px);
+  --loader-thickness: calc(0.05 * var(--loader-size));
+}
+
+.loader {
+  display: inline-block;
+  width: var(--loader-size, 60px);
+  aspect-ratio: 1;
+  border-width: var(--loader-thickness, 5px);
+  border-color: var(--loader-color, #{$color-neutral-light});
+  border-style: solid;
+  border-bottom-color: transparent;
+  border-radius: 50%;
+  box-sizing: border-box;
+  animation: rotation 1s linear infinite;
+}
+
+@keyframes rotation {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}

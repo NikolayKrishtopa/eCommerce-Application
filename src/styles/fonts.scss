@@ -1,0 +1,44 @@
+$font-display: block;
+
+@font-face {
+  font-family: 'Roboto';
+  font-weight: 700;
+  font-style: normal;
+  src: url('@/assets/fonts/Roboto/Roboto-Bold.woff2') format('woff2');
+  font-display: $font-display;
+}
+@font-face {
+  font-family: 'Roboto';
+  font-weight: 400;
+  font-style: normal;
+  src: url('@/assets/fonts/Roboto/Roboto-Regular.woff2') format('woff2');
+  font-display: $font-display;
+}
+@font-face {
+  font-family: 'Teko';
+  font-weight: 700;
+  font-style: normal;
+  src: url('@/assets/fonts/Teko/Teko-Bold.woff2') format('woff2');
+  font-display: $font-display;
+}
+@font-face {
+  font-family: 'Teko';
+  font-weight: 600;
+  font-style: normal;
+  src: url('@/assets/fonts/Teko/Teko-SemiBold.woff2') format('woff2');
+  font-display: $font-display;
+}
+@font-face {
+  font-family: 'Teko';
+  font-weight: 400;
+  font-style: normal;
+  src: url('@/assets/fonts/Teko/Teko-Regular.woff2') format('woff2');
+  font-display: $font-display;
+}
+@font-face {
+  font-family: 'Inter';
+  font-weight: 100 900;
+  font-style: normal;
+  src: url('@/assets/fonts/Inter/Inter-VariableFont.woff2') format('woff2');
+  font-display: $font-display;
+}

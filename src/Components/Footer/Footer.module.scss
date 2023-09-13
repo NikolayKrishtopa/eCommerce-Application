@@ -1,0 +1,95 @@
+@use 'sass:math';
+@use '@/styles/abstracts' as *;
+
+$footer-max-width: 1450px;
+$footer-margin-top: r(75px);
+
+.footer {
+  margin-top: $footer-margin-top;
+  max-width: 1450px;
+  padding-block: r(45px);
+  padding-inline: max(20px, 2.5%);
+  color: $color-primary;
+  background-color: $color-neutral-light;
+  margin-inline: auto;
+  border-radius: r(40px) r(40px) 0 0;
+}
+
+.row1,
+.row2 {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+
+.row1 {
+  max-width: 1000px;
+  margin-right: 50px;
+  gap: r(30px);
+}
+
+.heading {
+  margin: 0;
+  font-size: clamp(2.5rem, -0.95rem + 9.5vw, 5rem);
+  font-family: $font-stack-heading;
+  font-weight: normal;
+  line-height: 1;
+}
+
+.linksList {
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: auto auto;
+  align-content: start;
+  justify-content: start;
+  gap: r(20px) r(50px);
+  list-style: none;
+
+  .linkItem {
+    line-height: 1;
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}
+
+.row2 {
+  display: flex;
+  margin-top: r(45px);
+  max-width: 1250px;
+  gap: r(25px);
+}
+
+.logoLink {
+  display: inline-block;
+}
+
+.copyright {
+  margin-top: r(20px);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75ch;
+}
+
+.socialsGroup {
+  display: flex;
+  align-items: end;
+  gap: r(20px);
+
+  .socialSvgLink:hover {
+    svg * {
+      fill: $color-info;
+    }
+  }
+}
+
+@media screen and (max-width: $break-sm) {
+  .footer {
+    margin-top: r(35px);
+  }
+  .row1 {
+    flex-direction: column;
+    margin-right: 0;
+  }
+}

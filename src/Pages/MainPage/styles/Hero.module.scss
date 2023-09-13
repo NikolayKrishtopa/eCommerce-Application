@@ -2,14 +2,12 @@
 @use './MainPage.module.scss' as mainPage;
 
 .container {
-  --header-height: 80px;
   --hero-min-height: 777px;
   --hero-max-height: 777px;
   --partners-height: 120px;
 }
 
 .container {
-  margin-top: var(--header-height);
   height: clamp(
     var(--hero-min-height) + var(--partners-height),
     100svh - var(--header-height),

@@ -1,0 +1,41 @@
+@use '@/styles/abstracts' as *;
+
+.searchContainer {
+  margin-left: r(15px);
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  flex-basis: 432px;
+  height: 32px;
+  padding: 0px 10px;
+  border-radius: 10px;
+  border: 1px solid $color-neutral-light;
+  background: $color-neutral-light;
+}
+
+.searchImg {
+  color: $color-on-neutral-light-pale;
+  width: 18px;
+  height: 18px;
+  margin-right: 6px;
+}
+
+.searchInput {
+  border: none;
+  outline: none;
+  flex-grow: 1;
+  font-family: $font-stack-brand;
+  font-size: 12px;
+  font-weight: 400;
+  color: $color-on-neutral-light-pale;
+
+  &:focus-visible {
+    border: none;
+    outline: none;
+    color: $color-primary-light;
+    font-weight: 700;
+    &::placeholder {
+      visibility: hidden;
+    }
+  }
+}

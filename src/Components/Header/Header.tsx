@@ -3,10 +3,10 @@ import { NavLink, useLocation } from 'react-router-dom'
 import CurrentUserContext from '@/contexts/CurrentUserContext'
 import s from './Header.module.scss'
 import { ReactComponent as BasketImg } from '../../assets/icons/basket.svg'
-import { ReactComponent as Logo } from '../../assets/icons/logo.svg'
 import { ReactComponent as LogoutImg } from '../../assets/icons/logout.svg'
 import { ReactComponent as ProfileImg } from '../../assets/icons/person.svg'
 import { HeaderProps } from './Header.props'
+import Logo from '../Logo/Logo'
 
 export default function Header(props: HeaderProps) {
   const { onLogout } = props
@@ -27,8 +27,7 @@ export default function Header(props: HeaderProps) {
     >
       <h1 className={s.logo}>
         <NavLink to="/" onClick={() => setBurgerActive(false)}>
-          <Logo className={s.logoImg} />
-          <span>The Skateshop</span>
+          <Logo />
         </NavLink>
       </h1>
       <nav className={!burgerActive ? s.navbar : `${s.navbar} ${s.open}`}>
@@ -78,7 +77,7 @@ export default function Header(props: HeaderProps) {
       {currentUser && (
         <div className={s.profileLink}>
           <NavLink
-            to="/"
+            to="/profile"
             onClick={() => setBurgerActive(false)}
             data-testid="profile-button"
           >

@@ -5,12 +5,36 @@ import useAuth from '@/hooks/useAuth'
 import ProtectedRoute from '@/hok/ProtectedRoute/ProtectedRoute'
 import { FullPageLoader } from '@/Components/Loader/Loader'
 import SystMsgAlert from '../Components/SystMsgAlert/SystMsgAlert'
-import './App.scss'
+import s from './App.module.scss'
 import MainPage from '../Pages/MainPage/MainPage'
 import LoginPage from '../Pages/AuthPage/LoginPage'
 import RegistrationPage from '../Pages/AuthPage/RegistrationPage'
 import NotFoundPage from '../Pages/NotFoundPage/NotFoundPage'
 import Header from '../Components/Header/Header'
+import Footer from '../Components/Footer/Footer'
+import ProductsPage from '../Pages/ProductsPage/ProductsPage'
+import UserProfile from '../Pages/UserProfile/UserProfile'
+
+function PageBuilder(build: {
+  HeaderJSX: JSX.Element
+  FooterJSX: JSX.Element
+}) {
+  const { HeaderJSX, FooterJSX } = build
+  return function Page(props: {
+    header?: boolean
+    footer?: boolean
+    children: JSX.Element
+  }) {
+    const { header = false, footer = false, children } = props
+    return (
+      <div className={s.page}>
+        {header && HeaderJSX}
+        <div className={s.pageMain}>{children}</div>
+        {footer && FooterJSX}
+      </div>
+    )
+  }
+}
 
 export default function App() {
   const [systMsg, setSystMsg] = useState('')
@@ -22,10 +46,21 @@ export default function App() {
     setIsError(error)
   }
 
-  const { login, register, currentUser, logout, checkAuth } = useAuth(
-    setupMsg,
-    setIsFetching,
-  )
+  const {
+    login,
+    register,
+    currentUser,
+    logout,
+    checkAuth,
+    setDefaultAddress,
+    setAddress,
+    addAddress,
+    removeAddress,
+    updateUserData,
+    updatePassword,
+    editAddress,
+    unsetAddress,
+  } = useAuth(setupMsg, setIsFetching)
 
   const resetSystMsg = () => {
     setSystMsg('')
@@ -34,9 +69,13 @@ export default function App() {
   // remove those useEffects when done
   useEffect(() => {
     checkAuth()
-    console.log(currentUser)
     setIsFetching(false)
   }, [])
+
+  const Page = PageBuilder({
+    HeaderJSX: <Header onLogout={logout} />,
+    FooterJSX: <Footer />,
+  })
 
   return (
     <CurrentUserContext.Provider value={currentUser}>
@@ -46,19 +85,22 @@ export default function App() {
         onResetMsg={resetSystMsg}
         type={isError ? 'fail' : 'success'}
       />
-      <SystMsgAlert
-        msg={systMsg}
-        onResetMsg={resetSystMsg}
-        type={isError ? 'fail' : 'success'}
-      />
-      <Header onLogout={logout} />
       <Routes>
-        <Route path="/" element={<MainPage />} />
+        <Route
+          path="/"
+          element={
+            <Page header footer>
+              <MainPage />
+            </Page>
+          }
+        />
         <Route
           path="/login"
           element={
             <ProtectedRoute condition={!currentUser}>
-              <LoginPage onSubmit={login} />
+              <Page header>
+                <LoginPage onSubmit={login} />
+              </Page>
             </ProtectedRoute>
           }
         />
@@ -66,11 +108,47 @@ export default function App() {
           path="/register"
           element={
             <ProtectedRoute condition={!currentUser}>
-              <RegistrationPage onSubmit={register} />
+              <Page header>
+                <RegistrationPage onSubmit={register} />
+              </Page>
             </ProtectedRoute>
           }
         />
-        <Route path="/*" element={<NotFoundPage />} />
+        <Route
+          path="/catalog/*"
+          element={
+            <Page header footer>
+              <ProductsPage />
+            </Page>
+          }
+        />
+        <Route
+          path="/profile"
+          element={
+            <ProtectedRoute condition={!!currentUser}>
+              <Page header footer>
+                <UserProfile
+                  onUserUpdate={updateUserData}
+                  onPasswordChange={updatePassword}
+                  onAddAddress={addAddress}
+                  onEditAddress={editAddress}
+                  onSetAddress={setAddress}
+                  onRemoveAddress={removeAddress}
+                  onSetDefaultAddress={setDefaultAddress}
+                  onUnsetAddress={unsetAddress}
+                />
+              </Page>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/*"
+          element={
+            <Page header>
+              <NotFoundPage />
+            </Page>
+          }
+        />
       </Routes>
     </CurrentUserContext.Provider>
   )

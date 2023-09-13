@@ -2,18 +2,18 @@ import { apiRoot } from '@/eComMerchant/client'
 import { Cart, CartUpdateAction } from '@commercetools/platform-sdk'
 import { useEffect, useRef, useState } from 'react'
 
-const STORAGE_BASKET_ID = 'basketId'
+const STORAGE_CART_ID = 'cartId'
 const DEFAULT_CURRENCY = 'EUR'
 
-export default function useBasket() {
-  const basketId = localStorage.getItem(STORAGE_BASKET_ID)
+export default function useCart() {
+  const cartId = localStorage.getItem(STORAGE_CART_ID)
 
-  const basketRef = useRef<Cart>()
-  const [basket, setBasket] = useState<Cart>()
+  const cartRef = useRef<Cart>()
+  const [cart, $setCart] = useState<Cart>()
 
-  const updateBasket = (cart: Cart) => {
-    setBasket(cart)
-    basketRef.current = cart
+  const setCart = (newCart: Cart) => {
+    $setCart(newCart)
+    cartRef.current = newCart
   }
 
   const [isFetching, setIsFetching] = useState(true)
@@ -21,16 +21,16 @@ export default function useBasket() {
 
   useEffect(() => {
     try {
-      if (basketId) {
+      if (cartId) {
         apiRoot
           .carts()
-          .withId({ ID: basketId })
+          .withId({ ID: cartId })
           .get()
           .execute()
           .then((resp) => {
             const { statusCode, body } = resp
             if (statusCode === 200) {
-              updateBasket(body)
+              setCart(body)
             }
           })
       } else {
@@ -41,8 +41,8 @@ export default function useBasket() {
           .then((resp) => {
             const { statusCode, body } = resp
             if (statusCode === 201) {
-              updateBasket(body)
-              localStorage.setItem(STORAGE_BASKET_ID, body.id)
+              setCart(body)
+              localStorage.setItem(STORAGE_CART_ID, body.id)
             }
           })
       }
@@ -50,21 +50,21 @@ export default function useBasket() {
       setIsFetching(false)
       setIsLoaded(true)
     }
-  }, [basketId])
+  }, [cartId])
 
   const updateCart = (cartUpdate: CartUpdateAction | CartUpdateAction[]) => {
-    if (!basketId) {
-      throw new Error('Basket is not created')
+    if (!cartId) {
+      throw new Error('Cart is not created')
     }
-    if (!basketRef.current) {
-      throw new Error('Basket is not fetched yet')
+    if (!cartRef.current) {
+      throw new Error('Cart is not fetched yet')
     }
     return apiRoot
       .carts()
-      .withId({ ID: basketId })
+      .withId({ ID: cartId })
       .post({
         body: {
-          version: basketRef.current.version,
+          version: cartRef.current.version,
           actions: [cartUpdate].flat(),
         },
       })
@@ -72,19 +72,19 @@ export default function useBasket() {
       .then((resp) => {
         const { statusCode, body } = resp
         if (statusCode === 200) {
-          updateBasket(body)
-          localStorage.setItem(STORAGE_BASKET_ID, body.id)
+          setCart(body)
+          localStorage.setItem(STORAGE_CART_ID, body.id)
         }
         return resp
       })
   }
 
   const findLineItemBy = ({ productId }: { productId: string }) =>
-    basketRef.current?.lineItems.find((li) => li.productId === productId)
+    cartRef.current?.lineItems.find((li) => li.productId === productId)
 
   /* Expose API */
 
-  const addItem = async (productId: string, quantity = 1) => {
+  const addLineItem = async (productId: string, quantity = 1) => {
     setIsFetching(true)
     try {
       await updateCart({ action: 'addLineItem', productId, quantity })
@@ -93,7 +93,7 @@ export default function useBasket() {
     }
   }
 
-  const removeItem = async (productId: string) => {
+  const removeLineItem = async (productId: string) => {
     const lineItem = findLineItemBy({ productId })
     if (lineItem) {
       setIsFetching(true)
@@ -105,7 +105,7 @@ export default function useBasket() {
     }
   }
 
-  const updateItemQuantity = async (
+  const updateLineItemQuantity = async (
     productId: string,
     updater: (q: number) => number,
   ) => {
@@ -124,7 +124,7 @@ export default function useBasket() {
     }
   }
 
-  const addPromo = async (code: string) => {
+  const addDiscountCode = async (code: string) => {
     setIsFetching(true)
     try {
       await updateCart({ action: 'addDiscountCode', code })
@@ -133,8 +133,8 @@ export default function useBasket() {
     }
   }
 
-  const removePromo = async (code: string) => {
-    const discountCode = basketRef.current?.discountCodes.find(
+  const removeDiscountCode = async (code: string) => {
+    const discountCode = cartRef.current?.discountCodes.find(
       (dc) => code === dc.discountCode.obj?.code,
     )?.discountCode
     if (!discountCode) {
@@ -149,13 +149,13 @@ export default function useBasket() {
   }
 
   return {
-    basket,
+    cart,
     isLoaded,
     isFetching,
-    addItem,
-    removeItem,
-    updateItemQuantity,
-    addPromo,
-    removePromo,
+    addLineItem,
+    removeLineItem,
+    updateLineItemQuantity,
+    addDiscountCode,
+    removeDiscountCode,
   }
 }

@@ -124,6 +124,30 @@ export default function useBasket() {
     }
   }
 
+  const addPromo = async (code: string) => {
+    setIsFetching(true)
+    try {
+      await updateCart({ action: 'addDiscountCode', code })
+    } finally {
+      setIsFetching(false)
+    }
+  }
+
+  const removePromo = async (code: string) => {
+    const discountCode = basketRef.current?.discountCodes.find(
+      (dc) => code === dc.discountCode.obj?.code,
+    )?.discountCode
+    if (!discountCode) {
+      throw new Error(`Discount '${code}' is not applied`)
+    }
+    setIsFetching(true)
+    try {
+      await updateCart({ action: 'removeDiscountCode', discountCode })
+    } finally {
+      setIsFetching(false)
+    }
+  }
+
   return {
     basket,
     isLoaded,
@@ -131,5 +155,7 @@ export default function useBasket() {
     addItem,
     removeItem,
     updateItemQuantity,
+    addPromo,
+    removePromo,
   }
 }

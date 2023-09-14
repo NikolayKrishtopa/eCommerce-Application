@@ -6,6 +6,23 @@
   padding: 0 2rem;
 }
 
+.cartHeader {
+  color: $color-neutral-light;
+  font-family: $font-stack-heading;
+  font-size: 28px;
+  font-weight: 700;
+  margin: 0;
+}
+
+.cartDelLink {
+  color: $color-neutral-light;
+  font-family: $font-stack-text;
+  font-size: 16px;
+  font-weight: 400;
+  text-decoration-line: underline;
+  margin: 0 0 32px 0;
+}
+
 .cartWrapper {
   display: flex;
   justify-content: space-between;
@@ -29,9 +46,7 @@
   margin: 0 0 30px 0;
   font-family: $font-stack-heading;
   font-size: 28px;
-  font-style: normal;
   font-weight: 700;
-  line-height: normal;
 }
 
 .summaryLine {
@@ -39,9 +54,7 @@
   justify-content: space-between;
   font-family: $font-stack-text;
   font-size: 20px;
-  font-style: normal;
   font-weight: 700;
-  line-height: normal;
   margin-bottom: 30px;
 }
 

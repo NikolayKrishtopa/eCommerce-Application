@@ -436,7 +436,7 @@ export default function CartPage() {
   return (
     <section className={s.cart}>
       <h2 className={s.cartHeader}>Shopping Cart</h2>
-      <p>Clear shopping cart</p>
+      <p className={s.cartDelLink}>Clear shopping cart</p>
       <div className={s.cartWrapper}>
         <div className={s.cartProducts}>
           {mockCart.lineItems.map((item) => (

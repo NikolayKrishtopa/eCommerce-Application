@@ -61,7 +61,7 @@ export default function ProductCard() {
   })
 
   useEffect(() => {
-    console.log(`qty : ${qty}`)
+    // console.log(`qty : ${qty}`)
   }, [qty])
 
   if (product) {

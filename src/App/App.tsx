@@ -12,7 +12,7 @@ import RegistrationPage from '../Pages/AuthPage/RegistrationPage'
 import NotFoundPage from '../Pages/NotFoundPage/NotFoundPage'
 import Header from '../Components/Header/Header'
 import Footer from '../Components/Footer/Footer'
-import ProductsPage from '../Pages/ProductsPage/ProductsPage'
+import ProductCardRoutes from '../Pages/ProductsPage/ProductsPage'
 import UserProfile from '../Pages/UserProfile/UserProfile'
 
 function PageBuilder(build: {
@@ -118,7 +118,7 @@ export default function App() {
           path="/catalog/*"
           element={
             <Page header footer>
-              <ProductsPage />
+              <ProductCardRoutes />
             </Page>
           }
         />

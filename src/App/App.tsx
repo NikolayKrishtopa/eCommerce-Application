@@ -4,6 +4,7 @@ import CurrentUserContext from '@/contexts/CurrentUserContext'
 import useAuth from '@/hooks/useAuth'
 import ProtectedRoute from '@/hok/ProtectedRoute/ProtectedRoute'
 import { FullPageLoader } from '@/Components/Loader/Loader'
+import CartPage from '@/Pages/CartPage/CartPage'
 import SystMsgAlert from '../Components/SystMsgAlert/SystMsgAlert'
 import s from './App.module.scss'
 import MainPage from '../Pages/MainPage/MainPage'
@@ -139,6 +140,14 @@ export default function App() {
                 />
               </Page>
             </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/cart"
+          element={
+            <Page header footer>
+              <CartPage />
+            </Page>
           }
         />
         <Route

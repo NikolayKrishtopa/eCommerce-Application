@@ -1,26 +1,19 @@
 @use '@/styles/abstracts' as *;
 
-.tools {
-  display: flex;
-  gap: 16px;
-  @media (max-width: $break-sm) {
-    flex-direction: column;
-  }
-}
 @mixin toolsItem {
   display: flex;
   padding: 16px;
   align-items: center;
-  justify-content: center;
+  justify-content: space-between;
   border-radius: 10px;
   gap: 16px;
-  background-color: $color-neutral-light;
-  color: $color-neutral-dark;
   font-family: $font-stack-text;
   font-size: 20px;
   font-style: normal;
   font-weight: 700;
   line-height: normal;
+  height: 56px;
+  width: 150px;
 }
 .qtyWrapper {
   @include toolsItem;
@@ -29,4 +22,5 @@
   @include clickable;
   background-color: transparent;
   border: none;
+  font-size: 32px;
 }

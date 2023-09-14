@@ -1,0 +1,128 @@
+@use '@/styles/abstracts' as *;
+
+.cart {
+  max-width: 1512px;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+.cartWrapper {
+  display: flex;
+  justify-content: space-between;
+}
+
+.cartProducts {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.cartSummaryContainer {
+  margin: 0 auto;
+}
+
+.summary {
+  margin-bottom: 40px;
+}
+
+.summaryHeader {
+  margin: 0 0 30px 0;
+  font-family: $font-stack-heading;
+  font-size: 28px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: normal;
+}
+
+.summaryLine {
+  display: flex;
+  justify-content: space-between;
+  font-family: $font-stack-text;
+  font-size: 20px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: normal;
+  margin-bottom: 30px;
+}
+
+.checkoutBtn {
+  width: 100%;
+  min-width: 340px;
+  height: 56px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 14px;
+  border-radius: 10px;
+  border: none;
+  background: $color-neutral-light;
+  color: $color-primary;
+  font-family: $font-stack-text;
+  font-size: 20px;
+  font-style: normal;
+  font-weight: 700;
+  @include clickable;
+}
+
+.promoContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+}
+
+.promoHeader {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-family: $font-stack-text;
+  font-size: 20px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: normal;
+  svg {
+    height: 25px;
+    width: 25px;
+  }
+}
+
+.promoInputContainer {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  border-radius: 10px;
+  border: none;
+  background: $color-neutral-light;
+  overflow: hidden;
+}
+
+.promoInput {
+  border: none;
+  flex-grow: 1;
+  display: flex;
+  align-items: center;
+  padding: 0 23px;
+  color: $color-primary;
+  font-family: $font-stack-text;
+  font-size: 16px;
+  font-weight: 700;
+  &::placeholder {
+    color: $color-on-neutral-light-pale;
+    font-weight: 400;
+  }
+}
+
+.promoSubmit {
+  height: 56px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 10px;
+  padding: 0 46px;
+  border: solid 1px $color-neutral-light;
+  background: $color-primary;
+  color: $color-neutral-light;
+  font-family: $font-stack-text;
+  font-size: 20px;
+  font-weight: 700;
+  @include clickable;
+}

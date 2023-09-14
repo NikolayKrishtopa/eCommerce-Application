@@ -195,9 +195,11 @@ export default function ProductCard() {
               </div>
               <p className={s.description}>{item?.description?.en ?? ''}</p>
               <div className={s.tools}>
-                {/* ------------------ */}
-                <QtyInput quantity={1} onChangeHandler={(q) => setQty(q)} />
-                {/* ------------------ */}
+                <QtyInput
+                  className={s.prodQtyButtons}
+                  quantity={1}
+                  onChangeHandler={(q) => setQty(q)}
+                />
                 <button type="button" className={s.btn}>
                   Add to shopping cart <img src={cartIcon} alt="cart" />
                 </button>

@@ -1,0 +1,142 @@
+@use '@/styles/abstracts' as *;
+
+.productCard {
+  display: flex;
+  position: relative;
+  max-width: 861px;
+  max-height: 283px;
+  border-radius: 10px;
+  overflow: hidden;
+  // @media (max-width: $break-lg) {
+  //   gap: 24px;
+  // }
+  // @media (max-width: $break-lm) {
+  //   flex-direction: column;
+  //   gap: 40px;
+  // }
+}
+
+.imageBlock {
+  width: 242px;
+  min-width: 242px;
+  height: 283px;
+  border: none;
+  outline: none;
+  overflow: hidden;
+  padding: 0;
+  margin: 0;
+  object-fit: cover;
+  // @media (max-width: $break-lg) {
+  //   width: 355px;
+  // }
+  // @media (max-width: $break-md) {
+  //   width: 446px;
+  // }
+  // @media (max-width: $break-sm) {
+  //   width: 100%;
+  //   max-width: 446px;
+  // }
+}
+
+.image {
+  height: 100%;
+}
+
+@mixin price {
+  margin: 0;
+  font-family: $font-stack-heading;
+  font-size: 20px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: normal;
+  @media (max-width: $break-md) {
+    font-size: 28px;
+  }
+}
+
+.price {
+  @include price;
+}
+
+.crossed {
+  text-decoration: line-through;
+}
+.pricePromo {
+  @include price;
+  color: $color-danger;
+}
+
+.textBlock {
+  display: flex;
+  flex-direction: column;
+  padding: 26px 20px;
+  width: 100%;
+  background-color: $color-neutral-light;
+  color: $color-primary;
+}
+
+.itemTitle {
+  margin: 0;
+  font-family: $font-stack-heading;
+  font-size: 24px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 32px;
+  text-transform: capitalize;
+  // @media (max-width: $break-md) {
+  //   font-size: 24px;
+  // }
+}
+
+.priceBlock {
+  display: flex;
+  gap: 16px;
+  flex-grow: 1;
+}
+
+.tools {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  @media (max-width: $break-sm) {
+    flex-direction: column;
+  }
+}
+
+@mixin toolsItem {
+  display: flex;
+  padding: 16px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 10px;
+  gap: 16px;
+  background-color: $color-neutral-light;
+  color: $color-neutral-dark;
+  font-family: $font-stack-text;
+  font-size: 20px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: normal;
+}
+
+.cartQtyButtons {
+  background-color: $color-primary;
+  color: $color-neutral-light;
+  button {
+    color: $color-neutral-light;
+  }
+}
+
+.btn {
+  @include toolsItem;
+  @include clickable;
+}
+
+.closeBtn {
+  @include clickable;
+  position: absolute;
+  top: 23px;
+  right: 14px;
+  background-color: transparent;
+  border: none;
+}

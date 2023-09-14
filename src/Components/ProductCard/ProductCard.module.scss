@@ -102,6 +102,7 @@
 }
 .tools {
   display: flex;
+  align-items: center;
   gap: 16px;
   @media (max-width: $break-sm) {
     flex-direction: column;
@@ -113,32 +114,25 @@
   align-items: center;
   justify-content: center;
   border-radius: 10px;
+  border: none;
   gap: 16px;
-  background-color: $color-neutral-light;
-  color: $color-neutral-dark;
   font-family: $font-stack-text;
   font-size: 20px;
   font-style: normal;
   font-weight: 700;
   line-height: normal;
 }
-.qtyWrapper {
-  @include toolsItem;
-}
-.qtyBtn {
-  @include clickable;
-  background-color: transparent;
-  border: none;
+
+.prodQtyButtons {
+  background-color: $color-neutral-light;
+  color: $color-neutral-dark;
 }
 
 .btn {
   @include toolsItem;
   @include clickable;
 }
-.qty {
-  margin: 0;
-  color: $color-neutral-dark;
-}
+
 .navButton {
   @include clickable;
   position: absolute;

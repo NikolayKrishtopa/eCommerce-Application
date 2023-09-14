@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { Route, Routes } from 'react-router-dom'
 import CurrentUserContext from '@/contexts/CurrentUserContext'
 import useAuth from '@/hooks/useAuth'
+import AboutPage from '@/Pages/AboutPage/AboutPage'
 import ProtectedRoute from '@/hok/ProtectedRoute/ProtectedRoute'
 import { FullPageLoader } from '@/Components/Loader/Loader'
 import SystMsgAlert from '../Components/SystMsgAlert/SystMsgAlert'
@@ -12,7 +13,7 @@ import RegistrationPage from '../Pages/AuthPage/RegistrationPage'
 import NotFoundPage from '../Pages/NotFoundPage/NotFoundPage'
 import Header from '../Components/Header/Header'
 import Footer from '../Components/Footer/Footer'
-import ProductsPage from '../Pages/ProductsPage/ProductsPage'
+import ProductCardRoutes from '../Pages/ProductsPage/ProductsPage'
 import UserProfile from '../Pages/UserProfile/UserProfile'
 
 function PageBuilder(build: {
@@ -115,10 +116,18 @@ export default function App() {
           }
         />
         <Route
+          path="/about"
+          element={
+            <Page header footer>
+              <AboutPage />
+            </Page>
+          }
+        />
+        <Route
           path="/catalog/*"
           element={
             <Page header footer>
-              <ProductsPage />
+              <ProductCardRoutes />
             </Page>
           }
         />

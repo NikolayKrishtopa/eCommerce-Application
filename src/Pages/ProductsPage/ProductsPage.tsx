@@ -142,7 +142,7 @@ type Sort = {
   sorting: 'price asc' | 'price desc' | 'name.en asc' | 'name.en desc'
 }
 
-export function ProductsPage() {
+function ProductsPage() {
   const [currentPage, setCurrentPage] = useState(1)
   const [query, setQuery] = useState('')
   const { categorySlug } = useParams()

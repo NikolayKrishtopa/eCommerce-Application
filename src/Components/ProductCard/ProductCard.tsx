@@ -11,6 +11,7 @@ import useProduct from '@/hooks/useProduct'
 import NotFoundPage from '@/Pages/NotFoundPage/NotFoundPage'
 import s from './ProductCard.module.scss'
 import Breadcrumbs from '../Breadcrumbs/Breadcrumbs'
+import QtyInput from '../UIKit/QtyInput/QtyInput'
 
 export default function ProductCard() {
   // const products = useContext(ProductsContext)
@@ -58,6 +59,10 @@ export default function ProductCard() {
     const timer = setTimeout(() => setInitiated(true), 1000)
     return () => clearTimeout(timer)
   })
+
+  useEffect(() => {
+    console.log(`qty : ${qty}`)
+  }, [qty])
 
   if (product) {
     return (
@@ -190,24 +195,9 @@ export default function ProductCard() {
               </div>
               <p className={s.description}>{item?.description?.en ?? ''}</p>
               <div className={s.tools}>
-                <div className={s.qtyWrapper}>
-                  <button
-                    type="button"
-                    className={s.qtyBtn}
-                    onClick={() => setQty(qty - 1)}
-                  >
-                    -
-                  </button>
-                  <p className={s.qty}>{qty}</p>
-
-                  <button
-                    type="button"
-                    className={s.qtyBtn}
-                    onClick={() => setQty(qty + 1)}
-                  >
-                    +
-                  </button>
-                </div>
+                {/* ------------------ */}
+                <QtyInput quantity={1} onChangeHandler={(q) => setQty(q)} />
+                {/* ------------------ */}
                 <button type="button" className={s.btn}>
                   Add to shopping cart <img src={cartIcon} alt="cart" />
                 </button>

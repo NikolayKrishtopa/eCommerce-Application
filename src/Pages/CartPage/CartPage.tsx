@@ -3,6 +3,7 @@ import { Cart } from '@commercetools/platform-sdk'
 import CartProductCard from '@/Components/CartProductCard/CartProductCard'
 import { ReactComponent as SvgCheckout } from '@/assets/icons/arrow-right.svg'
 import { ReactComponent as SvgDiscount } from '@/assets/icons/discount.svg'
+// import { useNavigate } from 'react-router-dom'
 import s from './CartPage.module.scss'
 
 const mockCart: Cart = {
@@ -426,9 +427,27 @@ const mockCart: Cart = {
 }
 
 export default function CartPage() {
+  // const navigate = useNavigate()
+
   return (
     <section className={s.cart}>
       <h2 className={s.cartHeader}>Shopping Cart</h2>
+
+      {/* Empty cart stub */}
+      {/* <div className={s.emptyCart}>
+        <h3 className={s.emptyCartHeader}>Your Cart is empty</h3>
+        <p className={s.emptyCartMessage}>Once you add something to your cart - it will appear here. Ready to get started?</p>
+        <button
+          type="button"
+          className={s.emptyCartButton}
+          onClick={() => navigate("/catalog")}
+        >
+          <div>Go to catalogue</div>
+          <SvgCheckout />
+        </button>
+      </div> */}
+
+      {/* Cart with goods */}
       <p className={s.cartDelLink}>Clear shopping cart</p>
       <div className={s.cartWrapper}>
         <div className={s.cartProducts}>

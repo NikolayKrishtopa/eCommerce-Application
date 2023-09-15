@@ -22,6 +22,7 @@ export default function QtyInput(props: QtyInputProps) {
     <div className={cn(s.qtyWrapper, className)}>
       <button
         type="button"
+        disabled={qty <= 1}
         className={s.qtyBtn}
         onClick={() => {
           setQty(qty - 1)

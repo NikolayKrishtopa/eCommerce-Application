@@ -20,8 +20,8 @@ export default function AddressTag(props: AddressTagProps) {
     onRemove(addressData.id)
   }
   const SetDefaultBillingAddress = () => {
-    if (!onSetAddress || !addressData.id) return
-    onSetAddress('billing', addressData.id)
+    if (!onSetDefaultAddress || !addressData.id) return
+    onSetDefaultAddress('billing', addressData.id)
   }
   const SetDefaultShippingAddress = () => {
     if (!onSetDefaultAddress || !addressData.id) return

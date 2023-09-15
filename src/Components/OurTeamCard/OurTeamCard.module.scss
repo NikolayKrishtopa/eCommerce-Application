@@ -4,11 +4,19 @@
   display: flex;
   flex-direction: column;
   gap: 16px;
-  padding: 50px 20px;
+  padding: 50px 20px 91px;
   background-color: $color-neutral-light;
   color: $color-neutral-dark;
   border-radius: r(10px);
-  max-width: 430px;
+  // max-width: 430px;
+  position: relative;
+  @media screen and (max-width: $break-lm) {
+    gap: 12px;
+    padding: 16px 20px 100px;
+  }
+  @media screen and (max-width: $break-sm) {
+    padding-bottom: 90px;
+  }
 }
 .avatar {
   width: 120px;
@@ -23,6 +31,12 @@
   line-height: normal;
   letter-spacing: -0.64px;
   margin: 0;
+  @media screen and (max-width: $break-lm) {
+    margin: 8px 0 -4px;
+  }
+  @media screen and (max-width: $break-lm) {
+    font-size: r(28px);
+  }
 }
 .subtitle {
   font-family: $font-stack-heading;
@@ -37,6 +51,9 @@
   display: flex;
   flex-direction: column;
   gap: 5px;
+  @media screen and (max-width: $break-sm) {
+    font-size: 3px;
+  }
 }
 .paragraph {
   font-family: $font-stack-text;
@@ -45,8 +62,13 @@
   font-weight: 400;
   line-height: normal;
   margin: 0;
+  @media screen and (max-width: $break-lm) {
+    font-size: r(16px);
+  }
 }
 .link {
   display: block;
-  justify-self: flex-end;
+  position: absolute;
+  left: 20px;
+  bottom: 20px;
 }

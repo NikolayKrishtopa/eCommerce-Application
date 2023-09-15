@@ -1,5 +1,5 @@
 import githubIcon from '@/assets/icons/github.svg'
-import linkedinIcon from '@/assets/icons/linkedin.svg'
+import framerIcon from '@/assets/icons/framer.svg'
 import { PortfolioLinkType } from '@/Models/Models'
 import { OurTeamCardProps } from './OurTeamCard.props'
 import s from './OurTeamCard.module.scss'
@@ -21,7 +21,7 @@ export default function OurTeamCard(props: OurTeamCardProps) {
           src={
             profile.PORTFOLIO.TYPE === PortfolioLinkType.GITHUB
               ? githubIcon
-              : linkedinIcon
+              : framerIcon
           }
           alt="icon"
         />

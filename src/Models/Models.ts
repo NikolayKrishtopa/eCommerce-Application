@@ -50,6 +50,7 @@ export interface ProductQueryParams {
 export enum PortfolioLinkType {
   GITHUB = 'github',
   LINKEDIN = 'linkedin',
+  FRAMER = 'framer',
 }
 
 export interface TeamMember {

@@ -70,10 +70,9 @@ const TEAM: Array<TeamMember> = [
     ROLE: 'Frontend developer',
     PICTURE: nikolayAvatar,
     SKILLS: [
-      `bio + each member's contributions to the project, their effective collaboration methods`,
       `💻 I'm the front-end developer behind the visual magic you see on our website.`,
-      `🖌️ My toolbox is filled with HTML, CSS, and JavaScript.`,
-      `🖌️ My toolbox is filled with HTML, CSS, and JavaScript.`,
+      `💻 Javascript, React.js. vue.js, Redux/toolkit, Vuex`,
+      `🖌️ HTML, CSS/SCSS, Figma`,
     ],
     PORTFOLIO: {
       LINK: 'https://github.com/NikolayKrishtopa',
@@ -90,8 +89,8 @@ const TEAM: Array<TeamMember> = [
       `She is proficient in Figma, Adobe Creative Cloud tools (including Adobe XD), and Framer.`,
     ],
     PORTFOLIO: {
-      LINK: 'https://www.linkedin.com/in/ruzanna-baldryan/',
-      TYPE: PortfolioLinkType.LINKEDIN,
+      LINK: 'https://ruzannadesigns.framer.website/',
+      TYPE: PortfolioLinkType.FRAMER,
     },
   },
 ]

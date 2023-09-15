@@ -6,20 +6,16 @@ import { ReactComponent as SvgDiscount } from '@/assets/icons/discount.svg'
 import s from './CartPage.module.scss'
 
 const mockCart: Cart = {
-  type: 'Cart',
   id: '3a506597-5329-4dbe-b740-056eb5091833',
   version: 12,
-  versionModifiedAt: '2023-09-13T23:06:31.067Z',
-  lastMessageSequenceNumber: 1,
+
   createdAt: '2023-09-13T22:31:48.790Z',
   lastModifiedAt: '2023-09-13T23:06:31.067Z',
   lastModifiedBy: {
     clientId: 'Djy17nsDyJD_qmn2ZaOtBdD_',
-    isPlatformClient: false,
   },
   createdBy: {
     clientId: 'Djy17nsDyJD_qmn2ZaOtBdD_',
-    isPlatformClient: false,
   },
   lineItems: [
     {
@@ -31,7 +27,6 @@ const mockCart: Cart = {
       productType: {
         typeId: 'product-type',
         id: '7e8c2453-f80c-4b8f-b90e-7dc95a1c3e58',
-        version: 57,
       },
       productSlug: {
         en: 'birdhouse-stage-3-plague-doctor-8-complete-board',
@@ -141,7 +136,6 @@ const mockCart: Cart = {
       productType: {
         typeId: 'product-type',
         id: '0ac83fe6-67f6-4ead-be12-7b72ea625ec5',
-        version: 31,
       },
       productSlug: {
         en: 'antix-repitat-conical-wheels-54mm-100a-4-pack',
@@ -265,7 +259,6 @@ const mockCart: Cart = {
       productType: {
         typeId: 'product-type',
         id: 'd09d3b4e-4359-48b9-85a0-49e4fda4cd76',
-        version: 29,
       },
       productSlug: {
         en: 'almost-max-cars-impact-pro-light-825in-skateboard-deck',

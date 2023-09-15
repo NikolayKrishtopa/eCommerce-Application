@@ -142,7 +142,7 @@ type Sort = {
   sorting: 'price asc' | 'price desc' | 'name.en asc' | 'name.en desc'
 }
 
-export function ProductsPage() {
+function ProductsPage() {
   const [currentPage, setCurrentPage] = useState(1)
   const [query, setQuery] = useState('')
   const { categorySlug } = useParams()
@@ -210,7 +210,7 @@ export function ProductsPage() {
         ? product.masterVariant.prices[0].value.currencyCode
         : 'EUR',
       imageUrl: product.masterVariant.images
-        ? product.masterVariant.images[0].url
+        ? product.masterVariant.images[0]?.url
         : '',
       imageAlt: product.name.en,
       discountPrice: discounted,

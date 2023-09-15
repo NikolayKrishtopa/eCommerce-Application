@@ -102,7 +102,7 @@ export default function Header(props: HeaderProps) {
       )}
 
       <div className={s.basketLink}>
-        <NavLink to="/basket" onClick={() => setBurgerActive(false)}>
+        <NavLink to="/cart" onClick={() => setBurgerActive(false)}>
           <BasketImg className={s.basketImg} />
         </NavLink>
       </div>

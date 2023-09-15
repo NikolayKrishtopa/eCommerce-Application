@@ -1,3 +1,9 @@
+import { TeamMember, PortfolioLinkType } from '@/Models/Models'
+import nikolayAvatar from '@/assets/img/nikolayAvatar.png'
+import ruzannaAvatar from '@/assets/img/ruzannaAvatar.png'
+import maxAvatar from '@/assets/img/maxAvatar.png'
+import ivanAvatar from '@/assets/img/ivanAvatar.png'
+
 const SYSTEM_MESSAGES = {
   LOGIN_SCSS: 'Successfully logged in as',
   LOGOUT_SCSS: 'User successfully logged out',
@@ -24,6 +30,69 @@ const UI_TEXTS = {
   LOGIN_HEADER: 'Log in',
   LOGIN_CTA: 'Welcome back!',
   LOGIN_BTN: 'Login',
+
+  ABOUT_HEADER: 'About us',
 }
 
-export { SYSTEM_MESSAGES, UI_TEXTS }
+const TEAM: Array<TeamMember> = [
+  {
+    NAME: 'Ivan Gavrilin',
+    ROLE: 'Frontend developer',
+    PICTURE: ivanAvatar,
+    SKILLS: [
+      `bio + each member's contributions to the project, their effective collaboration methods`,
+      `💻 I'm the front-end developer behind the visual magic you see on our website.`,
+      `🖌️ My toolbox is filled with HTML, CSS, and JavaScript.`,
+      `🖌️ My toolbox is filled with HTML, CSS, and JavaScript.`,
+    ],
+    PORTFOLIO: {
+      LINK: 'https://github.com/ivan-gav',
+      TYPE: PortfolioLinkType.GITHUB,
+    },
+  },
+  {
+    NAME: 'Maksim Shamal',
+    ROLE: 'Frontend developer',
+    PICTURE: maxAvatar,
+    SKILLS: [
+      `bio + each member's contributions to the project, their effective collaboration methods`,
+      `💻 I'm the front-end developer behind the visual magic you see on our website.`,
+      `🖌️ My toolbox is filled with HTML, CSS, and JavaScript.`,
+      `🖌️ My toolbox is filled with HTML, CSS, and JavaScript.`,
+    ],
+    PORTFOLIO: {
+      LINK: 'https://github.com/lazy-goose',
+      TYPE: PortfolioLinkType.GITHUB,
+    },
+  },
+  {
+    NAME: 'Nikolay Krihstopa',
+    ROLE: 'Frontend developer',
+    PICTURE: nikolayAvatar,
+    SKILLS: [
+      `💻 I'm the front-end developer behind the visual magic you see on our website.`,
+      `💻 Javascript, React.js. vue.js, Redux/toolkit, Vuex`,
+      `🖌️ HTML, CSS/SCSS, Figma`,
+    ],
+    PORTFOLIO: {
+      LINK: 'https://github.com/NikolayKrishtopa',
+      TYPE: PortfolioLinkType.GITHUB,
+    },
+  },
+  {
+    NAME: 'Ruzanna Baldryan',
+    ROLE: 'UI/UX designer',
+    PICTURE: ruzannaAvatar,
+    SKILLS: [
+      `Ruzanna specializes in crafting intuitive and user-centric products for startups.`,
+      `She developed the UI concept for the Skateshop project.`,
+      `She is proficient in Figma, Adobe Creative Cloud tools (including Adobe XD), and Framer.`,
+    ],
+    PORTFOLIO: {
+      LINK: 'https://ruzannadesigns.framer.website/',
+      TYPE: PortfolioLinkType.FRAMER,
+    },
+  },
+]
+
+export { SYSTEM_MESSAGES, UI_TEXTS, TEAM }

@@ -1,0 +1,78 @@
+@use '@/styles/abstracts' as *;
+
+.pageContainer {
+  max-width: 1512px;
+  margin: 0 auto -110px;
+  padding: 1rem 2rem 0;
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+  color: $color-neutral-light;
+  @media screen and (max-width: $break-lm) {
+    gap: 16px;
+  }
+  @media screen and (max-width: $break-sm) {
+    margin-bottom: -70px;
+  }
+  @media screen and (max-width: $break-sm) {
+    padding: 1rem 1.5rem 0;
+  }
+}
+.title {
+  font-family: $font-stack-heading;
+  font-size: 2rem;
+  margin: 0;
+  @media screen and (max-width: $break-sm) {
+    font-size: r(28px);
+  }
+}
+.cardsContainer {
+  display: grid;
+  margin-top: 8px;
+  gap: 30px;
+  grid-template-columns: repeat(4, 1fr);
+  @media screen and (max-width: $break-xl) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  @media screen and (max-width: $break-lm) {
+    gap: 20px;
+  }
+  @media screen and (max-width: $break-sm) {
+    gap: 24px;
+    grid-template-columns: 1fr;
+  }
+}
+.logoWrapper {
+  margin-top: 16px;
+  align-self: flex-end;
+  @media screen and (max-width: 700px) {
+    margin-top: 6px;
+    align-self: center;
+  }
+  @media screen and (max-width: $break-sm) {
+    width: 123px;
+    height: 44px;
+  }
+}
+.logo {
+  max-width: 100%;
+}
+.skateWrapper {
+  align-self: center;
+  margin-top: -26px;
+  z-index: 2;
+  @media screen and (max-width: $break-lg) {
+    margin-top: -60px;
+  }
+  @media screen and (max-width: 700px) {
+    margin-top: 0;
+  }
+}
+.skateImg {
+  height: 94px;
+  width: 286px;
+  @media screen and (max-width: $break-sm) {
+    height: 71px;
+    width: 216px;
+  }
+}

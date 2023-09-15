@@ -46,3 +46,20 @@ export interface ProductQueryParams {
   categoryId?: string
   searchText?: string
 }
+
+export enum PortfolioLinkType {
+  GITHUB = 'github',
+  LINKEDIN = 'linkedin',
+  FRAMER = 'framer',
+}
+
+export interface TeamMember {
+  NAME: string
+  ROLE: string
+  SKILLS: string[]
+  PICTURE?: string
+  PORTFOLIO: {
+    LINK: string
+    TYPE: PortfolioLinkType
+  }
+}

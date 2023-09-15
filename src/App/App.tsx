@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { Route, Routes } from 'react-router-dom'
 import CurrentUserContext from '@/contexts/CurrentUserContext'
 import useAuth from '@/hooks/useAuth'
+import AboutPage from '@/Pages/AboutPage/AboutPage'
 import ProtectedRoute from '@/hok/ProtectedRoute/ProtectedRoute'
 import { FullPageLoader } from '@/Components/Loader/Loader'
 import CartPage from '@/Pages/CartPage/CartPage'
@@ -113,6 +114,14 @@ export default function App() {
                 <RegistrationPage onSubmit={register} />
               </Page>
             </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/about"
+          element={
+            <Page header footer>
+              <AboutPage />
+            </Page>
           }
         />
         <Route

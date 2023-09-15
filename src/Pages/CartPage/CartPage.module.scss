@@ -3,7 +3,7 @@
 .cart {
   max-width: 1512px;
   margin: 0 auto;
-  padding: 0 2rem;
+  padding: 0 2%;
 }
 
 .cartHeader {
@@ -26,6 +26,10 @@
 .cartWrapper {
   display: flex;
   justify-content: space-between;
+  @media (max-width: $break-xl) {
+    flex-direction: column;
+    align-items: center;
+  }
 }
 
 .cartProducts {
@@ -35,11 +39,28 @@
 }
 
 .cartSummaryContainer {
+  display: flex;
+  flex-direction: column;
   margin: 0 auto;
+  padding: 32px;
+  @media (max-width: $break-xl) {
+    flex-direction: row-reverse;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 32px;
+    padding: 32px 0;
+  }
+  @media (max-width: $break-lm) {
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+  }
 }
 
 .summary {
+  width: 100%;
   margin-bottom: 40px;
+  padding: 0;
 }
 
 .summaryHeader {
@@ -93,19 +114,23 @@
   font-weight: 700;
   line-height: normal;
   svg {
-    height: 25px;
-    width: 25px;
+    height: 30px;
+    width: 30px;
   }
 }
 
 .promoInputContainer {
   width: 100%;
+  min-width: 340px;
   display: flex;
   justify-content: space-between;
   border-radius: 10px;
   border: none;
   background: $color-neutral-light;
   overflow: hidden;
+  @media (max-width: $break-lg) {
+    width: 340px;
+  }
 }
 
 .promoInput {
@@ -126,11 +151,12 @@
 
 .promoSubmit {
   height: 56px;
+  width: 140px;
   display: flex;
   justify-content: center;
   align-items: center;
   border-radius: 10px;
-  padding: 0 46px;
+  // padding: 0 46px;
   border: solid 1px $color-neutral-light;
   background: $color-primary;
   color: $color-neutral-light;
@@ -138,4 +164,7 @@
   font-size: 20px;
   font-weight: 700;
   @include clickable;
+  @media (max-width: $break-lg) {
+    font-size: 16px;
+  }
 }

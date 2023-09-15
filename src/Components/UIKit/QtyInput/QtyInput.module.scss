@@ -1,6 +1,6 @@
 @use '@/styles/abstracts' as *;
 
-@mixin toolsItem {
+.qtyWrapper {
   display: flex;
   padding: 16px;
   align-items: center;
@@ -15,9 +15,7 @@
   height: 56px;
   width: 150px;
 }
-.qtyWrapper {
-  @include toolsItem;
-}
+
 .qtyBtn {
   @include clickable;
   background-color: transparent;

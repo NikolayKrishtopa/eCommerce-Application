@@ -16,7 +16,7 @@ export default function CartProductCard(props: CartProductCardProps) {
   const [qty, setQty] = useState(quantity)
 
   useEffect(() => {
-    console.log(`qty : ${qty}`)
+    // console.log(`qty : ${qty}`)
   }, [qty])
 
   return (

@@ -2,22 +2,23 @@
 
 .productCard {
   display: flex;
-  position: relative;
+  // position: relative;
   max-width: 861px;
   max-height: 283px;
   border-radius: 10px;
   overflow: hidden;
-  // @media (max-width: $break-lg) {
-  //   gap: 24px;
-  // }
-  // @media (max-width: $break-lm) {
-  //   flex-direction: column;
-  //   gap: 40px;
-  // }
+  @media (max-width: $break-lg) {
+    max-width: 762px;
+  }
+  @media (max-width: $break-md) {
+    height: 259px;
+  }
 }
 
 .imageBlock {
-  width: 242px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   min-width: 242px;
   height: 283px;
   border: none;
@@ -25,17 +26,16 @@
   overflow: hidden;
   padding: 0;
   margin: 0;
-  object-fit: cover;
-  // @media (max-width: $break-lg) {
-  //   width: 355px;
-  // }
-  // @media (max-width: $break-md) {
-  //   width: 446px;
-  // }
-  // @media (max-width: $break-sm) {
-  //   width: 100%;
-  //   max-width: 446px;
-  // }
+  @media (max-width: $break-md) {
+    max-width: 200px;
+    min-width: 200px;
+    height: 259px;
+  }
+  @media (max-width: $break-sm) {
+    max-width: 155px;
+    min-width: 155px;
+    height: 259px;
+  }
 }
 
 .image {
@@ -49,9 +49,6 @@
   font-style: normal;
   font-weight: 600;
   line-height: normal;
-  @media (max-width: $break-md) {
-    font-size: 28px;
-  }
 }
 
 .price {
@@ -70,7 +67,7 @@
   display: flex;
   flex-direction: column;
   padding: 26px 20px;
-  width: 100%;
+  flex-grow: 1;
   background-color: $color-neutral-light;
   color: $color-primary;
 }
@@ -83,9 +80,9 @@
   font-weight: 700;
   line-height: 32px;
   text-transform: capitalize;
-  // @media (max-width: $break-md) {
-  //   font-size: 24px;
-  // }
+  @media (max-width: $break-md) {
+    font-size: 16px;
+  }
 }
 
 .priceBlock {
@@ -98,8 +95,9 @@
   display: flex;
   align-items: center;
   gap: 16px;
-  @media (max-width: $break-sm) {
+  @media (max-width: $break-md) {
     flex-direction: column;
+    align-items: flex-start;
   }
 }
 
@@ -125,11 +123,22 @@
   button {
     color: $color-neutral-light;
   }
+  @media (max-width: $break-md) {
+    width: 114px !important;
+    height: 40px !important;
+    p {
+      font-size: 16px;
+    }
+  }
 }
 
 .btn {
   @include toolsItem;
   @include clickable;
+  @media (max-width: $break-md) {
+    height: 40px !important;
+    font-size: 16px;
+  }
 }
 
 .closeBtn {

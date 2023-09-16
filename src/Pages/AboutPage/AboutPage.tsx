@@ -12,7 +12,7 @@ export default function AboutPage() {
       <h3 className={s.title}>{UI_TEXTS.ABOUT_HEADER}</h3>
       <div className={s.cardsContainer}>
         {TEAM.map((m) => (
-          <OurTeamCard profile={m} />
+          <OurTeamCard profile={m} key={m.NAME} />
         ))}
       </div>
       <div className={s.logoWrapper}>

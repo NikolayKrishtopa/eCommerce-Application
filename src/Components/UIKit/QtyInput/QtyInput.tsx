@@ -15,15 +15,18 @@ export default function QtyInput(props: QtyInputProps) {
   const [qty, setQty] = useState(quantity)
 
   useEffect(() => {
-    onChangeHandler(qty)
-  }, [qty, onChangeHandler])
+    setQty(quantity)
+  }, [quantity])
 
   return (
     <div className={cn(s.qtyWrapper, className)}>
       <button
         type="button"
         className={s.qtyBtn}
-        onClick={() => setQty(qty - 1)}
+        onClick={() => {
+          setQty(qty - 1)
+          onChangeHandler(qty - 1)
+        }}
       >
         -
       </button>
@@ -32,7 +35,10 @@ export default function QtyInput(props: QtyInputProps) {
       <button
         type="button"
         className={s.qtyBtn}
-        onClick={() => setQty(qty + 1)}
+        onClick={() => {
+          setQty(qty + 1)
+          onChangeHandler(qty + 1)
+        }}
       >
         +
       </button>

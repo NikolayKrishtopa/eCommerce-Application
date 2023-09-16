@@ -56,7 +56,7 @@ export enum PortfolioLinkType {
 export interface TeamMember {
   NAME: string
   ROLE: string
-  SKILLS: string[]
+  SKILLS: Array<{ id: number; text: string }>
   PICTURE?: string
   PORTFOLIO: {
     LINK: string

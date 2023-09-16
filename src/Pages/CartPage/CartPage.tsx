@@ -1,9 +1,11 @@
-// import useCart from '@/hooks/useCart'
+import useCart from '@/hooks/useCart'
 import { Cart } from '@commercetools/platform-sdk'
 import CartProductCard from '@/Components/CartProductCard/CartProductCard'
+import Loader from '@/Components/Loader/Loader'
 import { ReactComponent as SvgCheckout } from '@/assets/icons/arrow-right.svg'
 import { ReactComponent as SvgDiscount } from '@/assets/icons/discount.svg'
-// import { useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
+import { useState } from 'react'
 import s from './CartPage.module.scss'
 
 const mockCart: Cart = {
@@ -427,66 +429,121 @@ const mockCart: Cart = {
 }
 
 export default function CartPage() {
-  // const navigate = useNavigate()
+  const [promoCode, setPromoCode] = useState('')
+  const navigate = useNavigate()
+
+  const {
+    // cart,
+    isLoaded,
+    removeLineItem,
+    updateLineItemQuantity,
+    addDiscountCode,
+  } = useCart()
+
+  const cleanCart = async (basket: Cart): Promise<void> => {
+    basket.lineItems.forEach((item) => {
+      console.log(item.id)
+      removeLineItem(item.id)
+    })
+  }
+
+  const TESTING_CART = mockCart
 
   return (
     <section className={s.cart}>
       <h2 className={s.cartHeader}>Shopping Cart</h2>
 
-      {/* Empty cart stub */}
-      {/* <div className={s.emptyCart}>
-        <h3 className={s.emptyCartHeader}>Your Cart is empty</h3>
-        <p className={s.emptyCartMessage}>Once you add something to your cart - it will appear here. Ready to get started?</p>
-        <button
-          type="button"
-          className={s.emptyCartButton}
-          onClick={() => navigate("/catalog")}
-        >
-          <div>Go to catalogue</div>
-          <SvgCheckout />
-        </button>
-      </div> */}
+      {!isLoaded && <Loader className={s.cartLoader} />}
 
-      {/* Cart with goods */}
-      <p className={s.cartDelLink}>Clear shopping cart</p>
-      <div className={s.cartWrapper}>
-        <div className={s.cartProducts}>
-          {mockCart.lineItems.map((item) => (
-            <div key={crypto.randomUUID()}>
-              <CartProductCard item={item} />
-            </div>
-          ))}
+      {/* Empty cart stub */}
+      {isLoaded && !TESTING_CART?.lineItems.length && (
+        <div className={s.emptyCart}>
+          <h3 className={s.emptyCartHeader}>Your Cart is empty</h3>
+          <p className={s.emptyCartMessage}>
+            Once you add something to your cart - it will appear here. Ready to
+            get started?
+          </p>
+          <button
+            type="button"
+            className={s.emptyCartButton}
+            onClick={() => navigate('/catalog')}
+          >
+            <div>Go to catalogue</div>
+            <SvgCheckout />
+          </button>
         </div>
-        <div className={s.cartSummaryContainer}>
-          <div className={s.summary}>
-            <h3 className={s.summaryHeader}>Order summary</h3>
-            <div className={s.summaryLine}>
-              <span>Total:</span>
-              <span>EUR {Number(mockCart.totalPrice.centAmount) / 100}</span>
+      )}
+      {isLoaded && TESTING_CART?.lineItems.length !== 0 && (
+        <>
+          <button
+            type="button"
+            className={s.cartDelLink}
+            onClick={() => TESTING_CART && cleanCart(TESTING_CART)}
+          >
+            Clear shopping cart
+          </button>
+
+          <div className={s.cartWrapper}>
+            <div className={s.cartProducts}>
+              {TESTING_CART?.lineItems.map((item) => (
+                <div key={crypto.randomUUID()}>
+                  <CartProductCard
+                    item={item}
+                    handleQty={(q) => {
+                      console.log(q)
+                      updateLineItemQuantity(item.id, () => q)
+                    }}
+                    handleRemove={() => {
+                      console.log(`remove ${item.name.en}`)
+                      removeLineItem(item.id)
+                    }}
+                  />
+                </div>
+              ))}
             </div>
-            <button type="button" className={s.checkoutBtn}>
-              <div>Checkout</div>
-              <SvgCheckout />
-            </button>
+            <div className={s.cartSummaryContainer}>
+              <div className={s.summary}>
+                <h3 className={s.summaryHeader}>Order summary</h3>
+                <div className={s.summaryLine}>
+                  <span>Total:</span>
+                  <span>
+                    EUR {Number(TESTING_CART?.totalPrice.centAmount) / 100}
+                  </span>
+                </div>
+                <button type="button" className={s.checkoutBtn}>
+                  <div>Checkout</div>
+                  <SvgCheckout />
+                </button>
+              </div>
+              <div className={s.promoContainer}>
+                <div className={s.promoHeader}>
+                  <SvgDiscount />
+                  <div>Use a promo code</div>
+                </div>
+                <div className={s.promoInputContainer}>
+                  <input
+                    className={s.promoInput}
+                    type="text"
+                    placeholder="Enter promo code"
+                    value={promoCode}
+                    onChange={(e) => setPromoCode(e.target.value)}
+                  />
+                  <button
+                    className={s.promoSubmit}
+                    type="button"
+                    onClick={() => {
+                      console.log(promoCode)
+                      addDiscountCode(promoCode)
+                    }}
+                  >
+                    APPLY
+                  </button>
+                </div>
+              </div>
+            </div>
           </div>
-          <div className={s.promoContainer}>
-            <div className={s.promoHeader}>
-              <SvgDiscount />
-              <div>Use a promo code</div>
-            </div>
-            <div className={s.promoInputContainer}>
-              <input
-                className={s.promoInput}
-                type="text"
-                placeholder="Enter promo code"
-              />
-              <button className={s.promoSubmit} type="submit">
-                APPLY
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
+        </>
+      )}
     </section>
   )
 }

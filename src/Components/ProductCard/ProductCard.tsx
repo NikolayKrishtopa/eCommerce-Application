@@ -1,8 +1,8 @@
 import { useParams } from 'react-router-dom'
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useContext } from 'react'
+import CartContext from '@/contexts/CartContext'
 import cn from 'classnames'
 import { ProductProjection } from '@commercetools/platform-sdk'
-// import ProductsContext from '@/contexts/ProductsContext'
 import leftArrIcon from '@/assets/img/chevron_left.svg'
 import rightArrIcon from '@/assets/img/chevron_right.svg'
 import cartIcon from '@/assets/img/Cart.svg'
@@ -14,7 +14,7 @@ import Breadcrumbs from '../Breadcrumbs/Breadcrumbs'
 import QtyInput from '../UIKit/QtyInput/QtyInput'
 
 export default function ProductCard() {
-  // const products = useContext(ProductsContext)
+  const cart = useContext(CartContext)
   const { productSlug } = useParams()
   const product = useProduct(productSlug)
   const [item, setItem] = useState<ProductProjection | null>(null)
@@ -49,6 +49,7 @@ export default function ProductCard() {
     const newItem = product
     setItem(newItem ?? null)
     setPhotoQty(newItem?.masterVariant?.images?.length ?? 1)
+    console.log(cart?.cart)
   }, [product])
 
   useEffect(() => {

@@ -108,6 +108,21 @@ export default function useCart(setIsFetching: (isFetching: boolean) => void) {
     }
   }
 
+  const clearCart = async () => {
+    const actions = cartRef.current?.lineItems.map((item) => ({
+      action: 'removeLineItem',
+      lineItemId: item.id,
+    }))
+    if (actions) {
+      setIsFetching(true)
+      try {
+        await updateCart(actions as CartUpdateAction[])
+      } finally {
+        setIsFetching(false)
+      }
+    }
+  }
+
   const updateLineItemQuantity = async (
     productId: string,
     updater: (q?: number) => number,
@@ -160,5 +175,6 @@ export default function useCart(setIsFetching: (isFetching: boolean) => void) {
     updateLineItemQuantity,
     addDiscountCode,
     removeDiscountCode,
+    clearCart,
   }
 }

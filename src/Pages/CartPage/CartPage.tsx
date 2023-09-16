@@ -1,4 +1,3 @@
-import { Cart } from '@commercetools/platform-sdk'
 import CartProductCard from '@/Components/CartProductCard/CartProductCard'
 import { ReactComponent as SvgCheckout } from '@/assets/icons/arrow-right.svg'
 import { ReactComponent as SvgDiscount } from '@/assets/icons/discount.svg'
@@ -33,14 +32,13 @@ export default function CartPage() {
 
   if (!currentCart) return emptyCartStub
 
-  const { cart, removeLineItem, updateLineItemQuantity, addDiscountCode } =
-    currentCart
-
-  const cleanCart = async (basket: Cart): Promise<void> => {
-    basket.lineItems.forEach((item) => {
-      removeLineItem(item.id)
-    })
-  }
+  const {
+    cart,
+    removeLineItem,
+    updateLineItemQuantity,
+    addDiscountCode,
+    clearCart,
+  } = currentCart
 
   return (
     <section className={s.cart}>
@@ -53,7 +51,7 @@ export default function CartPage() {
           <button
             type="button"
             className={s.cartDelLink}
-            onClick={() => cart && cleanCart(cart)}
+            onClick={() => cart && clearCart()}
           >
             Clear shopping cart
           </button>

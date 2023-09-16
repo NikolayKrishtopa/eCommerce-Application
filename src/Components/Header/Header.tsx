@@ -1,6 +1,7 @@
 import { useState, useContext, useEffect } from 'react'
 import { NavLink, useLocation } from 'react-router-dom'
 import CurrentUserContext from '@/contexts/CurrentUserContext'
+import CartContext from '@/contexts/CartContext'
 import s from './Header.module.scss'
 import { ReactComponent as BasketImg } from '../../assets/icons/basket.svg'
 import { ReactComponent as LogoutImg } from '../../assets/icons/logout.svg'
@@ -13,6 +14,8 @@ export default function Header(props: HeaderProps) {
   const [burgerActive, setBurgerActive] = useState(false)
   const location = useLocation()
   const currentUser = useContext(CurrentUserContext)
+
+  const currentCart = useContext(CartContext)
 
   const isTransparent = () =>
     location.pathname === '/register' || location.pathname === '/login'
@@ -103,7 +106,14 @@ export default function Header(props: HeaderProps) {
 
       <div className={s.basketLink}>
         <NavLink to="/cart" onClick={() => setBurgerActive(false)}>
-          <BasketImg className={s.basketImg} />
+          <div className={s.basketImgContainer}>
+            <BasketImg className={s.basketImg} />
+            {currentCart?.cart && currentCart?.cart.totalLineItemQuantity && (
+              <div className={s.basketCount}>
+                {currentCart?.cart.totalLineItemQuantity}
+              </div>
+            )}
+          </div>
         </NavLink>
       </div>
 

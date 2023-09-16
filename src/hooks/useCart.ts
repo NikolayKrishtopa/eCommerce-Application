@@ -110,7 +110,7 @@ export default function useCart(setIsFetching: (isFetching: boolean) => void) {
 
   const updateLineItemQuantity = async (
     productId: string,
-    updater: (q: number) => number,
+    updater: (q?: number) => number,
   ) => {
     const lineItem = findLineItemBy({ productId })
     if (lineItem) {

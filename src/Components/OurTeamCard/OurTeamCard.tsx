@@ -13,7 +13,9 @@ export default function OurTeamCard(props: OurTeamCardProps) {
       <p className={s.subtitle}>{profile.ROLE}</p>
       <div className={s.description}>
         {profile.SKILLS.map((e) => (
-          <p className={s.paragraph}>{e}</p>
+          <p className={s.paragraph} key={e.id}>
+            {e.text}
+          </p>
         ))}
       </div>
       <a href={profile.PORTFOLIO.LINK} target="blank" className={s.link}>

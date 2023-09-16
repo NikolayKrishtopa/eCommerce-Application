@@ -40,10 +40,22 @@ const TEAM: Array<TeamMember> = [
     ROLE: 'Frontend developer',
     PICTURE: ivanAvatar,
     SKILLS: [
-      `bio + each member's contributions to the project, their effective collaboration methods`,
-      `💻 I'm the front-end developer behind the visual magic you see on our website.`,
-      `🖌️ My toolbox is filled with HTML, CSS, and JavaScript.`,
-      `🖌️ My toolbox is filled with HTML, CSS, and JavaScript.`,
+      {
+        id: 1,
+        text: `bio + each member's contributions to the project, their effective collaboration methods`,
+      },
+      {
+        id: 2,
+        text: `💻 I'm the front-end developer behind the visual magic you see on our website.`,
+      },
+      {
+        id: 3,
+        text: `🖌️ My toolbox is filled with HTML, CSS, and JavaScript.`,
+      },
+      {
+        id: 4,
+        text: `🖌️ My toolbox is filled with HTML, CSS, and JavaScript.`,
+      },
     ],
     PORTFOLIO: {
       LINK: 'https://github.com/ivan-gav',
@@ -55,10 +67,22 @@ const TEAM: Array<TeamMember> = [
     ROLE: 'Frontend developer',
     PICTURE: maxAvatar,
     SKILLS: [
-      `bio + each member's contributions to the project, their effective collaboration methods`,
-      `💻 I'm the front-end developer behind the visual magic you see on our website.`,
-      `🖌️ My toolbox is filled with HTML, CSS, and JavaScript.`,
-      `🖌️ My toolbox is filled with HTML, CSS, and JavaScript.`,
+      {
+        id: 1,
+        text: `bio + each member's contributions to the project, their effective collaboration methods`,
+      },
+      {
+        id: 2,
+        text: `💻 I'm the front-end developer behind the visual magic you see on our website.`,
+      },
+      {
+        id: 3,
+        text: `🖌️ My toolbox is filled with HTML, CSS, and JavaScript.`,
+      },
+      {
+        id: 4,
+        text: `🖌️ My toolbox is filled with HTML, CSS, and JavaScript.`,
+      },
     ],
     PORTFOLIO: {
       LINK: 'https://github.com/lazy-goose',
@@ -70,9 +94,18 @@ const TEAM: Array<TeamMember> = [
     ROLE: 'Frontend developer',
     PICTURE: nikolayAvatar,
     SKILLS: [
-      `💻 I'm the front-end developer behind the visual magic you see on our website.`,
-      `💻 Javascript, React.js. vue.js, Redux/toolkit, Vuex`,
-      `🖌️ HTML, CSS/SCSS, Figma`,
+      {
+        id: 1,
+        text: `💻 I'm the front-end developer behind the visual magic you see on our website.`,
+      },
+      {
+        id: 2,
+        text: `💻 Javascript, React.js. vue.js, Redux/toolkit, Vuex`,
+      },
+      {
+        id: 3,
+        text: `🖌️ HTML, CSS/SCSS, Figma`,
+      },
     ],
     PORTFOLIO: {
       LINK: 'https://github.com/NikolayKrishtopa',
@@ -84,9 +117,18 @@ const TEAM: Array<TeamMember> = [
     ROLE: 'UI/UX designer',
     PICTURE: ruzannaAvatar,
     SKILLS: [
-      `Ruzanna specializes in crafting intuitive and user-centric products for startups.`,
-      `She developed the UI concept for the Skateshop project.`,
-      `She is proficient in Figma, Adobe Creative Cloud tools (including Adobe XD), and Framer.`,
+      {
+        id: 1,
+        text: `Ruzanna specializes in crafting intuitive and user-centric products for startups.`,
+      },
+      {
+        id: 2,
+        text: `She developed the UI concept for the Skateshop project.`,
+      },
+      {
+        id: 3,
+        text: `She is proficient in Figma, Adobe Creative Cloud tools (including Adobe XD), and Framer.`,
+      },
     ],
     PORTFOLIO: {
       LINK: 'https://ruzannadesigns.framer.website/',

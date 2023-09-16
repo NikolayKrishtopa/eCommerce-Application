@@ -143,14 +143,7 @@ export default function ProductCard() {
         <div className={s.pageContainer}>
           <Breadcrumbs />
           <div className={s.productCard}>
-            <button
-              type="button"
-              className={s.imageBlock}
-              onClick={(e) => {
-                e.stopPropagation()
-                setPopupOpen(true)
-              }}
-            >
+            <div className={s.imageBlock}>
               {currentPicture > 1 && (
                 <button
                   type="button"
@@ -175,15 +168,23 @@ export default function ProductCard() {
                   <img src={rightArrIcon} alt="next" />
                 </button>
               )}
-              <img
-                src={
-                  item?.masterVariant?.images &&
-                  item?.masterVariant?.images[currentPicture - 1].url
-                }
-                alt="item"
-                className={s.image}
-              />
-            </button>
+              <button
+                type="button"
+                onClick={(e) => {
+                  e.stopPropagation()
+                  setPopupOpen(true)
+                }}
+              >
+                <img
+                  src={
+                    item?.masterVariant?.images &&
+                    item?.masterVariant?.images[currentPicture - 1].url
+                  }
+                  alt="item"
+                  className={s.image}
+                />
+              </button>
+            </div>
 
             <div className={s.textBlock}>
               <h3 className={s.itemTitle}>{item?.name.en}</h3>

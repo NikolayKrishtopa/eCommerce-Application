@@ -5,7 +5,7 @@ import { useEffect, useRef, useState } from 'react'
 const STORAGE_CART_ID = 'cartId'
 const DEFAULT_CURRENCY = 'EUR'
 
-export default function useCart() {
+export default function useCart(setIsFetching: (isFetching: boolean) => void) {
   const cartId = localStorage.getItem(STORAGE_CART_ID)
 
   const cartRef = useRef<Cart>()
@@ -16,11 +16,12 @@ export default function useCart() {
     cartRef.current = newCart
   }
 
-  const [isFetching, setIsFetching] = useState(true)
-  const [isLoaded, setIsLoaded] = useState(false)
+  // const [isFetching, setIsFetching] = useState(true)
+  // const [isLoaded, setIsLoaded] = useState(false)
 
   useEffect(() => {
     try {
+      setIsFetching(true)
       if (cartId) {
         apiRoot
           .carts()
@@ -48,7 +49,7 @@ export default function useCart() {
       }
     } finally {
       setIsFetching(false)
-      setIsLoaded(true)
+      // setIsLoaded(true)
     }
   }, [cartId])
 
@@ -59,6 +60,7 @@ export default function useCart() {
     if (!cartRef.current) {
       throw new Error('Cart is not fetched yet')
     }
+    setIsFetching(true)
     return apiRoot
       .carts()
       .withId({ ID: cartId })
@@ -77,6 +79,7 @@ export default function useCart() {
         }
         return resp
       })
+      .finally(() => setIsFetching(false))
   }
 
   const findLineItemBy = ({ productId }: { productId: string }) =>
@@ -150,8 +153,8 @@ export default function useCart() {
 
   return {
     cart,
-    isLoaded,
-    isFetching,
+    // isLoaded,
+    // isFetching,
     addLineItem,
     removeLineItem,
     updateLineItemQuantity,

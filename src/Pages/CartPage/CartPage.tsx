@@ -71,7 +71,7 @@ export default function CartPage() {
                   <CartProductCard
                     item={item}
                     handleQty={(q) => {
-                      updateLineItemQuantity(item.id, () => q)
+                      updateLineItemQuantity(item.productId, () => q)
                     }}
                     handleRemove={() => {
                       removeLineItem(item.productId)

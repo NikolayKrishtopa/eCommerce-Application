@@ -119,14 +119,22 @@ export default function useCart(setIsFetching: (isFetching: boolean) => void) {
   }
 
   const clearCart = async () => {
-    const actions = cartRef.current?.lineItems.map((item) => ({
+    const liActions = cartRef.current?.lineItems.map((item) => ({
       action: 'removeLineItem',
       lineItemId: item.id,
     }))
-    if (actions) {
+    const dcActions = cartRef.current?.discountCodes.map((code) => ({
+      action: 'removeDiscountCode',
+      discountCode: code.discountCode,
+    }))
+
+    if (liActions) {
       setIsFetching(true)
       try {
-        await updateCart(actions as CartUpdateAction[])
+        await updateCart(liActions as CartUpdateAction[])
+        if (dcActions) {
+          await updateCart(dcActions as CartUpdateAction[])
+        }
       } finally {
         setIsFetching(false)
       }

@@ -11,6 +11,7 @@ import wheelsImage from '@/assets/img/categories/wheels.jpg'
 import newInImage from '@/assets/img/trending/new-in.jpg'
 import latestImage from '@/assets/img/trending/latest.jpg'
 import ShoppingCard from '@/Components/ShoppingCard/ShoppingCard'
+import PromoBar from '@/Components/PromoBar/PromoBar'
 import m from './styles/MainPage.module.scss'
 import h from './styles/Hero.module.scss'
 import c from './styles/Categories.module.scss'
@@ -82,6 +83,15 @@ export default function MainPage() {
   return (
     <main className={m.main}>
       {/* Hero */}
+      <PromoBar
+        message="Get your EUR 10 Welcome discount with promocode"
+        code="welcome"
+      />
+      <PromoBar
+        message="Only today! Your code for 25% discount"
+        code="fall2023"
+        color="#2983B8"
+      />
       <section className={h.container}>
         <div className={h.hero}>
           <div className={h.background}>

@@ -1,7 +1,7 @@
-// import { useEffect, useState } from 'react'
 import cn from 'classnames'
 import { LineItem } from '@commercetools/platform-sdk'
 
+import { Link } from 'react-router-dom'
 import s from './CartProductCard.module.scss'
 import QtyInput from '../UIKit/QtyInput/QtyInput'
 
@@ -13,13 +13,7 @@ type CartProductCardProps = {
 
 export default function CartProductCard(props: CartProductCardProps) {
   const { item, handleQty, handleRemove } = props
-  const { quantity, variant, name } = item
-
-  // const [qty, setQty] = useState(quantity)
-
-  // useEffect(() => {
-  //   handleQty(qty)
-  // }, [qty])
+  const { quantity, variant, name, productSlug } = item
 
   return (
     <div className={s.productCard}>
@@ -32,7 +26,10 @@ export default function CartProductCard(props: CartProductCardProps) {
       </div>
 
       <div className={s.textBlock}>
-        <h3 className={s.itemTitle}>{name.en}</h3>
+        <Link to={`/catalog/all-products/${productSlug?.en}` || ''}>
+          <h3 className={s.itemTitle}>{name.en}</h3>
+        </Link>
+
         <div className={s.priceBlock}>
           <p
             className={cn(s.price, {

@@ -83,7 +83,7 @@ export default function useCart(setIsFetching: (isFetching: boolean) => void) {
   }
 
   const findLineItemBy = ({ productId }: { productId: string }) =>
-    cartRef.current?.lineItems.find((li) => li.id === productId)
+    cartRef.current?.lineItems.find((li) => li.productId === productId)
 
   const getTotalPriceOriginal = () =>
     cartRef.current?.lineItems

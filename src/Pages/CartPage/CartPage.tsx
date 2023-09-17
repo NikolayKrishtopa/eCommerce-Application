@@ -74,7 +74,7 @@ export default function CartPage() {
                       updateLineItemQuantity(item.id, () => q)
                     }}
                     handleRemove={() => {
-                      removeLineItem(item.id)
+                      removeLineItem(item.productId)
                     }}
                   />
                 </div>

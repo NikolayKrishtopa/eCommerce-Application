@@ -1,13 +1,17 @@
 import CartProductCard from '@/Components/CartProductCard/CartProductCard'
 import { ReactComponent as SvgCheckout } from '@/assets/icons/arrow-right.svg'
 import { ReactComponent as SvgDiscount } from '@/assets/icons/discount.svg'
+import { ReactComponent as SvgClose } from '@/assets/icons/close.svg'
 import { useNavigate } from 'react-router-dom'
 import { useState, useContext } from 'react'
 import CartContext from '@/contexts/CartContext'
+import useDiscountCodes from '@/hooks/useDiscountCodes'
+import cn from 'classnames'
 import s from './CartPage.module.scss'
 
 export default function CartPage() {
   const [promoCode, setPromoCode] = useState('')
+
   const navigate = useNavigate()
 
   const emptyCartStub = (
@@ -30,6 +34,8 @@ export default function CartPage() {
 
   const currentCart = useContext(CartContext)
 
+  const { findDiscountCodeBy } = useDiscountCodes()
+
   if (!currentCart) return emptyCartStub
 
   const {
@@ -37,7 +43,9 @@ export default function CartPage() {
     removeLineItem,
     updateLineItemQuantity,
     addDiscountCode,
+    removeDiscountCode,
     clearCart,
+    totalPriceOriginal,
   } = currentCart
 
   return (
@@ -75,10 +83,65 @@ export default function CartPage() {
             <div className={s.cartSummaryContainer}>
               <div className={s.summary}>
                 <h3 className={s.summaryHeader}>Order summary</h3>
+
+                {cart && cart.discountCodes.length > 0 && (
+                  <>
+                    <div className={cn(s.summaryLine, s.originalPrice)}>
+                      <span>Total (original price):</span>
+                      <span>
+                        EUR{' '}
+                        <span className={s.discardedPrice}>
+                          {totalPriceOriginal}
+                        </span>
+                      </span>
+                    </div>
+
+                    <div className={s.summaryLine}>
+                      <span>Applied promo codes:</span>
+                    </div>
+
+                    {cart?.discountCodes.map((dc) => {
+                      const code =
+                        findDiscountCodeBy({ codeId: dc.discountCode.id })
+                          ?.code || ''
+
+                      return (
+                        <div
+                          className={s.summaryLine}
+                          key={crypto.randomUUID()}
+                        >
+                          <div className={s.promoCode}>
+                            <SvgDiscount /> {code}
+                          </div>
+                          <button
+                            className={s.removePromoBtn}
+                            type="button"
+                            onClick={() =>
+                              removeDiscountCode(dc.discountCode.id)
+                            }
+                          >
+                            <SvgClose />
+                            <div>REMOVE</div>
+                          </button>
+                        </div>
+                      )
+                    })}
+                  </>
+                )}
+
                 <div className={s.summaryLine}>
-                  <span>Total:</span>
-                  <span>EUR {Number(cart?.totalPrice.centAmount) / 100}</span>
+                  <span>
+                    Total{' '}
+                    {cart &&
+                      cart?.discountCodes.length > 0 &&
+                      '(discounted price)'}
+                    :
+                  </span>
+                  <span>
+                    EUR {(Number(cart?.totalPrice.centAmount) / 100).toFixed(2)}
+                  </span>
                 </div>
+
                 <button type="button" className={s.checkoutBtn}>
                   <div>Checkout</div>
                   <SvgCheckout />
@@ -89,7 +152,13 @@ export default function CartPage() {
                   <SvgDiscount />
                   <div>Use a promo code</div>
                 </div>
-                <div className={s.promoInputContainer}>
+                <form
+                  className={s.promoInputContainer}
+                  onSubmit={(e) => {
+                    e.preventDefault()
+                    addDiscountCode(promoCode)
+                  }}
+                >
                   <input
                     className={s.promoInput}
                     type="text"
@@ -106,7 +175,7 @@ export default function CartPage() {
                   >
                     APPLY
                   </button>
-                </div>
+                </form>
               </div>
             </div>
           </div>

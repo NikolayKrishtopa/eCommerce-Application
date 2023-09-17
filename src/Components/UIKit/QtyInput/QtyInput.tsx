@@ -18,6 +18,7 @@ export default function QtyInput(props: QtyInputProps) {
     onChangeHandler(q)
     setQty(q)
   }
+
   useEffect(() => {
     setQty(quantity)
   }, [quantity])

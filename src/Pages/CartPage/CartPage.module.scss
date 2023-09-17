@@ -231,6 +231,42 @@
   }
 }
 
-.cartLoader {
-  margin: 20px auto;
+.originalPrice {
+  color: $color-neutral-light-additional;
+}
+
+.discardedPrice {
+  text-decoration: 1px line-through $color-neutral-light;
+}
+
+.promoCode {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding-left: 15px;
+  font-weight: 400;
+}
+
+.removePromoBtn {
+  @include button-reset;
+  @include clickable;
+  width: max-content;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  gap: 6px;
+  font-size: 14px;
+  font-weight: bold;
+  color: $color-on-primary;
+  border-bottom: 1px solid transparent;
+  &:hover {
+    border-bottom: 1px solid currentColor;
+  }
+  &:active {
+    color: $color-info;
+  }
+  svg {
+    width: 8px;
+    height: 8px;
+  }
 }

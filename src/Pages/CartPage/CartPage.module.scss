@@ -2,6 +2,8 @@
 
 .cart {
   max-width: 1512px;
+  display: flex;
+  flex-direction: column;
   margin: 0 auto;
   padding: 0 2%;
 }
@@ -21,6 +23,12 @@
   font-weight: 400;
   text-decoration-line: underline;
   margin: 0 0 32px 0;
+  display: block;
+  text-align: start;
+  padding: 0;
+  border: none;
+  background-color: transparent;
+  @include clickable;
 }
 
 .cartWrapper {
@@ -110,9 +118,7 @@
   gap: 10px;
   font-family: $font-stack-text;
   font-size: 20px;
-  font-style: normal;
   font-weight: 700;
-  line-height: normal;
   svg {
     height: 30px;
     width: 30px;
@@ -147,6 +153,11 @@
     color: $color-on-neutral-light-pale;
     font-weight: 400;
   }
+  &:focus,
+  &:focus-within {
+    border: none;
+    outline: none;
+  }
 }
 
 .promoSubmit {
@@ -166,5 +177,96 @@
   @include clickable;
   @media (max-width: $break-lg) {
     font-size: 16px;
+  }
+}
+
+.emptyCart {
+  display: flex;
+  flex-direction: column;
+  width: 778px;
+  border-radius: 10px;
+  background-color: $color-neutral-light;
+  color: $color-primary;
+  overflow: hidden;
+  margin: 32px 0 0 0;
+  padding: 20px;
+  @media (max-width: $break-lm) {
+    width: 100%;
+  }
+}
+
+.emptyCartHeader {
+  margin: 0;
+  font-family: $font-stack-heading;
+  font-size: 24px;
+  font-weight: 700;
+  line-height: 32px;
+  text-transform: capitalize;
+}
+
+.emptyCartMessage {
+  font-family: $font-stack-text;
+  font-size: 20px;
+  font-weight: 400;
+}
+
+.emptyCartButton {
+  display: flex;
+  height: 56px;
+  width: 236px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 10px;
+  border: none;
+  gap: 16px;
+  background-color: $color-primary;
+  color: $color-neutral-light;
+  font-family: $font-stack-text;
+  font-size: 20px;
+  font-weight: 700;
+  @include clickable;
+  @media (max-width: $break-md) {
+    height: 40px !important;
+    font-size: 16px;
+  }
+}
+
+.originalPrice {
+  color: $color-neutral-light-additional;
+}
+
+.discardedPrice {
+  text-decoration: 1px line-through $color-neutral-light;
+}
+
+.promoCode {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding-left: 15px;
+  font-weight: 400;
+}
+
+.removePromoBtn {
+  @include button-reset;
+  @include clickable;
+  width: max-content;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  gap: 6px;
+  font-size: 14px;
+  font-weight: bold;
+  color: $color-on-primary;
+  border-bottom: 1px solid transparent;
+  &:hover {
+    border-bottom: 1px solid currentColor;
+  }
+  &:active {
+    color: $color-info;
+  }
+  svg {
+    width: 8px;
+    height: 8px;
   }
 }

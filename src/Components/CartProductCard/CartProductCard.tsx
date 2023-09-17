@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+// import { useEffect, useState } from 'react'
 import cn from 'classnames'
 import { LineItem } from '@commercetools/platform-sdk'
 
@@ -7,17 +7,19 @@ import QtyInput from '../UIKit/QtyInput/QtyInput'
 
 type CartProductCardProps = {
   item: LineItem
+  handleQty: (q: number) => void
+  handleRemove: () => void
 }
 
 export default function CartProductCard(props: CartProductCardProps) {
-  const { item } = props
+  const { item, handleQty, handleRemove } = props
   const { quantity, variant, name } = item
 
-  const [qty, setQty] = useState(quantity)
+  // const [qty, setQty] = useState(quantity)
 
-  useEffect(() => {
-    // console.log(`qty : ${qty}`)
-  }, [qty])
+  // useEffect(() => {
+  //   handleQty(qty)
+  // }, [qty])
 
   return (
     <div className={s.productCard}>
@@ -55,9 +57,16 @@ export default function CartProductCard(props: CartProductCardProps) {
           <QtyInput
             className={s.cartQtyButtons}
             quantity={quantity}
-            onChangeHandler={(q) => setQty(q)}
+            onChangeHandler={(q) => {
+              handleQty(q)
+              // setQty(q)
+            }}
           />
-          <button type="button" className={s.btn}>
+          <button
+            type="button"
+            className={s.btn}
+            onClick={() => handleRemove()}
+          >
             Remove from cart
           </button>
         </div>

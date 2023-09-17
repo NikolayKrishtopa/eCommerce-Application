@@ -83,7 +83,17 @@ export default function useCart(setIsFetching: (isFetching: boolean) => void) {
   }
 
   const findLineItemBy = ({ productId }: { productId: string }) =>
-    cartRef.current?.lineItems.find((li) => li.productId === productId)
+    cartRef.current?.lineItems.find((li) => li.id === productId)
+
+  const getTotalPriceOriginal = () =>
+    cartRef.current?.lineItems
+      .reduce((total, li) => {
+        const term = li.price.discounted
+          ? li.price.discounted.value.centAmount
+          : li.price.value.centAmount
+        return total + (Number(term) / 100) * li.quantity
+      }, 0)
+      .toFixed(2)
 
   /* Expose API */
 
@@ -102,6 +112,21 @@ export default function useCart(setIsFetching: (isFetching: boolean) => void) {
       setIsFetching(true)
       try {
         await updateCart({ action: 'removeLineItem', lineItemId: lineItem.id })
+      } finally {
+        setIsFetching(false)
+      }
+    }
+  }
+
+  const clearCart = async () => {
+    const actions = cartRef.current?.lineItems.map((item) => ({
+      action: 'removeLineItem',
+      lineItemId: item.id,
+    }))
+    if (actions) {
+      setIsFetching(true)
+      try {
+        await updateCart(actions as CartUpdateAction[])
       } finally {
         setIsFetching(false)
       }
@@ -136,12 +161,12 @@ export default function useCart(setIsFetching: (isFetching: boolean) => void) {
     }
   }
 
-  const removeDiscountCode = async (code: string) => {
+  const removeDiscountCode = async (codeId: string) => {
     const discountCode = cartRef.current?.discountCodes.find(
-      (dc) => code === dc.discountCode.obj?.code,
+      (dc) => codeId === dc.discountCode.id,
     )?.discountCode
     if (!discountCode) {
-      throw new Error(`Discount '${code}' is not applied`)
+      throw new Error(`Discount '${codeId}' is not applied`)
     }
     setIsFetching(true)
     try {
@@ -150,6 +175,8 @@ export default function useCart(setIsFetching: (isFetching: boolean) => void) {
       setIsFetching(false)
     }
   }
+
+  const totalPriceOriginal = getTotalPriceOriginal()
 
   return {
     cart,
@@ -160,5 +187,7 @@ export default function useCart(setIsFetching: (isFetching: boolean) => void) {
     updateLineItemQuantity,
     addDiscountCode,
     removeDiscountCode,
+    clearCart,
+    totalPriceOriginal,
   }
 }

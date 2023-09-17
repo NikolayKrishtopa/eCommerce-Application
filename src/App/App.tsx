@@ -160,7 +160,7 @@ export default function App() {
             path="/cart"
             element={
               <Page header footer>
-                <CartPage />
+                <CartPage alert={(msg: string) => setupMsg(msg, true)} />
               </Page>
             }
           />

@@ -10,6 +10,7 @@ export default function useCart(setIsFetching: (isFetching: boolean) => void) {
 
   const cartRef = useRef<Cart>()
   const [cart, $setCart] = useState<Cart>()
+  const [cartErrorMsg, setCartErrorMsg] = useState('')
 
   const setCart = (newCart: Cart) => {
     $setCart(newCart)
@@ -162,8 +163,11 @@ export default function useCart(setIsFetching: (isFetching: boolean) => void) {
 
   const addDiscountCode = async (code: string) => {
     setIsFetching(true)
+    setCartErrorMsg('')
     try {
       await updateCart({ action: 'addDiscountCode', code })
+    } catch {
+      setCartErrorMsg(`Promo code "${code}" not found`)
     } finally {
       setIsFetching(false)
     }
@@ -196,6 +200,8 @@ export default function useCart(setIsFetching: (isFetching: boolean) => void) {
     addDiscountCode,
     removeDiscountCode,
     clearCart,
+    cartErrorMsg,
     totalPriceOriginal,
+    setCartErrorMsg,
   }
 }

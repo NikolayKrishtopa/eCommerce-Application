@@ -3,13 +3,18 @@ import { ReactComponent as SvgCheckout } from '@/assets/icons/arrow-right.svg'
 import { ReactComponent as SvgDiscount } from '@/assets/icons/discount.svg'
 import { ReactComponent as SvgClose } from '@/assets/icons/close.svg'
 import { useNavigate } from 'react-router-dom'
-import { useState, useContext } from 'react'
+import { useState, useContext, useEffect } from 'react'
 import CartContext from '@/contexts/CartContext'
 import useDiscountCodes from '@/hooks/useDiscountCodes'
 import cn from 'classnames'
 import s from './CartPage.module.scss'
 
-export default function CartPage() {
+type CartPageProps = {
+  alert: (msg: string) => void
+}
+
+export default function CartPage(props: CartPageProps) {
+  const { alert } = props
   const [promoCode, setPromoCode] = useState('')
 
   const navigate = useNavigate()
@@ -35,6 +40,17 @@ export default function CartPage() {
   const currentCart = useContext(CartContext)
 
   const { findDiscountCodeBy } = useDiscountCodes()
+
+  const cartErrorMsg = currentCart?.cartErrorMsg || ''
+  const setCartErrorMsg = currentCart?.setCartErrorMsg
+  const [errorMsg, setErrorMsg] = useState(cartErrorMsg)
+
+  useEffect(() => {
+    if (errorMsg) {
+      alert(errorMsg)
+      if (setCartErrorMsg) setCartErrorMsg('')
+    }
+  }, [errorMsg, alert, setCartErrorMsg])
 
   if (!currentCart) return emptyCartStub
 
@@ -156,23 +172,19 @@ export default function CartPage() {
                   className={s.promoInputContainer}
                   onSubmit={(e) => {
                     e.preventDefault()
+                    setErrorMsg('')
                     addDiscountCode(promoCode)
                   }}
                 >
                   <input
+                    name="promocode-input"
                     className={s.promoInput}
                     type="text"
                     placeholder="Enter promo code"
                     value={promoCode}
                     onChange={(e) => setPromoCode(e.target.value)}
                   />
-                  <button
-                    className={s.promoSubmit}
-                    type="button"
-                    onClick={() => {
-                      addDiscountCode(promoCode)
-                    }}
-                  >
+                  <button className={s.promoSubmit} type="submit">
                     APPLY
                   </button>
                 </form>

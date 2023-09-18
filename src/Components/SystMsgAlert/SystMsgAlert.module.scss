@@ -75,8 +75,6 @@
   border: none;
   background: transparent;
   display: inline-block;
-  align-items: center;
-  justify-content: center;
   @media (max-width: $break-sm) {
     width: r(20px);
     height: r(20px);
@@ -85,7 +83,6 @@
 
 .closeIcon {
   stroke: $color-neutral-light;
-  max-width: 100%;
   width: r(25px);
   height: r(25px);
   @media (max-width: $break-sm) {

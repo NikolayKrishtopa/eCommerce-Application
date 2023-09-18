@@ -65,6 +65,8 @@
   }
 
   &Price {
+    justify-content: space-between;
+    align-items: center;
     display: flex;
     gap: 0.75ch;
     font-size: 1.1em;
@@ -85,24 +87,23 @@
   }
 
   &DiscountPrice {
-    display: flex;
-    justify-content: space-between;
     color: $color-danger;
   }
 }
 .cartBtnBlock {
   display: flex;
-  width: 100%;
   gap: 5px;
+  align-items: center;
 }
 .cartBtn {
+  max-height: 32px;
   display: flex;
   padding: 5px;
   align-items: center;
   justify-content: center;
   border-radius: 5px;
   border: none;
-  gap: 5px;
+  gap: 10px;
   font-family: $font-stack-text;
   font-size: 12px;
   font-style: normal;

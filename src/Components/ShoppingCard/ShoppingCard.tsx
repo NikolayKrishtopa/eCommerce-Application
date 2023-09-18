@@ -28,7 +28,8 @@ export default function ShoppingCard(props: ShoppingCardProps) {
 
   const [itemInCart, setItemInCard] = useState<LineItem | null>(null)
 
-  const removeFromCart = () => {
+  const removeFromCart: React.MouseEventHandler<HTMLButtonElement> = (e) => {
+    e.preventDefault()
     if (!cart || !itemInCart) return
     cart.removeLineItem(productId)
   }
@@ -47,7 +48,7 @@ export default function ShoppingCard(props: ShoppingCardProps) {
   }, [cart?.cart, productId])
 
   const addToCart: React.MouseEventHandler<HTMLButtonElement> = (e) => {
-    e.stopPropagation()
+    e.preventDefault()
     cart?.addLineItem(productId)
   }
 
@@ -97,13 +98,13 @@ export default function ShoppingCard(props: ShoppingCardProps) {
                 <QtyInput
                   quantity={itemInCart.quantity}
                   onChangeHandler={updateQty}
+                  size="s"
                 />
                 <button
                   className={s.cartBtn}
                   type="button"
                   onClick={removeFromCart}
                 >
-                  Remove from cart
                   <img src={removeIcon} alt="cart" />
                 </button>
               </>

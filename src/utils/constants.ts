@@ -42,19 +42,15 @@ const TEAM: Array<TeamMember> = [
     SKILLS: [
       {
         id: 1,
-        text: `bio + each member's contributions to the project, their effective collaboration methods`,
+        text: `My toolbox is filled with HTML, CSS, and JS. I’m eager to master React, which we were using in this project.`,
       },
       {
         id: 2,
-        text: `💻 I'm the front-end developer behind the visual magic you see on our website.`,
+        text: `I made a part of layout and logic for our online store and filled it with content.`,
       },
       {
         id: 3,
-        text: `🖌️ My toolbox is filled with HTML, CSS, and JavaScript.`,
-      },
-      {
-        id: 4,
-        text: `🖌️ My toolbox is filled with HTML, CSS, and JavaScript.`,
+        text: `It’s been a real adventure and fun, and we’ve made a great team.`,
       },
     ],
     PORTFOLIO: {

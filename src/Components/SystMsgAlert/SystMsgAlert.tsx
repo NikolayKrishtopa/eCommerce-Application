@@ -1,8 +1,8 @@
 import { useEffect } from 'react'
 import cn from 'classnames'
+import { ReactComponent as SvgClose } from '@/assets/icons/close.svg'
 import SystAlertProps from './SystMsgAlert.props'
 import skateIcon from '../../assets/icons/skateboard.svg'
-import closeIcon from '../../assets/icons/close.svg'
 import s from './SystMsgAlert.module.scss'
 
 export default function SystMsgAlert(props: SystAlertProps) {
@@ -31,7 +31,7 @@ export default function SystMsgAlert(props: SystAlertProps) {
         onClick={onResetMsg}
         data-testid="exit-button"
       >
-        <img src={closeIcon} alt="Close button" className={s.closeIcon} />
+        <SvgClose className={s.closeIcon} />
       </button>
     </div>
   )

@@ -120,6 +120,9 @@ const useFilters = () => {
       let updated = [...filters]
       if (value) {
         updated[index].values = updated[index].values.filter((v) => v !== value)
+        if (!updated[index].values.length) {
+          updated = updated.filter((_, i) => i !== index)
+        }
       } else {
         updated = updated.filter((_, i) => i !== index)
       }

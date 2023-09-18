@@ -6,7 +6,6 @@ import {
 } from '@commercetools/platform-sdk'
 import useProducts from '@/hooks/useProducts'
 import ShoppingCard from '@/Components/ShoppingCard/ShoppingCard'
-import Loader from '@/Components/Loader/Loader'
 import ProductCard from '@/Components/ProductCard/ProductCard'
 import Breadcrumbs from '@/Components/Breadcrumbs/Breadcrumbs'
 import Search from '@/Components/Search/Search'
@@ -457,7 +456,6 @@ function ProductsPage() {
       </div>
       <div className={s.products}>
         <ul className={s.prodList}>{prodList}</ul>
-        {loading && <Loader className={s.prodLoader} />}
         <button
           type="button"
           className={s.loadMore}

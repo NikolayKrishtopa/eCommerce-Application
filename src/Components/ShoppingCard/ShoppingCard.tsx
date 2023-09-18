@@ -1,6 +1,12 @@
 import cn from 'classnames'
+import CartContext from '@/contexts/CartContext'
+import { useState, useEffect, useContext } from 'react'
+import cartIcon from '@/assets/img/Cart.svg'
+import { LineItem } from '@commercetools/platform-sdk'
+import removeIcon from '@/assets/icons/remove.svg'
 import type ShoppingCardProps from './ShoppingCard.d'
 import s from './ShoppingCard.module.scss'
+import QtyInput from '../UIKit/QtyInput/QtyInput'
 
 export default function ShoppingCard(props: ShoppingCardProps) {
   const {
@@ -15,7 +21,35 @@ export default function ShoppingCard(props: ShoppingCardProps) {
     onNameClick = undefined,
     toFixed = 2,
     intlLocale = 'de-DE',
+    productId,
   } = props
+
+  const cart = useContext(CartContext)
+
+  const [itemInCart, setItemInCard] = useState<LineItem | null>(null)
+
+  const removeFromCart = () => {
+    if (!cart || !itemInCart) return
+    cart.removeLineItem(productId)
+  }
+
+  const updateQty = (qty: number) => {
+    if (!itemInCart) return
+    cart?.updateLineItemQuantity(productId, () => qty)
+  }
+
+  useEffect(() => {
+    const newItemInCart = cart?.cart?.lineItems.find(
+      (e) => e.productId === productId,
+    )
+    if (!newItemInCart) return
+    setItemInCard(newItemInCart)
+  }, [cart?.cart, productId])
+
+  const addToCart: React.MouseEventHandler<HTMLButtonElement> = (e) => {
+    e.stopPropagation()
+    cart?.addLineItem(productId)
+  }
 
   const isDiscount = typeof discountPrice === 'number'
 
@@ -55,7 +89,32 @@ export default function ShoppingCard(props: ShoppingCardProps) {
           <h5 className={s.singleSellerName}>{name}</h5>
         </button>
         <div className={s.singleSellerDescription}>{description}</div>
-        <div className={s.singleSellerPrice}>{PriceJSX}</div>
+        <div className={s.singleSellerPrice}>
+          {PriceJSX}
+          <div className={s.cartBtnBlock}>
+            {itemInCart ? (
+              <>
+                <QtyInput
+                  quantity={itemInCart.quantity}
+                  onChangeHandler={updateQty}
+                />
+                <button
+                  className={s.cartBtn}
+                  type="button"
+                  onClick={removeFromCart}
+                >
+                  Remove from cart
+                  <img src={removeIcon} alt="cart" />
+                </button>
+              </>
+            ) : (
+              <button className={s.cartBtn} type="button" onClick={addToCart}>
+                Add to cart
+                <img src={cartIcon} alt="cart" />
+              </button>
+            )}
+          </div>
+        </div>
       </div>
     </div>
   )

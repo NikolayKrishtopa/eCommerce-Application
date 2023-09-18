@@ -212,6 +212,7 @@ function ProductsPage() {
       imageUrl: product.masterVariant.images
         ? product.masterVariant.images[0]?.url
         : '',
+      productId: product.id,
       imageAlt: product.name.en,
       discountPrice: discounted,
       onNameClick: undefined,

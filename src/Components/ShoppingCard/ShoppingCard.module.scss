@@ -85,6 +85,28 @@
   }
 
   &DiscountPrice {
+    display: flex;
+    justify-content: space-between;
     color: $color-danger;
   }
+}
+.cartBtnBlock {
+  display: flex;
+  width: 100%;
+  gap: 5px;
+}
+.cartBtn {
+  display: flex;
+  padding: 5px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 5px;
+  border: none;
+  gap: 5px;
+  font-family: $font-stack-text;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: normal;
+  @include clickable;
 }

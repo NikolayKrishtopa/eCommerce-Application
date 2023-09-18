@@ -10,6 +10,7 @@ export default function useCart(setIsFetching: (isFetching: boolean) => void) {
 
   const cartRef = useRef<Cart>()
   const [cart, $setCart] = useState<Cart>()
+  const [cartErrorMsg, setCartErrorMsg] = useState('')
 
   const setCart = (newCart: Cart) => {
     $setCart(newCart)
@@ -83,7 +84,7 @@ export default function useCart(setIsFetching: (isFetching: boolean) => void) {
   }
 
   const findLineItemBy = ({ productId }: { productId: string }) =>
-    cartRef.current?.lineItems.find((li) => li.id === productId)
+    cartRef.current?.lineItems.find((li) => li.productId === productId)
 
   const getTotalPriceOriginal = () =>
     cartRef.current?.lineItems
@@ -119,14 +120,22 @@ export default function useCart(setIsFetching: (isFetching: boolean) => void) {
   }
 
   const clearCart = async () => {
-    const actions = cartRef.current?.lineItems.map((item) => ({
+    const liActions = cartRef.current?.lineItems.map((item) => ({
       action: 'removeLineItem',
       lineItemId: item.id,
     }))
-    if (actions) {
+    const dcActions = cartRef.current?.discountCodes.map((code) => ({
+      action: 'removeDiscountCode',
+      discountCode: code.discountCode,
+    }))
+
+    if (liActions) {
       setIsFetching(true)
       try {
-        await updateCart(actions as CartUpdateAction[])
+        await updateCart(liActions as CartUpdateAction[])
+        if (dcActions) {
+          await updateCart(dcActions as CartUpdateAction[])
+        }
       } finally {
         setIsFetching(false)
       }
@@ -154,8 +163,11 @@ export default function useCart(setIsFetching: (isFetching: boolean) => void) {
 
   const addDiscountCode = async (code: string) => {
     setIsFetching(true)
+    setCartErrorMsg('')
     try {
       await updateCart({ action: 'addDiscountCode', code })
+    } catch {
+      setCartErrorMsg(`Promo code "${code}" not found`)
     } finally {
       setIsFetching(false)
     }
@@ -188,6 +200,8 @@ export default function useCart(setIsFetching: (isFetching: boolean) => void) {
     addDiscountCode,
     removeDiscountCode,
     clearCart,
+    cartErrorMsg,
     totalPriceOriginal,
+    setCartErrorMsg,
   }
 }

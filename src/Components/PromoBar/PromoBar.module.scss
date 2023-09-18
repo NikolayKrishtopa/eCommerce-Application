@@ -1,0 +1,41 @@
+@use '@/styles/abstracts' as *;
+
+.promoBar {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  height: fit-content;
+  padding: 12px;
+  margin: 12px 0;
+  font-family: $font-stack-text;
+  font-weight: 400;
+  font-size: 20px;
+}
+
+.code {
+  font-weight: 700;
+  text-decoration: underline;
+}
+
+.icon {
+  width: 30px;
+  height: 30px;
+}
+
+.closeBtn {
+  @include clickable;
+  position: absolute;
+  top: 10px;
+  right: 5px;
+  color: inherit;
+  background-color: transparent;
+  border: none;
+  outline: none;
+  svg {
+    width: 20px;
+    height: 20px;
+  }
+}

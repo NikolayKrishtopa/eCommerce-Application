@@ -10,6 +10,7 @@ type ShoppingCardProps = {
   onNameClick?: () => void
   toFixed?: number
   intlLocale?: string
+  productId: string
 }
 
 export default ShoppingCardProps

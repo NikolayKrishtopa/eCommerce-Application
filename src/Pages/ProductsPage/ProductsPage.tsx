@@ -212,6 +212,7 @@ function ProductsPage() {
       imageUrl: product.masterVariant.images
         ? product.masterVariant.images[0]?.url
         : '',
+      productId: product.id,
       imageAlt: product.name.en,
       discountPrice: discounted,
       onNameClick: undefined,
@@ -226,7 +227,8 @@ function ProductsPage() {
     return (
       <li key={crypto.randomUUID()} className={s.prodListItem}>
         <Link className={s.prodListItemLink} to={link}>
-          {ShoppingCard(prodData)}
+          {/* eslint-disable-next-line react/jsx-props-no-spreading */}
+          <ShoppingCard {...prodData} />
         </Link>
       </li>
     )

@@ -7,10 +7,11 @@ type QtyInputProps = {
   className?: string
   quantity?: number
   onChangeHandler: (qty: number) => void
+  size?: 's' | 'm' | 'l'
 }
 
 export default function QtyInput(props: QtyInputProps) {
-  const { className, quantity = 1, onChangeHandler } = props
+  const { className, quantity = 1, onChangeHandler, size } = props
 
   const [qty, setQty] = useState(quantity)
 
@@ -24,12 +25,19 @@ export default function QtyInput(props: QtyInputProps) {
   }, [quantity])
 
   return (
-    <div className={cn(s.qtyWrapper, className)}>
+    <div
+      className={cn(s.qtyWrapper, className, {
+        [s.qtyWrapperSmall]: size === 's',
+      })}
+    >
       <button
         type="button"
         disabled={qty <= 1}
-        className={s.qtyBtn}
-        onClick={() => handleClick(qty - 1)}
+        className={cn(s.qtyBtn, { [s.qtyBtnSmall]: size === 's' })}
+        onClick={(e) => {
+          e.preventDefault()
+          handleClick(qty - 1)
+        }}
       >
         -
       </button>
@@ -37,8 +45,11 @@ export default function QtyInput(props: QtyInputProps) {
 
       <button
         type="button"
-        className={s.qtyBtn}
-        onClick={() => handleClick(qty + 1)}
+        className={cn(s.qtyBtn, { [s.qtyBtnSmall]: size === 's' })}
+        onClick={(e) => {
+          e.preventDefault()
+          handleClick(qty + 1)
+        }}
       >
         +
       </button>

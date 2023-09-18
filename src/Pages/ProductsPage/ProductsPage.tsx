@@ -18,6 +18,7 @@ import { ReactComponent as SvgArrow } from '@/assets/icons/arrow-right.svg'
 import { apiRoot } from '@/eComMerchant/client'
 import useCategories from '@/hooks/useCategories'
 import Checkbox from '@/Components/UIKit/Checkbox/Checkbox'
+import { useInView } from 'react-intersection-observer'
 import s from './ProductsPage.module.scss'
 import b from './Sidebar.module.scss'
 
@@ -183,10 +184,18 @@ function ProductsPage() {
     searchText: query,
   })
 
-  const MAX_PAGES = Math.ceil(total / PRODS_ON_PAGE) - 1
+  const MAX_PAGES = Math.ceil(total / PRODS_ON_PAGE)
   const isMaxPage = currentPage >= MAX_PAGES
 
   const [products, setProducts] = useState<typeof fetchedProducts>([])
+
+  const { ref, inView } = useInView()
+
+  useEffect(() => {
+    if (inView && !isMaxPage) {
+      setCurrentPage((prev) => Math.min(MAX_PAGES, prev + 1))
+    }
+  }, [inView])
 
   useEffect(() => {
     setProducts(fetchedProducts)
@@ -466,16 +475,7 @@ function ProductsPage() {
       </div>
       <div className={s.products}>
         <ul className={s.prodList}>{prodList}</ul>
-        <button
-          type="button"
-          className={s.loadMore}
-          disabled={isMaxPage}
-          onClick={() => {
-            setCurrentPage((prev) => Math.min(MAX_PAGES, prev + 1))
-          }}
-        >
-          Load more
-        </button>
+        <div ref={ref} className={s.pageBreak} />
       </div>
     </section>
   )

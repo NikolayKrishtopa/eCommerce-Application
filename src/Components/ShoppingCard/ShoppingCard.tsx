@@ -1,12 +1,10 @@
 import cn from 'classnames'
 import CartContext from '@/contexts/CartContext'
 import { useState, useEffect, useContext } from 'react'
-import cartIcon from '@/assets/img/Cart.svg'
 import { LineItem } from '@commercetools/platform-sdk'
-import removeIcon from '@/assets/icons/remove.svg'
+import { useNavigate } from 'react-router-dom'
 import type ShoppingCardProps from './ShoppingCard.d'
 import s from './ShoppingCard.module.scss'
-import QtyInput from '../UIKit/QtyInput/QtyInput'
 
 export default function ShoppingCard(props: ShoppingCardProps) {
   const {
@@ -28,15 +26,11 @@ export default function ShoppingCard(props: ShoppingCardProps) {
 
   const [itemInCart, setItemInCard] = useState<LineItem | null>(null)
 
-  const removeFromCart: React.MouseEventHandler<HTMLButtonElement> = (e) => {
-    e.preventDefault()
-    if (!cart || !itemInCart) return
-    cart.removeLineItem(productId)
-  }
+  const navigate = useNavigate()
 
-  const updateQty = (qty: number) => {
-    if (!itemInCart) return
-    cart?.updateLineItemQuantity(productId, () => qty)
+  const goToCart: React.MouseEventHandler<HTMLButtonElement> = (e) => {
+    e.preventDefault()
+    navigate('/cart')
   }
 
   useEffect(() => {
@@ -90,31 +84,21 @@ export default function ShoppingCard(props: ShoppingCardProps) {
           <h5 className={s.singleSellerName}>{name}</h5>
         </button>
         <div className={s.singleSellerDescription}>{description}</div>
-        <div className={s.singleSellerPrice}>
-          {PriceJSX}
-          <div className={s.cartBtnBlock}>
-            {itemInCart ? (
-              <>
-                <QtyInput
-                  quantity={itemInCart.quantity}
-                  onChangeHandler={updateQty}
-                  size="s"
-                />
-                <button
-                  className={s.cartBtn}
-                  type="button"
-                  onClick={removeFromCart}
-                >
-                  <img src={removeIcon} alt="cart" />
-                </button>
-              </>
-            ) : (
-              <button className={s.cartBtn} type="button" onClick={addToCart}>
-                Add to cart
-                <img src={cartIcon} alt="cart" />
-              </button>
-            )}
-          </div>
+        <div className={s.singleSellerPrice}>{PriceJSX}</div>
+        <div className={s.cartBtnBlock}>
+          {itemInCart ? (
+            <button
+              className={cn(s.cartBtn, s.addedToCartBtn)}
+              type="button"
+              onClick={goToCart}
+            >
+              Added to cart
+            </button>
+          ) : (
+            <button className={s.cartBtn} type="button" onClick={addToCart}>
+              Add to cart
+            </button>
+          )}
         </div>
       </div>
     </div>

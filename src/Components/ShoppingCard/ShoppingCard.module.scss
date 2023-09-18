@@ -65,7 +65,7 @@
   }
 
   &Price {
-    justify-content: space-between;
+    justify-content: flex-start;
     align-items: center;
     display: flex;
     gap: 0.75ch;
@@ -96,18 +96,24 @@
   align-items: center;
 }
 .cartBtn {
-  max-height: 32px;
   display: flex;
-  padding: 5px;
-  align-items: center;
+  width: 100%;
+  height: 60px;
+  padding: 0px 10px;
   justify-content: center;
-  border-radius: 5px;
-  border: none;
+  align-items: center;
   gap: 10px;
-  font-family: $font-stack-text;
-  font-size: 12px;
-  font-style: normal;
+  border-radius: 10px;
+  border: none;
+  outline: none;
+  background: $color-primary;
+  color: $color-on-primary;
+  font-family: $font-stack-brand;
+  font-size: 16px;
   font-weight: 700;
-  line-height: normal;
   @include clickable;
+}
+
+.addedToCartBtn {
+  background: $color-success;
 }

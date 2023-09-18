@@ -175,6 +175,7 @@ export default function MainPage() {
                   onNameClick={() => navigate(link)}
                   price={price}
                   currency={currency}
+                  productId={id.toString()}
                 />
               </li>
             ),

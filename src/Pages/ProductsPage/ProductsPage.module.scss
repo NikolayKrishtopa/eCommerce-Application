@@ -90,6 +90,7 @@ $col-gap: r(10px);
   flex-wrap: wrap;
   justify-content: space-between;
   column-gap: r(50px);
+  margin-block: r(10px) r(30px);
 }
 
 .cancelFilterGroup {
@@ -100,8 +101,10 @@ $col-gap: r(10px);
 }
 
 .openSidebarGroup {
-  margin-block: r(10px) r(30px);
   display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  flex-grow: 1;
   column-gap: $col-gap;
 }
 
@@ -133,6 +136,14 @@ $col-gap: r(10px);
     background-color: $color-neutral-light;
     border-radius: r(10px);
     user-select: none;
+    font-family: $font-stack-brand;
+    font-size: 16px;
+    font-weight: 400;
+    &Icon {
+      height: 12px;
+      width: 12px;
+    }
+
     &:hover &Icon {
       color: $color-danger;
     }
@@ -144,12 +155,22 @@ $col-gap: r(10px);
 
 .clearFiltersButton {
   @include button-reset;
-  @include hoverBorderDecoration;
+  @include clickable;
   width: max-content;
   display: inline-flex;
+  align-items: center;
   gap: r(5px);
   font-weight: bold;
   color: $color-on-primary;
+  &Text {
+    font-size: 20px;
+    font-weight: 700;
+    text-decoration-line: underline;
+  }
+  &Icon {
+    width: 12px;
+    height: 12px;
+  }
   &:active {
     color: $color-info;
   }

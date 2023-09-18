@@ -402,10 +402,10 @@ function ProductsPage() {
                           removeFilter(name, value)
                         }}
                       >
-                        <span className={s.cancelFilterItemButtonName}>
+                        <div className={s.cancelFilterItemButtonName}>
                           {`${name}: ${value}`}
-                        </span>
-                        <span className={s.cancelFilterItemButtonIcon}>𝕏</span>
+                        </div>
+                        <SvgClose className={s.cancelFilterItemButtonIcon} />
                       </button>
                     </li>
                   )),
@@ -418,8 +418,8 @@ function ProductsPage() {
                   clearFilters()
                 }}
               >
-                <span className={s.clearFiltersButtonIcon}>×</span>
-                <span className={s.clearFiltersButtonText}>Clear filters</span>
+                <SvgClose className={s.clearFiltersButtonIcon} />
+                <div className={s.clearFiltersButtonText}>Clear filters</div>
               </button>
             </>
           )}

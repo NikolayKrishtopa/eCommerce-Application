@@ -14,6 +14,7 @@ import { Route, Routes, Link, useParams } from 'react-router-dom'
 import { ReactComponent as SvgFilter } from '@/assets/icons/filter.svg'
 import { ReactComponent as SvgSort } from '@/assets/icons/sort.svg'
 import { ReactComponent as SvgClose } from '@/assets/icons/close.svg'
+import { ReactComponent as SvgArrow } from '@/assets/icons/arrow-right.svg'
 import { apiRoot } from '@/eComMerchant/client'
 import useCategories from '@/hooks/useCategories'
 import Checkbox from '@/Components/UIKit/Checkbox/Checkbox'
@@ -325,7 +326,10 @@ function ProductsPage() {
           <div className={b.main}>
             <div className={b.list}>
               <div className={b.checkBoxContainer}>
-                <label htmlFor="sort-price-asc">Price Asc</label>
+                <label htmlFor="sort-price-asc">
+                  <div>Price</div>
+                  <SvgArrow style={{ transform: 'rotate(270deg)' }} />
+                </label>
                 <input
                   id="sort-price-asc"
                   name="price"
@@ -336,7 +340,10 @@ function ProductsPage() {
                 />
               </div>
               <div className={b.checkBoxContainer}>
-                <label htmlFor="sort-price-desc">Price Dsc</label>
+                <label htmlFor="sort-price-desc">
+                  <div>Price</div>
+                  <SvgArrow style={{ transform: 'rotate(90deg)' }} />
+                </label>
                 <input
                   id="sort-price-desc"
                   name="price"
@@ -347,7 +354,7 @@ function ProductsPage() {
                 />
               </div>
               <div className={b.checkBoxContainer}>
-                <label htmlFor="sort-name-asc">Name asc</label>
+                <label htmlFor="sort-name-asc">A—z</label>
                 <input
                   id="sort-name-asc"
                   name="name"
@@ -358,7 +365,7 @@ function ProductsPage() {
                 />
               </div>
               <div className={b.checkBoxContainer}>
-                <label htmlFor="sort-name-desc">Name desc</label>
+                <label htmlFor="sort-name-desc">Z—a</label>
                 <input
                   id="sort-name-desc"
                   name="name"

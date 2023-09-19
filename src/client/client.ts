@@ -1,14 +1,16 @@
 import { createApiBuilderFromCtpClient } from '@commercetools/platform-sdk'
-import { ByProjectKeyRequestBuilder } from '@commercetools/platform-sdk/dist/declarations/src/generated/client/by-project-key-request-builder'
 import {
   ClientBuilder,
+  type Credentials,
   type AuthMiddlewareOptions,
   type HttpMiddlewareOptions,
-  TokenStore,
-  Credentials,
-  TokenCache,
 } from '@commercetools/sdk-client-v2'
 import variables from './variables'
+import extend from './extend/extend'
+import withRetrieveToken, {
+  bindTokenStore,
+  createTokenStore,
+} from './extend/withRetrieveToken'
 
 const credentials = {
   clientId: variables.clientId,
@@ -27,6 +29,7 @@ const httpMiddlewareOptions = {
   host: variables.apiHost,
   fetch,
 } satisfies HttpMiddlewareOptions
+
 const baseCtpClient = new ClientBuilder().withHttpMiddleware(
   httpMiddlewareOptions,
 )
@@ -36,58 +39,28 @@ const buildApiRoot = (ctpBuilder: ClientBuilder) =>
     projectKey: variables.projectKey,
   })
 
-const createTokenStore = () =>
-  ({
-    token: '',
-    expirationTime: 0,
-    refreshToken: '',
-  }) satisfies TokenStore
-
-const bindTokenStore = (tokenStore: TokenStore) =>
-  ({
-    set(token) {
-      Object.assign(tokenStore, token)
-    },
-    get() {
-      return tokenStore
-    },
-  }) satisfies TokenCache
-
 /* Without tokenStore */
 
 function buildClientCredentialsFlowApiRoot() {
-  return buildApiRoot(
+  const apiRoot = buildApiRoot(
     baseCtpClient.withClientCredentialsFlow(authMiddlewareOptions),
   )
+
+  return apiRoot
 }
 
 function buildRefreshTokenFlowApiRoot(refreshToken: string) {
-  return buildApiRoot(
+  const apiRoot = buildApiRoot(
     baseCtpClient.withRefreshTokenFlow({
       ...authMiddlewareOptions,
       refreshToken,
     }),
   )
+
+  return apiRoot
 }
 
 /* With tokenStore */
-
-const extendWithRetrieveToken = <K extends TokenStore>(
-  apiRoot: ByProjectKeyRequestBuilder,
-  tokenStore: K,
-) => {
-  const tokenRetrieveRequest = apiRoot.get().execute()
-  const extendedApiRoot = Object.create(apiRoot)
-
-  extendedApiRoot.retrieveToken = async () => {
-    await tokenRetrieveRequest
-    return tokenStore
-  }
-
-  return extendedApiRoot as typeof apiRoot & {
-    retrieveToken: () => Promise<K>
-  }
-}
 
 function buildAnonymousSessionFlowApiRoot(anonymousId?: string | null) {
   const tokenStore = createTokenStore()
@@ -104,7 +77,7 @@ function buildAnonymousSessionFlowApiRoot(anonymousId?: string | null) {
     }),
   )
 
-  return extendWithRetrieveToken(apiRoot, tokenStore)
+  return extend(apiRoot, withRetrieveToken(apiRoot, tokenStore))
 }
 
 function buildPasswordFlowApiRoot(email: string, password: string) {
@@ -125,7 +98,7 @@ function buildPasswordFlowApiRoot(email: string, password: string) {
     }),
   )
 
-  return extendWithRetrieveToken(apiRoot, tokenStore)
+  return extend(apiRoot, withRetrieveToken(apiRoot, tokenStore))
 }
 
 // Backward compatibility

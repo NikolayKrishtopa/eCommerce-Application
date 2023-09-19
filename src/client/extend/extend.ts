@@ -1,4 +1,4 @@
-import { type ByProjectKeyRequestBuilder } from '@commercetools/platform-sdk/dist/declarations/src/generated/client/by-project-key-request-builder'
+import { type ClientApiRoot } from '../types'
 
 type UnionToIntersection<U> = (
   U extends unknown ? (k: U) => void : never
@@ -6,7 +6,7 @@ type UnionToIntersection<U> = (
   ? I
   : never
 
-function extend<T extends ByProjectKeyRequestBuilder, K extends object[]>(
+function extend<T extends ClientApiRoot, K extends object[]>(
   proto: T,
   ...targets: K
 ) {

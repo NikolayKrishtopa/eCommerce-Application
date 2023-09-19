@@ -1,5 +1,5 @@
-import { type ByProjectKeyRequestBuilder } from '@commercetools/platform-sdk/dist/declarations/src/generated/client/by-project-key-request-builder'
 import { type TokenCache, type TokenStore } from '@commercetools/sdk-client-v2'
+import { type ClientApiRoot } from '../types'
 
 const createTokenStore = () =>
   ({
@@ -18,10 +18,10 @@ const bindTokenStore = (tokenStore: TokenStore) =>
     },
   }) satisfies TokenCache
 
-function withRetrieveToken<
-  T extends ByProjectKeyRequestBuilder,
-  K extends TokenStore,
->(apiRoot: T, tokenStore: K) {
+function withRetrieveToken<T extends ClientApiRoot, K extends TokenStore>(
+  apiRoot: T,
+  tokenStore: K,
+) {
   const tokenRetrieveRequest = apiRoot.get().execute()
 
   const retrieveToken = async () => {

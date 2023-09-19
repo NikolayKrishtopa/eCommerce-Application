@@ -3,6 +3,7 @@ import OurTeamCard from '@/Components/OurTeamCard/OurTeamCard'
 import schoolLogo from '@/assets/img/rs_school logo.png'
 import skateBoardPic from '@/assets/img/skateboard_horizontal.png'
 import Breadcrumbs from '@/Components/Breadcrumbs/Breadcrumbs'
+import { Link } from 'react-router-dom'
 import s from './AboutPage.module.scss'
 
 export default function AboutPage() {
@@ -16,7 +17,9 @@ export default function AboutPage() {
         ))}
       </div>
       <div className={s.logoWrapper}>
-        <img src={schoolLogo} alt="RS school logo" className={s.logo} />
+        <Link to="https://rs.school">
+          <img src={schoolLogo} alt="RS school logo" className={s.logo} />
+        </Link>
       </div>
       <div className={s.skateWrapper}>
         <img src={skateBoardPic} alt="skateboard" className={s.skateImg} />

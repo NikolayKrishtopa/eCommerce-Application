@@ -16,6 +16,11 @@
   margin: 0;
 }
 
+.cartDelContainer {
+  display: flex;
+  gap: 10px;
+}
+
 .cartDelLink {
   color: $color-neutral-light;
   font-family: $font-stack-text;
@@ -28,7 +33,28 @@
   padding: 0;
   border: none;
   background-color: transparent;
+  white-space: nowrap;
   @include clickable;
+  transition: transform 0.3s;
+}
+
+.hiddenDelLink {
+  transform: translateX(-3000px);
+  width: 0;
+  opacity: 0;
+  transition: all 0.3s;
+}
+
+.sureToDelete {
+  display: flex;
+  justify-content: flex-start;
+  gap: 10px;
+  opacity: 0;
+}
+
+.showDialog {
+  opacity: 1;
+  transition: opacity 0.3s 0.3s;
 }
 
 .cartWrapper {

@@ -1,9 +1,15 @@
 import {
   buildClientCredentialsFlowApiRoot,
   buildRefreshTokenFlowApiRoot,
+  buildPasswordFlowApiRoot,
   buildAnonymousSessionFlowApiRoot,
 } from '@/client/client'
-import { type Cart, type Customer } from '@commercetools/platform-sdk'
+import {
+  type Cart,
+  type Customer,
+  type MyCustomerDraft,
+  type MyCustomerSignin,
+} from '@commercetools/platform-sdk'
 import { useEffect, useRef, useState } from 'react'
 
 enum SessionType {
@@ -134,6 +140,54 @@ function useAuth() {
     authenticateFallback()
   }, [])
 
+  const login = async (customerSignIn: MyCustomerSignin) => {
+    const { session } = sessionStore.get()
+    if (session === SessionType.Authenticated) {
+      return {}
+    }
+    let response
+    if (session === SessionType.Anonymous) {
+      response = await authApiRootRef.current
+        .me()
+        .login()
+        .post({ body: customerSignIn })
+        .execute()
+    } else {
+      response = await authApiRootRef.current
+        .login()
+        .post({ body: customerSignIn })
+        .execute()
+    }
+    const { email, password } = customerSignIn
+    const customerApiRoot = buildPasswordFlowApiRoot(email, password)
+    const token = await customerApiRoot.retrieveToken()
+    sessionStore.set(SessionType.Authenticated, token.refreshToken)
+    const { customer, cart } = response.body
+    setCurrentCart(cart)
+    setCurrentUser(customer)
+    return { customer, cart }
+  }
+
+  const logout = () => {
+    authenticateFallback()
+  }
+
+  const register = async (customerDraft: MyCustomerDraft, autoLogin = true) => {
+    const { session } = sessionStore.get()
+    if (session !== SessionType.Anonymous) {
+      await authenticateAnonymous()
+    }
+    const response = await authApiRootRef.current
+      .me()
+      .signup()
+      .post({ body: customerDraft })
+      .execute()
+    if (autoLogin) {
+      await login(customerDraft)
+    }
+    return response.body
+  }
+
   const authApiRoot = () => authApiRootRef.current
 
   const sessionState = sessionStore.get().session
@@ -148,6 +202,9 @@ function useAuth() {
     currentCart,
     setCurrentUser,
     setCurrentCart,
+    login,
+    logout,
+    register,
   }
 }
 

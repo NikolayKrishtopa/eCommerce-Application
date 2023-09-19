@@ -6,7 +6,6 @@ import {
 } from '@commercetools/platform-sdk'
 import useProducts from '@/hooks/useProducts'
 import ShoppingCard from '@/Components/ShoppingCard/ShoppingCard'
-import Loader from '@/Components/Loader/Loader'
 import ProductCard from '@/Components/ProductCard/ProductCard'
 import Breadcrumbs from '@/Components/Breadcrumbs/Breadcrumbs'
 import Search from '@/Components/Search/Search'
@@ -15,9 +14,11 @@ import { Route, Routes, Link, useParams } from 'react-router-dom'
 import { ReactComponent as SvgFilter } from '@/assets/icons/filter.svg'
 import { ReactComponent as SvgSort } from '@/assets/icons/sort.svg'
 import { ReactComponent as SvgClose } from '@/assets/icons/close.svg'
+import { ReactComponent as SvgArrow } from '@/assets/icons/arrow-right.svg'
 import { apiRoot } from '@/eComMerchant/client'
 import useCategories from '@/hooks/useCategories'
 import Checkbox from '@/Components/UIKit/Checkbox/Checkbox'
+import { useInView } from 'react-intersection-observer'
 import s from './ProductsPage.module.scss'
 import b from './Sidebar.module.scss'
 
@@ -121,6 +122,9 @@ const useFilters = () => {
       let updated = [...filters]
       if (value) {
         updated[index].values = updated[index].values.filter((v) => v !== value)
+        if (!updated[index].values.length) {
+          updated = updated.filter((_, i) => i !== index)
+        }
       } else {
         updated = updated.filter((_, i) => i !== index)
       }
@@ -180,10 +184,18 @@ function ProductsPage() {
     searchText: query,
   })
 
-  const MAX_PAGES = Math.ceil(total / PRODS_ON_PAGE) - 1
+  const MAX_PAGES = Math.ceil(total / PRODS_ON_PAGE)
   const isMaxPage = currentPage >= MAX_PAGES
 
   const [products, setProducts] = useState<typeof fetchedProducts>([])
+
+  const { ref, inView } = useInView()
+
+  useEffect(() => {
+    if (inView && !isMaxPage) {
+      setCurrentPage((prev) => Math.min(MAX_PAGES, prev + 1))
+    }
+  }, [inView])
 
   useEffect(() => {
     setProducts(fetchedProducts)
@@ -323,7 +335,10 @@ function ProductsPage() {
           <div className={b.main}>
             <div className={b.list}>
               <div className={b.checkBoxContainer}>
-                <label htmlFor="sort-price-asc">Price Asc</label>
+                <label htmlFor="sort-price-asc">
+                  <div>Price</div>
+                  <SvgArrow style={{ transform: 'rotate(270deg)' }} />
+                </label>
                 <input
                   id="sort-price-asc"
                   name="price"
@@ -334,7 +349,10 @@ function ProductsPage() {
                 />
               </div>
               <div className={b.checkBoxContainer}>
-                <label htmlFor="sort-price-desc">Price Dsc</label>
+                <label htmlFor="sort-price-desc">
+                  <div>Price</div>
+                  <SvgArrow style={{ transform: 'rotate(90deg)' }} />
+                </label>
                 <input
                   id="sort-price-desc"
                   name="price"
@@ -345,7 +363,7 @@ function ProductsPage() {
                 />
               </div>
               <div className={b.checkBoxContainer}>
-                <label htmlFor="sort-name-asc">Name asc</label>
+                <label htmlFor="sort-name-asc">A—z</label>
                 <input
                   id="sort-name-asc"
                   name="name"
@@ -356,7 +374,7 @@ function ProductsPage() {
                 />
               </div>
               <div className={b.checkBoxContainer}>
-                <label htmlFor="sort-name-desc">Name desc</label>
+                <label htmlFor="sort-name-desc">Z—a</label>
                 <input
                   id="sort-name-desc"
                   name="name"
@@ -403,10 +421,10 @@ function ProductsPage() {
                           removeFilter(name, value)
                         }}
                       >
-                        <span className={s.cancelFilterItemButtonName}>
+                        <div className={s.cancelFilterItemButtonName}>
                           {`${name}: ${value}`}
-                        </span>
-                        <span className={s.cancelFilterItemButtonIcon}>𝕏</span>
+                        </div>
+                        <SvgClose className={s.cancelFilterItemButtonIcon} />
                       </button>
                     </li>
                   )),
@@ -419,8 +437,8 @@ function ProductsPage() {
                   clearFilters()
                 }}
               >
-                <span className={s.clearFiltersButtonIcon}>×</span>
-                <span className={s.clearFiltersButtonText}>Clear filters</span>
+                <SvgClose className={s.clearFiltersButtonIcon} />
+                <div className={s.clearFiltersButtonText}>Clear filters</div>
               </button>
             </>
           )}
@@ -457,17 +475,7 @@ function ProductsPage() {
       </div>
       <div className={s.products}>
         <ul className={s.prodList}>{prodList}</ul>
-        {loading && <Loader className={s.prodLoader} />}
-        <button
-          type="button"
-          className={s.loadMore}
-          disabled={isMaxPage}
-          onClick={() => {
-            setCurrentPage((prev) => Math.min(MAX_PAGES, prev + 1))
-          }}
-        >
-          Load more
-        </button>
+        <div ref={ref} className={s.pageBreak} />
       </div>
     </section>
   )

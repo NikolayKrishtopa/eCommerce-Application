@@ -13,9 +13,12 @@ type CartPageProps = {
   alert: (msg: string) => void
 }
 
+let activeTimer = false
+
 export default function CartPage(props: CartPageProps) {
   const { alert } = props
   const [promoCode, setPromoCode] = useState('')
+  const [cartDelDialog, setCartDelDialog] = useState(false)
 
   const navigate = useNavigate()
 
@@ -64,6 +67,19 @@ export default function CartPage(props: CartPageProps) {
     totalPriceOriginal,
   } = currentCart
 
+  const handleClearCart = () => {
+    activeTimer = true
+    setCartDelDialog(true)
+    let timer = 0
+    const t = setInterval(() => {
+      timer += 1
+      if (timer >= 30 || !activeTimer) {
+        clearInterval(t)
+        setCartDelDialog(false)
+      }
+    }, 100)
+  }
+
   return (
     <section className={s.cart}>
       <h2 className={s.cartHeader}>Shopping Cart</h2>
@@ -72,13 +88,42 @@ export default function CartPage(props: CartPageProps) {
 
       {cart?.lineItems.length !== 0 && (
         <>
-          <button
-            type="button"
-            className={s.cartDelLink}
-            onClick={() => cart && clearCart()}
-          >
-            Clear shopping cart
-          </button>
+          <div className={s.cartDelContainer}>
+            <button
+              type="button"
+              className={cn(
+                s.cartDelLink,
+                cartDelDialog ? s.hiddenDelLink : '',
+              )}
+              onClick={() => {
+                handleClearCart()
+              }}
+            >
+              Clear shopping cart
+            </button>
+            <div
+              className={cn(s.sureToDelete, cartDelDialog ? s.showDialog : '')}
+            >
+              <span>Are you sure? </span>
+              <button
+                type="button"
+                className={s.cartDelLink}
+                onClick={() => cart && clearCart()}
+              >
+                Yes, clear cart
+              </button>
+              <button
+                type="button"
+                className={s.cartDelLink}
+                onClick={() => {
+                  setCartDelDialog(false)
+                  activeTimer = false
+                }}
+              >
+                No, not now
+              </button>
+            </div>
+          </div>
 
           <div className={s.cartWrapper}>
             <div className={s.cartProducts}>

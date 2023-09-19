@@ -1,4 +1,4 @@
-import { apiRoot } from '@/client/client'
+import { apiRoot } from '@/client'
 import { ProductProjection } from '@commercetools/platform-sdk'
 import { useState, useEffect } from 'react'
 

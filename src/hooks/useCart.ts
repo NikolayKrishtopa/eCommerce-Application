@@ -1,4 +1,4 @@
-import { apiRoot } from '@/client/client'
+import { apiRoot } from '@/client'
 import { Cart, CartUpdateAction } from '@commercetools/platform-sdk'
 import { useEffect, useRef, useState } from 'react'
 

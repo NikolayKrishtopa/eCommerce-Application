@@ -3,7 +3,7 @@ import {
   buildRefreshTokenFlowApiRoot,
   buildPasswordFlowApiRoot,
   buildAnonymousSessionFlowApiRoot,
-} from '@/client/client'
+} from '@/client'
 import {
   type Cart,
   type Customer,

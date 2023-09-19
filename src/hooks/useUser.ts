@@ -11,7 +11,7 @@ import {
   UserLoginPayloadType,
   UserUpdatePayloadType,
 } from '@/Models/Models'
-import { apiRoot } from '../client/client'
+import { apiRoot } from '@/client'
 
 export default function useUser(
   setSystMsg: (msg: string, isSuccess: boolean) => void,

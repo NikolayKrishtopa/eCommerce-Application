@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { DiscountCode } from '@commercetools/platform-sdk'
-import { apiRoot } from '../eComMerchant/client'
+import { apiRoot } from '@/client'
 
 export default function useDiscountCodes() {
   const [data, setData] = useState<DiscountCode[]>([])

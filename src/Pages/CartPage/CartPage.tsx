@@ -91,6 +91,7 @@ export default function CartPage(props: CartPageProps) {
           <div className={s.cartDelContainer}>
             <button
               type="button"
+              disabled={cartDelDialog}
               className={cn(
                 s.cartDelLink,
                 cartDelDialog ? s.hiddenDelLink : '',

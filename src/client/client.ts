@@ -11,6 +11,7 @@ import withRetrieveToken, {
   bindTokenStore,
   createTokenStore,
 } from './extend/withRetrieveToken'
+import withValidateRefreshToken from './extend/withValidateRefreshToken'
 
 const credentials = {
   clientId: variables.clientId,
@@ -46,7 +47,7 @@ function buildClientCredentialsFlowApiRoot() {
     baseCtpClient.withClientCredentialsFlow(authMiddlewareOptions),
   )
 
-  return apiRoot
+  return extend(apiRoot, withValidateRefreshToken())
 }
 
 function buildRefreshTokenFlowApiRoot(refreshToken: string) {
@@ -57,7 +58,7 @@ function buildRefreshTokenFlowApiRoot(refreshToken: string) {
     }),
   )
 
-  return apiRoot
+  return extend(apiRoot, withValidateRefreshToken())
 }
 
 /* With tokenStore */
@@ -77,7 +78,11 @@ function buildAnonymousSessionFlowApiRoot(anonymousId?: string | null) {
     }),
   )
 
-  return extend(apiRoot, withRetrieveToken(apiRoot, tokenStore))
+  return extend(
+    apiRoot,
+    withValidateRefreshToken(),
+    withRetrieveToken(apiRoot, tokenStore),
+  )
 }
 
 function buildPasswordFlowApiRoot(email: string, password: string) {
@@ -98,7 +103,11 @@ function buildPasswordFlowApiRoot(email: string, password: string) {
     }),
   )
 
-  return extend(apiRoot, withRetrieveToken(apiRoot, tokenStore))
+  return extend(
+    apiRoot,
+    withValidateRefreshToken(),
+    withRetrieveToken(apiRoot, tokenStore),
+  )
 }
 
 // Backward compatibility

@@ -1,12 +1,13 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { Route, Routes } from 'react-router-dom'
 import CurrentUserContext from '@/contexts/CurrentUserContext'
 import CartContext from '@/contexts/CartContext'
-import useUser from '@/hooks/useUser'
 import AboutPage from '@/Pages/AboutPage/AboutPage'
 import ProtectedRoute from '@/hok/ProtectedRoute/ProtectedRoute'
 import { FullPageLoader } from '@/Components/Loader/Loader'
 import CartPage from '@/Pages/CartPage/CartPage'
+import useAuth from '@/hooks/useAuth'
+import useUser from '@/hooks/useUser'
 import useCart from '@/hooks/useCart'
 import SystMsgAlert from '../Components/SystMsgAlert/SystMsgAlert'
 import s from './App.module.scss'
@@ -50,12 +51,19 @@ export default function App() {
     setIsError(error)
   }
 
+  const auth = useAuth()
+
   const {
-    login,
-    register,
+    isAuthenticated,
     currentUser,
-    logout,
-    checkAuth,
+    // authApiRoot,
+    // sessionState,
+  } = auth
+
+  const {
+    userLogin,
+    userRegister,
+    userLogout,
     setDefaultAddress,
     setAddress,
     addAddress,
@@ -64,20 +72,18 @@ export default function App() {
     updatePassword,
     editAddress,
     unsetAddress,
-  } = useUser(setupMsg, setIsFetching)
+  } = useUser({
+    ...auth,
+    systemMessage: setupMsg,
+    setIsFetching,
+  })
 
   const resetSystMsg = () => {
     setSystMsg('')
   }
 
-  // remove those useEffects when done
-  useEffect(() => {
-    checkAuth()
-    setIsFetching(false)
-  }, [])
-
   const Page = PageBuilder({
-    HeaderJSX: <Header onLogout={logout} />,
+    HeaderJSX: <Header onLogout={userLogout} />,
     FooterJSX: <Footer />,
   })
 
@@ -104,9 +110,9 @@ export default function App() {
           <Route
             path="/login"
             element={
-              <ProtectedRoute condition={!currentUser}>
+              <ProtectedRoute condition={!isAuthenticated}>
                 <Page header>
-                  <LoginPage onSubmit={login} />
+                  <LoginPage onSubmit={userLogin} />
                 </Page>
               </ProtectedRoute>
             }
@@ -114,9 +120,9 @@ export default function App() {
           <Route
             path="/register"
             element={
-              <ProtectedRoute condition={!currentUser}>
+              <ProtectedRoute condition={!isAuthenticated}>
                 <Page header>
-                  <RegistrationPage onSubmit={register} />
+                  <RegistrationPage onSubmit={userRegister} />
                 </Page>
               </ProtectedRoute>
             }
@@ -140,7 +146,7 @@ export default function App() {
           <Route
             path="/profile"
             element={
-              <ProtectedRoute condition={!!currentUser}>
+              <ProtectedRoute condition={isAuthenticated}>
                 <Page header footer>
                   <UserProfile
                     onUserUpdate={updateUserData}

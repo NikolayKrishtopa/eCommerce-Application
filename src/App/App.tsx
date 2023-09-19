@@ -46,9 +46,9 @@ export default function App() {
   const [isError, setIsError] = useState(false)
   const [isFetching, setIsFetching] = useState(false)
 
-  const setupMsg = (msg: string, error: boolean) => {
+  const setupMsg = (msg: string, isSuccess: boolean) => {
     setSystMsg(msg)
-    setIsError(error)
+    setIsError(!isSuccess)
   }
 
   const auth = useAuth()

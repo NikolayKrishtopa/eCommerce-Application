@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { Route, Routes } from 'react-router-dom'
 import CurrentUserContext from '@/contexts/CurrentUserContext'
 import CartContext from '@/contexts/CartContext'
-import useAuth from '@/hooks/useAuth'
+import useUser from '@/hooks/useUser'
 import AboutPage from '@/Pages/AboutPage/AboutPage'
 import ProtectedRoute from '@/hok/ProtectedRoute/ProtectedRoute'
 import { FullPageLoader } from '@/Components/Loader/Loader'
@@ -64,7 +64,7 @@ export default function App() {
     updatePassword,
     editAddress,
     unsetAddress,
-  } = useAuth(setupMsg, setIsFetching)
+  } = useUser(setupMsg, setIsFetching)
 
   const resetSystMsg = () => {
     setSystMsg('')

@@ -13,7 +13,7 @@ import {
 } from '@/Models/Models'
 import { apiRoot } from '../client/client'
 
-export default function useAuth(
+export default function useUser(
   setSystMsg: (msg: string, isSuccess: boolean) => void,
   setIsFetching: (isFetching: boolean) => void,
 ) {

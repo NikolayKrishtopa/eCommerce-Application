@@ -8,35 +8,32 @@ import {
   Credentials,
   TokenCache,
 } from '@commercetools/sdk-client-v2'
-
-const projectKey = import.meta.env.VITE_PROJECT_KEY
-const scopes = [import.meta.env.VITE_SCOPES]
+import variables from './variables'
 
 const credentials = {
-  clientId: import.meta.env.VITE_CLIENT_ID,
-  clientSecret: import.meta.env.VITE_CLIENT_SECRET,
+  clientId: variables.clientId,
+  clientSecret: variables.clientSecret,
 } satisfies Credentials
 
 const authMiddlewareOptions = {
-  host: import.meta.env.VITE_AUTH_HOST,
+  host: variables.authHost,
+  projectKey: variables.projectKey,
   credentials,
-  projectKey,
-  scopes,
+  scopes: variables.scopes,
   fetch,
 } satisfies AuthMiddlewareOptions
 
 const httpMiddlewareOptions = {
-  host: import.meta.env.VITE_API_HOST,
+  host: variables.apiHost,
   fetch,
 } satisfies HttpMiddlewareOptions
-
 const baseCtpClient = new ClientBuilder().withHttpMiddleware(
   httpMiddlewareOptions,
 )
 
 const buildApiRoot = (ctpBuilder: ClientBuilder) =>
   createApiBuilderFromCtpClient(ctpBuilder.build()).withProjectKey({
-    projectKey,
+    projectKey: variables.projectKey,
   })
 
 const createTokenStore = () =>

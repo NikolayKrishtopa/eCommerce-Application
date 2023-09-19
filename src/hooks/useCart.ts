@@ -1,4 +1,4 @@
-import { apiRoot } from '@/eComMerchant/client'
+import { apiRoot } from '@/client/client'
 import { Cart, CartUpdateAction } from '@commercetools/platform-sdk'
 import { useEffect, useRef, useState } from 'react'
 

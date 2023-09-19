@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { ProductProjection } from '@commercetools/platform-sdk'
 import { ProductQueryParams } from '@/Models/Models'
-import { apiRoot } from '../eComMerchant/client'
+import { apiRoot } from '../client/client'
 
 export default function useProducts(props: ProductQueryParams) {
   const { searchText, limit, offset, filter, categoryId, sort } = props

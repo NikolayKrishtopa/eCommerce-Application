@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Category } from '@commercetools/platform-sdk'
 // import { CategoriesQueryParams } from '@/Models/Models'
-import { apiRoot } from '../eComMerchant/client'
+import { apiRoot } from '../client/client'
 
 export default function useCategories() {
   const [data, setData] = useState<Category[]>([])

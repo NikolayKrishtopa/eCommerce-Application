@@ -11,7 +11,7 @@ import {
   UserLoginPayloadType,
   UserUpdatePayloadType,
 } from '@/Models/Models'
-import { apiRoot } from '../eComMerchant/client'
+import { apiRoot } from '../client/client'
 
 export default function useAuth(
   setSystMsg: (msg: string, isSuccess: boolean) => void,

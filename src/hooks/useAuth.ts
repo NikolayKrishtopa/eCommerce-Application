@@ -67,8 +67,20 @@ class SessionStore {
 const sessionStore = new SessionStore().retrieveFromLocalStorage()
 
 function useAuth() {
-  const [currentUser, setCurrentUser] = useState<Customer>()
-  const [currentCart, setCurrentCart] = useState<Cart>()
+  const [currentUser, $setCurrentUser] = useState<Customer>()
+  const [currentCart, $setCurrentCart] = useState<Cart>()
+
+  const currentUserRef = useRef<typeof currentUser>()
+  const currentCartRef = useRef<typeof currentCart>()
+
+  const setCurrentUser = (customer: typeof currentUser) => {
+    $setCurrentUser(customer)
+    currentUserRef.current = customer
+  }
+  const setCurrentCart = (cart: typeof currentCart) => {
+    $setCurrentCart(cart)
+    currentCartRef.current = cart
+  }
 
   const authApiRootRef = useRef(buildClientCredentialsFlowApiRoot())
 
@@ -202,6 +214,8 @@ function useAuth() {
     currentCart,
     setCurrentUser,
     setCurrentCart,
+    currentUserRef,
+    currentCartRef,
     login,
     logout,
     register,

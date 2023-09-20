@@ -3,7 +3,6 @@ import {
   type Address,
   type MyCustomerDraft,
   type MyCustomerSignin,
-  type ErrorResponse,
   type MyCustomerUpdateAction,
   type AddressDraft,
 } from '@commercetools/platform-sdk'
@@ -12,10 +11,8 @@ import {
   type UserRegisterPayloadType,
   type UserUpdatePayloadType,
 } from '@/Models/Models'
+import isErrorResponse from '@/utils/isErrorResponse'
 import useAuth from './useAuth'
-
-const isErrorObject = (t: unknown): t is ErrorResponse =>
-  typeof t === 'object' && t !== null && 'statusCode' in t && 'message' in t
 
 export default function useUser(
   params: Pick<
@@ -178,7 +175,7 @@ export default function useUser(
       systemMessage(SYSTEM_MESSAGES.EDIT_USER_SCSS, false)
     } catch (e) {
       systemMessage(
-        isErrorObject(e) ? e.message : SYSTEM_MESSAGES.DEFAULT_ERROR,
+        isErrorResponse(e) ? e.message : SYSTEM_MESSAGES.DEFAULT_ERROR,
         false,
       )
     } finally {
@@ -325,7 +322,7 @@ export default function useUser(
       systemMessage(SYSTEM_MESSAGES.PASSWORD_CHANGE_SCSS, true)
     } catch (e) {
       systemMessage(
-        isErrorObject(e) ? e.message : SYSTEM_MESSAGES.PASSWORD_CHANGE_ERR,
+        isErrorResponse(e) ? e.message : SYSTEM_MESSAGES.PASSWORD_CHANGE_ERR,
         false,
       )
     } finally {

@@ -1,5 +1,6 @@
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import { Route, Routes } from 'react-router-dom'
+import SessionContext from '@/contexts/SessionContext'
 import CurrentUserContext from '@/contexts/CurrentUserContext'
 import CartContext from '@/contexts/CartContext'
 import AboutPage from '@/Pages/AboutPage/AboutPage'
@@ -53,12 +54,7 @@ export default function App() {
 
   const auth = useAuth()
 
-  const {
-    isAuthenticated,
-    currentUser,
-    // authApiRoot,
-    // sessionState,
-  } = auth
+  const { authApiRoot, currentUser, sessionState, isAuthenticated } = auth
 
   const {
     userLogin,
@@ -89,97 +85,104 @@ export default function App() {
 
   const cart = useCart(setIsFetching)
 
+  const sessionContextValue = useMemo(
+    () => ({ authApiRoot, isAuthenticated, sessionState }),
+    [isAuthenticated, sessionState],
+  )
+
   return (
-    <CurrentUserContext.Provider value={currentUser}>
-      <CartContext.Provider value={cart}>
-        <FullPageLoader show={isFetching} />
-        <SystMsgAlert
-          msg={systMsg}
-          onResetMsg={resetSystMsg}
-          type={isError ? 'fail' : 'success'}
-        />
-        <Routes>
-          <Route
-            path="/"
-            element={
-              <Page header footer>
-                <MainPage />
-              </Page>
-            }
+    <SessionContext.Provider value={sessionContextValue}>
+      <CurrentUserContext.Provider value={currentUser}>
+        <CartContext.Provider value={cart}>
+          <FullPageLoader show={isFetching} />
+          <SystMsgAlert
+            msg={systMsg}
+            onResetMsg={resetSystMsg}
+            type={isError ? 'fail' : 'success'}
           />
-          <Route
-            path="/login"
-            element={
-              <ProtectedRoute condition={!isAuthenticated}>
-                <Page header>
-                  <LoginPage onSubmit={userLogin} />
-                </Page>
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/register"
-            element={
-              <ProtectedRoute condition={!isAuthenticated}>
-                <Page header>
-                  <RegistrationPage onSubmit={userRegister} />
-                </Page>
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/about"
-            element={
-              <Page header footer>
-                <AboutPage />
-              </Page>
-            }
-          />
-          <Route
-            path="/catalog/*"
-            element={
-              <Page header footer>
-                <ProductCardRoutes />
-              </Page>
-            }
-          />
-          <Route
-            path="/profile"
-            element={
-              <ProtectedRoute condition={isAuthenticated}>
+          <Routes>
+            <Route
+              path="/"
+              element={
                 <Page header footer>
-                  <UserProfile
-                    onUserUpdate={updateUserData}
-                    onPasswordChange={updatePassword}
-                    onAddAddress={addAddress}
-                    onEditAddress={editAddress}
-                    onSetAddress={setAddress}
-                    onRemoveAddress={removeAddress}
-                    onSetDefaultAddress={setDefaultAddress}
-                    onUnsetAddress={unsetAddress}
-                  />
+                  <MainPage />
                 </Page>
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/cart"
-            element={
-              <Page header footer>
-                <CartPage alert={(msg: string) => setupMsg(msg, true)} />
-              </Page>
-            }
-          />
-          <Route
-            path="/*"
-            element={
-              <Page header>
-                <NotFoundPage />
-              </Page>
-            }
-          />
-        </Routes>
-      </CartContext.Provider>
-    </CurrentUserContext.Provider>
+              }
+            />
+            <Route
+              path="/login"
+              element={
+                <ProtectedRoute condition={!isAuthenticated}>
+                  <Page header>
+                    <LoginPage onSubmit={userLogin} />
+                  </Page>
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/register"
+              element={
+                <ProtectedRoute condition={!isAuthenticated}>
+                  <Page header>
+                    <RegistrationPage onSubmit={userRegister} />
+                  </Page>
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/about"
+              element={
+                <Page header footer>
+                  <AboutPage />
+                </Page>
+              }
+            />
+            <Route
+              path="/catalog/*"
+              element={
+                <Page header footer>
+                  <ProductCardRoutes />
+                </Page>
+              }
+            />
+            <Route
+              path="/profile"
+              element={
+                <ProtectedRoute condition={isAuthenticated}>
+                  <Page header footer>
+                    <UserProfile
+                      onUserUpdate={updateUserData}
+                      onPasswordChange={updatePassword}
+                      onAddAddress={addAddress}
+                      onEditAddress={editAddress}
+                      onSetAddress={setAddress}
+                      onRemoveAddress={removeAddress}
+                      onSetDefaultAddress={setDefaultAddress}
+                      onUnsetAddress={unsetAddress}
+                    />
+                  </Page>
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/cart"
+              element={
+                <Page header footer>
+                  <CartPage alert={(msg: string) => setupMsg(msg, true)} />
+                </Page>
+              }
+            />
+            <Route
+              path="/*"
+              element={
+                <Page header>
+                  <NotFoundPage />
+                </Page>
+              }
+            />
+          </Routes>
+        </CartContext.Provider>
+      </CurrentUserContext.Provider>
+    </SessionContext.Provider>
   )
 }

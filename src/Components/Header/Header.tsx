@@ -1,6 +1,6 @@
 import { useState, useContext, useEffect } from 'react'
 import { NavLink, useLocation } from 'react-router-dom'
-import CurrentUserContext from '@/contexts/CurrentUserContext'
+import SessionContext from '@/contexts/SessionContext'
 import CartContext from '@/contexts/CartContext'
 import s from './Header.module.scss'
 import { ReactComponent as BasketImg } from '../../assets/icons/basket.svg'
@@ -13,9 +13,10 @@ export default function Header(props: HeaderProps) {
   const { onLogout } = props
   const [burgerActive, setBurgerActive] = useState(false)
   const location = useLocation()
-  const currentUser = useContext(CurrentUserContext)
 
-  const currentCart = useContext(CartContext)
+  const cartContext = useContext(CartContext)
+  const currentCart = cartContext?.cart
+  const { isAuthenticated } = useContext(SessionContext)
 
   const isTransparent = () =>
     location.pathname === '/register' || location.pathname === '/login'
@@ -52,65 +53,63 @@ export default function Header(props: HeaderProps) {
           </li>
         </ul>
 
-        {!currentUser && (
-          <div className={s.authlink}>
-            <NavLink
-              to="/login"
-              onClick={() => setBurgerActive(false)}
-              data-testid="login-button"
-            >
-              Login
-            </NavLink>
-          </div>
-        )}
-
-        {!currentUser && (
-          <div className={s.authlink}>
-            <NavLink
-              to="/register"
-              onClick={() => setBurgerActive(false)}
-              data-testid="register-button"
-            >
-              Register
-            </NavLink>
-          </div>
+        {!isAuthenticated && (
+          <>
+            <div className={s.authlink}>
+              <NavLink
+                to="/login"
+                onClick={() => setBurgerActive(false)}
+                data-testid="login-button"
+              >
+                Login
+              </NavLink>
+            </div>
+            <div className={s.authlink}>
+              <NavLink
+                to="/register"
+                onClick={() => setBurgerActive(false)}
+                data-testid="register-button"
+              >
+                Register
+              </NavLink>
+            </div>
+          </>
         )}
       </nav>
 
-      {currentUser && (
-        <div className={s.profileLink}>
-          <NavLink
-            to="/profile"
-            onClick={() => setBurgerActive(false)}
-            data-testid="profile-button"
-          >
-            <ProfileImg className={s.profileImg} />
-          </NavLink>
-        </div>
-      )}
-
-      {currentUser && (
-        <div className={s.profileLink}>
-          <NavLink
-            to="/"
-            onClick={() => {
-              onLogout()
-              setBurgerActive(false)
-            }}
-            data-testid="logout-button"
-          >
-            <LogoutImg className={s.profileImg} />
-          </NavLink>
-        </div>
+      {isAuthenticated && (
+        <>
+          <div className={s.profileLink}>
+            <NavLink
+              to="/profile"
+              onClick={() => setBurgerActive(false)}
+              data-testid="profile-button"
+            >
+              <ProfileImg className={s.profileImg} />
+            </NavLink>
+          </div>
+          <div className={s.profileLink}>
+            <NavLink
+              to="/"
+              onClick={() => {
+                onLogout()
+                setBurgerActive(false)
+              }}
+              data-testid="logout-button"
+            >
+              <LogoutImg className={s.profileImg} />
+            </NavLink>
+          </div>
+        </>
       )}
 
       <div className={s.basketLink}>
         <NavLink to="/cart" onClick={() => setBurgerActive(false)}>
           <div className={s.basketImgContainer}>
             <BasketImg className={s.basketImg} />
-            {currentCart?.cart && currentCart?.cart.totalLineItemQuantity && (
+            {currentCart?.totalLineItemQuantity && (
               <div className={s.basketCount}>
-                {currentCart?.cart.totalLineItemQuantity}
+                {currentCart?.totalLineItemQuantity}
               </div>
             )}
           </div>

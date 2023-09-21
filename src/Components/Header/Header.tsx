@@ -1,7 +1,7 @@
 import { useState, useContext, useEffect } from 'react'
 import { NavLink, useLocation } from 'react-router-dom'
 import SessionContext from '@/contexts/SessionContext'
-import CartContext from '@/contexts/CartContext'
+import CurrentCartContext from '@/contexts/CurrentCartContext'
 import s from './Header.module.scss'
 import { ReactComponent as BasketImg } from '../../assets/icons/basket.svg'
 import { ReactComponent as LogoutImg } from '../../assets/icons/logout.svg'
@@ -14,8 +14,7 @@ export default function Header(props: HeaderProps) {
   const [burgerActive, setBurgerActive] = useState(false)
   const location = useLocation()
 
-  const cartContext = useContext(CartContext)
-  const currentCart = cartContext?.cart
+  const currentCart = useContext(CurrentCartContext)
   const { isAuthenticated } = useContext(SessionContext)
 
   const isTransparent = () =>

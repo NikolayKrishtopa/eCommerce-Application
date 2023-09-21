@@ -1,5 +1,6 @@
 import cn from 'classnames'
-import CartContext from '@/contexts/CartContext'
+import CurrentCartContext from '@/contexts/CurrentCartContext'
+import CartHelpersContext from '@/contexts/CartHelpersContext'
 import { useState, useEffect, useContext } from 'react'
 import { LineItem } from '@commercetools/platform-sdk'
 import { useNavigate } from 'react-router-dom'
@@ -22,7 +23,8 @@ export default function ShoppingCard(props: ShoppingCardProps) {
     productId,
   } = props
 
-  const cart = useContext(CartContext)
+  const currentCart = useContext(CurrentCartContext)
+  const cartHelpers = useContext(CartHelpersContext)
 
   const [itemInCart, setItemInCard] = useState<LineItem | null>(null)
 
@@ -34,16 +36,16 @@ export default function ShoppingCard(props: ShoppingCardProps) {
   }
 
   useEffect(() => {
-    const newItemInCart = cart?.cart?.lineItems.find(
+    const newItemInCart = currentCart?.lineItems.find(
       (e) => e.productId === productId,
     )
     if (!newItemInCart) return
     setItemInCard(newItemInCart)
-  }, [cart?.cart, productId])
+  }, [currentCart, productId])
 
   const addToCart: React.MouseEventHandler<HTMLButtonElement> = (e) => {
     e.preventDefault()
-    cart?.addLineItem(productId)
+    cartHelpers?.addLineItem(productId)
   }
 
   const isDiscount = typeof discountPrice === 'number'

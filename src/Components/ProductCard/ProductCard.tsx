@@ -1,7 +1,8 @@
-import { useParams } from 'react-router-dom'
 import { useEffect, useState, useContext } from 'react'
-import CartContext from '@/contexts/CartContext'
+import { useParams } from 'react-router-dom'
 import cn from 'classnames'
+import CurrentCartContext from '@/contexts/CurrentCartContext'
+import { useCartHelpers } from '@/contexts/CartHelpersContext'
 import { LineItem, ProductProjection } from '@commercetools/platform-sdk'
 import leftArrIcon from '@/assets/img/chevron_left.svg'
 import rightArrIcon from '@/assets/img/chevron_right.svg'
@@ -14,8 +15,9 @@ import s from './ProductCard.module.scss'
 import Breadcrumbs from '../Breadcrumbs/Breadcrumbs'
 import QtyInput from '../UIKit/QtyInput/QtyInput'
 
-export default function ProductCard() {
-  const cart = useContext(CartContext)
+export default function OneProductPage() {
+  const currentCart = useContext(CurrentCartContext)
+  const cartHelpers = useCartHelpers()
   const { productSlug } = useParams()
   const product = useProduct(productSlug)
   const [item, setItem] = useState<ProductProjection | null>(null)
@@ -24,6 +26,8 @@ export default function ProductCard() {
   const [currentPopupPicture, setCurrentPopupPicture] = useState(1)
   const [popupOpen, setPopupOpen] = useState(false)
   const [initiated, setInitiated] = useState(false)
+
+  const { addLineItem, removeLineItem, updateLineItemQuantity } = cartHelpers
 
   const incCurPicture = () => {
     if (currentPicture === photoQty) return
@@ -48,31 +52,31 @@ export default function ProductCard() {
   const [itemInCart, setItemInCard] = useState<LineItem | null>(null)
 
   const removeFromCart = () => {
-    if (!cart || !item) return
-    cart.removeLineItem(item.id)
+    if (!currentCart || !item) return
+    removeLineItem(item.id)
   }
 
   const addToCart = () => {
-    if (!cart || !item) return
-    cart.addLineItem(item.id)
+    if (!currentCart || !item) return
+    addLineItem(item.id)
   }
 
   const updateQty = (qty: number) => {
     if (!item) return
-    cart?.updateLineItemQuantity(item.id, () => qty)
+    updateLineItemQuantity(item.id, qty)
   }
 
   useEffect(() => {
     if (!item) return
-    const newItemInCart = cart?.cart?.lineItems.find(
+    const newItemInCart = currentCart?.lineItems.find(
       (e) => e.productId === item.id,
     )
     if (!newItemInCart) return
     setItemInCard(newItemInCart)
-  }, [cart?.cart, item])
+  }, [currentCart?.version, item])
 
   useEffect(() => {
-    if (!cart) return
+    if (!product) return
     const newItem = product
     setItem(newItem ?? null)
     setPhotoQty(newItem?.masterVariant?.images?.length ?? 1)

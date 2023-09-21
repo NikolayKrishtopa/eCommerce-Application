@@ -4,6 +4,7 @@ import {
   buildPasswordFlowApiRoot,
   buildAnonymousSessionFlowApiRoot,
 } from '@/client'
+import isErrorResponse from '@/utils/isErrorResponse'
 import {
   type Cart,
   type Customer,
@@ -11,6 +12,8 @@ import {
   type MyCustomerSignin,
 } from '@commercetools/platform-sdk'
 import { useEffect, useRef, useState } from 'react'
+
+const DEFAULT_CURRENCY = 'EUR'
 
 enum SessionType {
   Client = 'client',
@@ -109,7 +112,7 @@ function useAuth() {
     }
   }
 
-  const authenticateFallback = () => authenticateClientApp()
+  const authenticateFallback = () => authenticateAnonymous()
 
   const authenticateCustomer = async (refreshToken: string) => {
     try {
@@ -139,14 +142,39 @@ function useAuth() {
       })
       .catch((e) => onInvalid(token, e))
 
+  const initCart = async () => {
+    try {
+      const response = await authApiRootRef.current
+        .me()
+        .activeCart()
+        .get()
+        .execute()
+      setCurrentCart(response.body)
+    } catch (e) {
+      if (isErrorResponse(e) && e.statusCode === 404) {
+        const response = await authApiRootRef.current
+          .me()
+          .carts()
+          .post({
+            body: {
+              currency: DEFAULT_CURRENCY,
+              customerEmail: currentUserRef.current?.email,
+            },
+          })
+          .execute()
+        setCurrentCart(response.body)
+      }
+    }
+  }
+
   useEffect(() => {
     const { session, refreshToken } = sessionStore.get()
     if (session === SessionType.Authenticated) {
-      onTokenValidation(refreshToken, authenticateCustomer)
+      onTokenValidation(refreshToken, authenticateCustomer).then(initCart)
       return
     }
     if (session === SessionType.Anonymous) {
-      onTokenValidation(refreshToken, authenticateAnonymous)
+      onTokenValidation(refreshToken, authenticateAnonymous).then(initCart)
       return
     }
     authenticateFallback()
@@ -181,7 +209,7 @@ function useAuth() {
   }
 
   const logout = () => {
-    authenticateFallback()
+    authenticateAnonymous()
   }
 
   const register = async (customerDraft: MyCustomerDraft, autoLogin = true) => {

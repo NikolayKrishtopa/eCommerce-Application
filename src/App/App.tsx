@@ -2,7 +2,8 @@ import { useMemo, useState } from 'react'
 import { Route, Routes } from 'react-router-dom'
 import SessionContext from '@/contexts/SessionContext'
 import CurrentUserContext from '@/contexts/CurrentUserContext'
-import CartContext from '@/contexts/CartContext'
+import CurrentCartContext from '@/contexts/CurrentCartContext'
+import CartHelpersContext from '@/contexts/CartHelpersContext'
 import AboutPage from '@/Pages/AboutPage/AboutPage'
 import ProtectedRoute from '@/hok/ProtectedRoute/ProtectedRoute'
 import { FullPageLoader } from '@/Components/Loader/Loader'
@@ -52,9 +53,19 @@ export default function App() {
     setIsError(!isSuccess)
   }
 
+  const resetSystMsg = () => {
+    setSystMsg('')
+  }
+
   const auth = useAuth()
 
-  const { authApiRoot, currentUser, sessionState, isAuthenticated } = auth
+  const {
+    authApiRoot,
+    currentUser,
+    currentCart,
+    sessionState,
+    isAuthenticated,
+  } = auth
 
   const {
     userLogin,
@@ -74,16 +85,16 @@ export default function App() {
     setIsFetching,
   })
 
-  const resetSystMsg = () => {
-    setSystMsg('')
-  }
-
   const Page = PageBuilder({
     HeaderJSX: <Header onLogout={userLogout} />,
     FooterJSX: <Footer />,
   })
 
-  const cart = useCart(setIsFetching)
+  const cartHelpers = useCart({
+    ...auth,
+    systemMessage: setupMsg,
+    setIsFetching,
+  })
 
   const sessionContextValue = useMemo(
     () => ({ authApiRoot, isAuthenticated, sessionState }),
@@ -93,95 +104,97 @@ export default function App() {
   return (
     <SessionContext.Provider value={sessionContextValue}>
       <CurrentUserContext.Provider value={currentUser}>
-        <CartContext.Provider value={cart}>
-          <FullPageLoader show={isFetching} />
-          <SystMsgAlert
-            msg={systMsg}
-            onResetMsg={resetSystMsg}
-            type={isError ? 'fail' : 'success'}
-          />
-          <Routes>
-            <Route
-              path="/"
-              element={
-                <Page header footer>
-                  <MainPage />
-                </Page>
-              }
+        <CurrentCartContext.Provider value={currentCart}>
+          <CartHelpersContext.Provider value={cartHelpers}>
+            <FullPageLoader show={isFetching} />
+            <SystMsgAlert
+              msg={systMsg}
+              onResetMsg={resetSystMsg}
+              type={isError ? 'fail' : 'success'}
             />
-            <Route
-              path="/login"
-              element={
-                <ProtectedRoute condition={!isAuthenticated}>
-                  <Page header>
-                    <LoginPage onSubmit={userLogin} />
-                  </Page>
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/register"
-              element={
-                <ProtectedRoute condition={!isAuthenticated}>
-                  <Page header>
-                    <RegistrationPage onSubmit={userRegister} />
-                  </Page>
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/about"
-              element={
-                <Page header footer>
-                  <AboutPage />
-                </Page>
-              }
-            />
-            <Route
-              path="/catalog/*"
-              element={
-                <Page header footer>
-                  <ProductCardRoutes />
-                </Page>
-              }
-            />
-            <Route
-              path="/profile"
-              element={
-                <ProtectedRoute condition={isAuthenticated}>
+            <Routes>
+              <Route
+                path="/"
+                element={
                   <Page header footer>
-                    <UserProfile
-                      onUserUpdate={updateUserData}
-                      onPasswordChange={updatePassword}
-                      onAddAddress={addAddress}
-                      onEditAddress={editAddress}
-                      onSetAddress={setAddress}
-                      onRemoveAddress={removeAddress}
-                      onSetDefaultAddress={setDefaultAddress}
-                      onUnsetAddress={unsetAddress}
-                    />
+                    <MainPage />
                   </Page>
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/cart"
-              element={
-                <Page header footer>
-                  <CartPage alert={(msg: string) => setupMsg(msg, true)} />
-                </Page>
-              }
-            />
-            <Route
-              path="/*"
-              element={
-                <Page header>
-                  <NotFoundPage />
-                </Page>
-              }
-            />
-          </Routes>
-        </CartContext.Provider>
+                }
+              />
+              <Route
+                path="/login"
+                element={
+                  <ProtectedRoute condition={!isAuthenticated}>
+                    <Page header>
+                      <LoginPage onSubmit={userLogin} />
+                    </Page>
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/register"
+                element={
+                  <ProtectedRoute condition={!isAuthenticated}>
+                    <Page header>
+                      <RegistrationPage onSubmit={userRegister} />
+                    </Page>
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/about"
+                element={
+                  <Page header footer>
+                    <AboutPage />
+                  </Page>
+                }
+              />
+              <Route
+                path="/catalog/*"
+                element={
+                  <Page header footer>
+                    <ProductCardRoutes />
+                  </Page>
+                }
+              />
+              <Route
+                path="/profile"
+                element={
+                  <ProtectedRoute condition={isAuthenticated}>
+                    <Page header footer>
+                      <UserProfile
+                        onUserUpdate={updateUserData}
+                        onPasswordChange={updatePassword}
+                        onAddAddress={addAddress}
+                        onEditAddress={editAddress}
+                        onSetAddress={setAddress}
+                        onRemoveAddress={removeAddress}
+                        onSetDefaultAddress={setDefaultAddress}
+                        onUnsetAddress={unsetAddress}
+                      />
+                    </Page>
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/cart"
+                element={
+                  <Page header footer>
+                    <CartPage alert={(msg: string) => setupMsg(msg, true)} />
+                  </Page>
+                }
+              />
+              <Route
+                path="/*"
+                element={
+                  <Page header>
+                    <NotFoundPage />
+                  </Page>
+                }
+              />
+            </Routes>
+          </CartHelpersContext.Provider>
+        </CurrentCartContext.Provider>
       </CurrentUserContext.Provider>
     </SessionContext.Provider>
   )

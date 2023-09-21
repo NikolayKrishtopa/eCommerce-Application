@@ -99,13 +99,14 @@ function useAuthInner() {
   const authenticateAnonymous = async (refreshToken?: string) => {
     if (refreshToken) {
       const apiRoot = buildRefreshTokenFlowApiRoot(refreshToken)
-      setCurrentUser(undefined)
       authApiRootRef.current = apiRoot
     } else {
       const apiRoot = buildAnonymousSessionFlowApiRoot()
       const token = await apiRoot.retrieveToken()
       sessionStore.set(SessionType.Anonymous, token.refreshToken)
+      authApiRootRef.current = apiRoot
     }
+    setCurrentUser(undefined)
   }
 
   const authenticateCustomer = async (refreshToken: string) => {
@@ -144,7 +145,7 @@ function useAuthInner() {
   const throwErrorOnInvalidToken = async (
     token: string,
   ): Promise<void | never> => {
-    const isValid = authApiRootRef.current.validateRefreshToken(token)
+    const isValid = await authApiRootRef.current.validateRefreshToken(token)
     if (!isValid) {
       throw new Error('Invalid token. Jump to catch')
     }
@@ -183,7 +184,7 @@ function useAuthInner() {
   const login = async (customerSignIn: MyCustomerSignin) => {
     const { session } = sessionStore.get()
     if (session === SessionType.Authenticated) {
-      return {}
+      return
     }
     let response
     if (session === SessionType.Anonymous) {
@@ -201,11 +202,9 @@ function useAuthInner() {
     const { email, password } = customerSignIn
     const customerApiRoot = buildPasswordFlowApiRoot(email, password)
     const token = await customerApiRoot.retrieveToken()
-    sessionStore.set(SessionType.Authenticated, token.refreshToken)
-    const { customer, cart } = response.body
+    await authenticateCustomer(token.refreshToken)
+    const { cart } = response.body
     setCurrentCart(cart)
-    setCurrentUser(customer)
-    return { customer, cart }
   }
 
   const logout = () => {
@@ -258,17 +257,15 @@ function useAuth(params: {
 
   const { systemMessage, setIsFetching } = params
   const { login, logout, register, ...pass } = useAuthInner()
-  const { isAuthenticated } = pass
+  const { isAuthenticated, currentUserRef } = pass
 
   const userLogin = async (data: MyCustomerSignin) => {
     try {
       setIsFetching(true)
-      const { customer } = await login(data)
-      if (customer) {
-        systemMessage(
-          `${SYSTEM_MESSAGES.LOGIN_SCSS} ${customer.firstName}`,
-          true,
-        )
+      await login(data)
+      const user = currentUserRef.current
+      if (user) {
+        systemMessage(`${SYSTEM_MESSAGES.LOGIN_SCSS} ${user.firstName}`, true)
         navigate('/')
       }
     } catch (e) {

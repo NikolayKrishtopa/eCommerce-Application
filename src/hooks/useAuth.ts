@@ -90,9 +90,6 @@ function useAuthInner() {
 
   const authApiRootRef = useRef(buildClientCredentialsFlowApiRoot())
 
-  const validateToken = async (token: string) =>
-    authApiRootRef.current.validateRefreshToken(token)
-
   const authenticateClientApp = () => {
     setCurrentUser(undefined)
     authApiRootRef.current = buildClientCredentialsFlowApiRoot()
@@ -100,50 +97,24 @@ function useAuthInner() {
   }
 
   const authenticateAnonymous = async (refreshToken?: string) => {
-    try {
-      if (refreshToken) {
-        const apiRoot = buildRefreshTokenFlowApiRoot(refreshToken)
-        setCurrentUser(undefined)
-        authApiRootRef.current = apiRoot
-      } else {
-        const apiRoot = buildAnonymousSessionFlowApiRoot()
-        const token = await apiRoot.retrieveToken()
-        sessionStore.set(SessionType.Anonymous, token.refreshToken)
-      }
-    } catch {
-      authenticateClientApp()
+    if (refreshToken) {
+      const apiRoot = buildRefreshTokenFlowApiRoot(refreshToken)
+      setCurrentUser(undefined)
+      authApiRootRef.current = apiRoot
+    } else {
+      const apiRoot = buildAnonymousSessionFlowApiRoot()
+      const token = await apiRoot.retrieveToken()
+      sessionStore.set(SessionType.Anonymous, token.refreshToken)
     }
   }
-
-  const authenticateFallback = () => authenticateAnonymous()
 
   const authenticateCustomer = async (refreshToken: string) => {
-    try {
-      const apiRoot = buildRefreshTokenFlowApiRoot(refreshToken)
-      const response = await apiRoot.me().get().execute()
-      if (response.statusCode === 200) {
-        setCurrentUser(response.body)
-        sessionStore.set(SessionType.Authenticated, refreshToken)
-        authApiRootRef.current = apiRoot
-      } else {
-        throw new Error('Jump into catch')
-      }
-    } catch {
-      authenticateFallback()
-    }
+    const apiRoot = buildRefreshTokenFlowApiRoot(refreshToken)
+    const response = await apiRoot.me().get().execute()
+    setCurrentUser(response.body)
+    sessionStore.set(SessionType.Authenticated, refreshToken)
+    authApiRootRef.current = apiRoot
   }
-
-  const onTokenValidation = (
-    token: string,
-    onValid: (t: string) => unknown,
-    onInvalid: (t: string, e?: Error) => unknown = authenticateFallback,
-  ) =>
-    validateToken(token)
-      .then((isValid) => {
-        if (isValid) onValid(token)
-        else onInvalid(token)
-      })
-      .catch((e) => onInvalid(token, e))
 
   const initCart = async () => {
     try {
@@ -170,17 +141,43 @@ function useAuthInner() {
     }
   }
 
+  const throwErrorOnInvalidToken = async (
+    token: string,
+  ): Promise<void | never> => {
+    const isValid = authApiRootRef.current.validateRefreshToken(token)
+    if (!isValid) {
+      throw new Error('Invalid token. Jump to catch')
+    }
+  }
+
   useEffect(() => {
-    const { session, refreshToken } = sessionStore.get()
-    if (session === SessionType.Authenticated) {
-      onTokenValidation(refreshToken, authenticateCustomer).then(initCart)
-      return
-    }
-    if (session === SessionType.Anonymous) {
-      onTokenValidation(refreshToken, authenticateAnonymous).then(initCart)
-      return
-    }
-    authenticateFallback()
+    ;(async () => {
+      const { session, refreshToken } = sessionStore.get()
+      try {
+        if (session === SessionType.Authenticated) {
+          try {
+            await throwErrorOnInvalidToken(refreshToken)
+            await authenticateCustomer(refreshToken)
+            await initCart()
+          } catch {
+            authenticateAnonymous()
+          }
+        } else if (session === SessionType.Anonymous) {
+          try {
+            await throwErrorOnInvalidToken(refreshToken)
+            await authenticateAnonymous(refreshToken)
+            await initCart()
+          } catch {
+            authenticateAnonymous()
+          }
+        } else {
+          await authenticateAnonymous()
+          await initCart()
+        }
+      } catch {
+        authenticateClientApp()
+      }
+    })()
   }, [])
 
   const login = async (customerSignIn: MyCustomerSignin) => {

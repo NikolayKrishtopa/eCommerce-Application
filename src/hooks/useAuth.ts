@@ -1,3 +1,5 @@
+import { useEffect, useRef, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import {
   buildClientCredentialsFlowApiRoot,
   buildRefreshTokenFlowApiRoot,
@@ -11,7 +13,8 @@ import {
   type MyCustomerDraft,
   type MyCustomerSignin,
 } from '@commercetools/platform-sdk'
-import { useEffect, useRef, useState } from 'react'
+import { type UserRegisterPayloadType } from '@/Models/Models'
+import { SYSTEM_MESSAGES } from '@/utils/constants'
 
 const DEFAULT_CURRENCY = 'EUR'
 
@@ -69,7 +72,7 @@ class SessionStore {
 
 const sessionStore = new SessionStore().retrieveFromLocalStorage()
 
-function useAuth() {
+function useAuthInner() {
   const [currentUser, $setCurrentUser] = useState<Customer>()
   const [currentCart, $setCurrentCart] = useState<Cart>()
 
@@ -247,6 +250,135 @@ function useAuth() {
     login,
     logout,
     register,
+  }
+}
+
+function useAuth(params: {
+  systemMessage: (msg: string, isSuccess: boolean) => void
+  setIsFetching: (isFetching: boolean) => void
+}) {
+  const navigate = useNavigate()
+
+  const { systemMessage, setIsFetching } = params
+  const { login, logout, register, ...pass } = useAuthInner()
+  const { isAuthenticated } = pass
+
+  const userLogin = async (data: MyCustomerSignin) => {
+    try {
+      setIsFetching(true)
+      const { customer } = await login(data)
+      if (customer) {
+        systemMessage(
+          `${SYSTEM_MESSAGES.LOGIN_SCSS} ${customer.firstName}`,
+          true,
+        )
+        navigate('/')
+      }
+    } catch (e) {
+      systemMessage(SYSTEM_MESSAGES.LOGIN_FAIL, false)
+      throw e
+    } finally {
+      setIsFetching(false)
+    }
+  }
+
+  const userLogout = () => {
+    if (!isAuthenticated) {
+      return
+    }
+    logout()
+    systemMessage(`${SYSTEM_MESSAGES.LOGOUT_SCSS}`, true)
+  }
+
+  const deriveCustomerPayload = (data: UserRegisterPayloadType) => {
+    const {
+      email,
+      password,
+      firstName,
+      lastName,
+      street: shippingAddrStreetName,
+      bldng: shippingAddrStreetNumber,
+      zipCode: shippingAddrPostalCode,
+      city: shippingAddrCity,
+      country: shippingAddrCountry,
+      billingStreet: billAddrStreetName,
+      billingBldng: billAddrStreetNumber,
+      billingZipCode: billAddrPostalCode,
+      billingCity: billAddrCity,
+      billingCountry: billAddrCountry,
+      dateOfBirth,
+      isBillingAddressSame,
+      setDefaultShipAddress: setDefaultShippingAddress,
+      setDefaultBillingAddress,
+    } = data
+
+    const shippingAddress = {
+      streetName: shippingAddrStreetName,
+      streetNumber: shippingAddrStreetNumber,
+      postalCode: shippingAddrPostalCode,
+      city: shippingAddrCity,
+      country: shippingAddrCountry,
+    }
+    const billingAddress = {
+      streetName: billAddrStreetName,
+      streetNumber: billAddrStreetNumber,
+      postalCode: billAddrPostalCode,
+      city: billAddrCity,
+      country: billAddrCountry,
+    }
+
+    const addresses = [shippingAddress]
+
+    const indexOf = (t: (typeof addresses)[number]) => {
+      const index = addresses.indexOf(t)
+      return index !== -1 ? index : undefined
+    }
+
+    let defaultShippingAddress
+    let defaultBillingAddress
+
+    if (setDefaultShippingAddress) {
+      defaultShippingAddress = indexOf(shippingAddress)
+    }
+
+    if (isBillingAddressSame) {
+      defaultBillingAddress = indexOf(shippingAddress)
+    } else {
+      addresses.push(billingAddress)
+      if (setDefaultBillingAddress) {
+        defaultBillingAddress = indexOf(billingAddress)
+      }
+    }
+
+    return {
+      email,
+      password,
+      firstName,
+      lastName,
+      dateOfBirth,
+      addresses,
+      defaultShippingAddress,
+      defaultBillingAddress,
+    } satisfies MyCustomerDraft
+  }
+
+  const userRegister = async (data: UserRegisterPayloadType) => {
+    try {
+      setIsFetching(true)
+      await register(deriveCustomerPayload(data))
+      systemMessage(SYSTEM_MESSAGES.REGISTER_SCSS, false)
+    } catch (e) {
+      systemMessage(SYSTEM_MESSAGES.REGISTER_FAIL, true)
+    } finally {
+      setIsFetching(false)
+    }
+  }
+
+  return {
+    userLogin,
+    userLogout,
+    userRegister,
+    ...pass,
   }
 }
 

@@ -57,10 +57,16 @@ export default function App() {
     setSystMsg('')
   }
 
-  const auth = useAuth()
+  const auth = useAuth({
+    systemMessage: setupMsg,
+    setIsFetching,
+  })
 
   const {
     authApiRoot,
+    userLogin,
+    userRegister,
+    userLogout,
     currentUser,
     currentCart,
     sessionState,
@@ -68,9 +74,6 @@ export default function App() {
   } = auth
 
   const {
-    userLogin,
-    userRegister,
-    userLogout,
     setDefaultAddress,
     setAddress,
     addAddress,

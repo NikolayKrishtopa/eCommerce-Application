@@ -123,6 +123,28 @@ $header-height: $global-header-height;
   align-items: center;
 }
 
+.basket-img-container {
+  display: flex;
+  align-items: center;
+  position: relative;
+}
+
+.basket-count {
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 18px;
+  height: 18px;
+  border: none;
+  border-radius: 20px;
+  background-color: $color-danger;
+  font-size: 14px;
+  font-weight: 700;
+}
+
 .profile-img,
 .basket-img {
   width: 30px;

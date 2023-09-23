@@ -7,9 +7,12 @@
   gap: r(15px) r(30px);
   flex-wrap: wrap;
   font-family: $font-stack-text;
-  font-size: 1.5rem;
+  font-size: 24px;
   font-weight: bold;
   color: $color-neutral-light-additional;
+  @media screen and (max-width: $break-lg) {
+    font-size: 20px;
+  }
 }
 
 .categoryLink {

@@ -1,4 +1,8 @@
 import cn from 'classnames'
+import CartContext from '@/contexts/CartContext'
+import { useState, useEffect, useContext } from 'react'
+import { LineItem } from '@commercetools/platform-sdk'
+import { useNavigate } from 'react-router-dom'
 import type ShoppingCardProps from './ShoppingCard.d'
 import s from './ShoppingCard.module.scss'
 
@@ -15,7 +19,32 @@ export default function ShoppingCard(props: ShoppingCardProps) {
     onNameClick = undefined,
     toFixed = 2,
     intlLocale = 'de-DE',
+    productId,
   } = props
+
+  const cart = useContext(CartContext)
+
+  const [itemInCart, setItemInCard] = useState<LineItem | null>(null)
+
+  const navigate = useNavigate()
+
+  const goToCart: React.MouseEventHandler<HTMLButtonElement> = (e) => {
+    e.preventDefault()
+    navigate('/cart')
+  }
+
+  useEffect(() => {
+    const newItemInCart = cart?.cart?.lineItems.find(
+      (e) => e.productId === productId,
+    )
+    if (!newItemInCart) return
+    setItemInCard(newItemInCart)
+  }, [cart?.cart, productId])
+
+  const addToCart: React.MouseEventHandler<HTMLButtonElement> = (e) => {
+    e.preventDefault()
+    cart?.addLineItem(productId)
+  }
 
   const isDiscount = typeof discountPrice === 'number'
 
@@ -56,6 +85,21 @@ export default function ShoppingCard(props: ShoppingCardProps) {
         </button>
         <div className={s.singleSellerDescription}>{description}</div>
         <div className={s.singleSellerPrice}>{PriceJSX}</div>
+        <div className={s.cartBtnBlock}>
+          {itemInCart ? (
+            <button
+              className={cn(s.cartBtn, s.addedToCartBtn)}
+              type="button"
+              onClick={goToCart}
+            >
+              Added to cart
+            </button>
+          ) : (
+            <button className={s.cartBtn} type="button" onClick={addToCart}>
+              Add to cart
+            </button>
+          )}
+        </div>
       </div>
     </div>
   )

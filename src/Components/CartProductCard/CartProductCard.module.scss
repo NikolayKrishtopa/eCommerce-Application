@@ -1,0 +1,151 @@
+@use '@/styles/abstracts' as *;
+
+.productCard {
+  display: flex;
+  // position: relative;
+  max-width: 861px;
+  max-height: 283px;
+  border-radius: 10px;
+  overflow: hidden;
+  @media (max-width: $break-lg) {
+    max-width: 762px;
+  }
+  @media (max-width: $break-md) {
+    height: 259px;
+  }
+}
+
+.imageBlock {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-width: 242px;
+  height: 283px;
+  border: none;
+  outline: none;
+  overflow: hidden;
+  padding: 0;
+  margin: 0;
+  @media (max-width: $break-md) {
+    max-width: 200px;
+    min-width: 200px;
+    height: 259px;
+  }
+  @media (max-width: $break-sm) {
+    max-width: 155px;
+    min-width: 155px;
+    height: 259px;
+  }
+}
+
+.image {
+  height: 100%;
+}
+
+@mixin price {
+  margin: 0;
+  font-family: $font-stack-heading;
+  font-size: 20px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: normal;
+}
+
+.price {
+  @include price;
+}
+
+.crossed {
+  text-decoration: line-through;
+}
+.pricePromo {
+  @include price;
+  color: $color-danger;
+}
+
+.textBlock {
+  display: flex;
+  flex-direction: column;
+  padding: 26px 20px;
+  flex-grow: 1;
+  background-color: $color-neutral-light;
+  color: $color-primary;
+}
+
+.itemTitle {
+  @include clickable;
+  margin: 0;
+  font-family: $font-stack-heading;
+  font-size: 24px;
+  font-weight: 700;
+  line-height: 32px;
+  text-transform: capitalize;
+  @media (max-width: $break-md) {
+    font-size: 16px;
+  }
+}
+
+.priceBlock {
+  display: flex;
+  gap: 16px;
+  flex-grow: 1;
+}
+
+.tools {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  @media (max-width: $break-md) {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+
+@mixin toolsItem {
+  display: flex;
+  padding: 16px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 10px;
+  gap: 16px;
+  background-color: $color-neutral-light;
+  color: $color-neutral-dark;
+  font-family: $font-stack-text;
+  font-size: 20px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: normal;
+}
+
+.cartQtyButtons {
+  background-color: $color-primary;
+  color: $color-neutral-light;
+  button {
+    color: $color-neutral-light;
+  }
+  @media (max-width: $break-md) {
+    width: 114px !important;
+    height: 40px !important;
+    p {
+      font-size: 16px;
+    }
+  }
+}
+
+.btn {
+  @include toolsItem;
+  @include clickable;
+  @media (max-width: $break-md) {
+    height: 40px !important;
+    font-size: 16px;
+  }
+}
+
+.closeBtn {
+  @include clickable;
+  position: absolute;
+  top: 23px;
+  right: 14px;
+  background-color: transparent;
+  border: none;
+}

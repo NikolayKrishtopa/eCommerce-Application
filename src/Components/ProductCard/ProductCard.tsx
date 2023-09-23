@@ -1,23 +1,24 @@
 import { useParams } from 'react-router-dom'
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useContext } from 'react'
+import CartContext from '@/contexts/CartContext'
 import cn from 'classnames'
-import { ProductProjection } from '@commercetools/platform-sdk'
-// import ProductsContext from '@/contexts/ProductsContext'
+import { LineItem, ProductProjection } from '@commercetools/platform-sdk'
 import leftArrIcon from '@/assets/img/chevron_left.svg'
 import rightArrIcon from '@/assets/img/chevron_right.svg'
 import cartIcon from '@/assets/img/Cart.svg'
 import closeIcon from '@/assets/img/X.svg'
 import useProduct from '@/hooks/useProduct'
 import NotFoundPage from '@/Pages/NotFoundPage/NotFoundPage'
+import removeIcon from '@/assets/icons/remove.svg'
 import s from './ProductCard.module.scss'
 import Breadcrumbs from '../Breadcrumbs/Breadcrumbs'
+import QtyInput from '../UIKit/QtyInput/QtyInput'
 
 export default function ProductCard() {
-  // const products = useContext(ProductsContext)
+  const cart = useContext(CartContext)
   const { productSlug } = useParams()
   const product = useProduct(productSlug)
   const [item, setItem] = useState<ProductProjection | null>(null)
-  const [qty, setQty] = useState(1)
   const [photoQty, setPhotoQty] = useState(1)
   const [currentPicture, setCurrentPicture] = useState(1)
   const [currentPopupPicture, setCurrentPopupPicture] = useState(1)
@@ -44,7 +45,34 @@ export default function ProductCard() {
     setCurrentPopupPicture(currentPopupPicture - 1)
   }
 
+  const [itemInCart, setItemInCard] = useState<LineItem | null>(null)
+
+  const removeFromCart = () => {
+    if (!cart || !item) return
+    cart.removeLineItem(item.id)
+  }
+
+  const addToCart = () => {
+    if (!cart || !item) return
+    cart.addLineItem(item.id)
+  }
+
+  const updateQty = (qty: number) => {
+    if (!item) return
+    cart?.updateLineItemQuantity(item.id, () => qty)
+  }
+
   useEffect(() => {
+    if (!item) return
+    const newItemInCart = cart?.cart?.lineItems.find(
+      (e) => e.productId === item.id,
+    )
+    if (!newItemInCart) return
+    setItemInCard(newItemInCart)
+  }, [cart?.cart, item])
+
+  useEffect(() => {
+    if (!cart) return
     const newItem = product
     setItem(newItem ?? null)
     setPhotoQty(newItem?.masterVariant?.images?.length ?? 1)
@@ -115,14 +143,7 @@ export default function ProductCard() {
         <div className={s.pageContainer}>
           <Breadcrumbs />
           <div className={s.productCard}>
-            <button
-              type="button"
-              className={s.imageBlock}
-              onClick={(e) => {
-                e.stopPropagation()
-                setPopupOpen(true)
-              }}
-            >
+            <div className={s.imageBlock}>
               {currentPicture > 1 && (
                 <button
                   type="button"
@@ -147,15 +168,23 @@ export default function ProductCard() {
                   <img src={rightArrIcon} alt="next" />
                 </button>
               )}
-              <img
-                src={
-                  item?.masterVariant?.images &&
-                  item?.masterVariant?.images[currentPicture - 1].url
-                }
-                alt="item"
-                className={s.image}
-              />
-            </button>
+              <button
+                type="button"
+                onClick={(e) => {
+                  e.stopPropagation()
+                  setPopupOpen(true)
+                }}
+              >
+                <img
+                  src={
+                    item?.masterVariant?.images &&
+                    item?.masterVariant?.images[currentPicture - 1].url
+                  }
+                  alt="item"
+                  className={s.image}
+                />
+              </button>
+            </div>
 
             <div className={s.textBlock}>
               <h3 className={s.itemTitle}>{item?.name.en}</h3>
@@ -190,27 +219,27 @@ export default function ProductCard() {
               </div>
               <p className={s.description}>{item?.description?.en ?? ''}</p>
               <div className={s.tools}>
-                <div className={s.qtyWrapper}>
-                  <button
-                    type="button"
-                    className={s.qtyBtn}
-                    onClick={() => setQty(qty - 1)}
-                  >
-                    -
+                {itemInCart ? (
+                  <>
+                    <QtyInput
+                      className={s.prodQtyButtons}
+                      quantity={itemInCart?.quantity ?? 0}
+                      onChangeHandler={updateQty}
+                    />
+                    <button
+                      type="button"
+                      className={s.btn}
+                      onClick={removeFromCart}
+                    >
+                      Remove from shopping cart
+                      <img src={removeIcon} alt="cart" />
+                    </button>
+                  </>
+                ) : (
+                  <button type="button" className={s.btn} onClick={addToCart}>
+                    Add to shopping cart <img src={cartIcon} alt="cart" />
                   </button>
-                  <p className={s.qty}>{qty}</p>
-
-                  <button
-                    type="button"
-                    className={s.qtyBtn}
-                    onClick={() => setQty(qty + 1)}
-                  >
-                    +
-                  </button>
-                </div>
-                <button type="button" className={s.btn}>
-                  Add to shopping cart <img src={cartIcon} alt="cart" />
-                </button>
+                )}
               </div>
             </div>
           </div>

@@ -1,0 +1,33 @@
+@use '@/styles/abstracts' as *;
+
+.qtyWrapper {
+  display: flex;
+  padding: 16px;
+  align-items: center;
+  justify-content: space-between;
+  border-radius: 10px;
+  gap: 16px;
+  font-family: $font-stack-text;
+  font-size: 20px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: normal;
+  height: 56px;
+  width: 150px;
+  &Small {
+    padding: 5px;
+    font-size: 14px;
+    gap: 8px;
+    width: unset;
+  }
+}
+
+.qtyBtn {
+  @include clickable;
+  background-color: transparent;
+  border: none;
+  font-size: 32px;
+  &Small {
+    font-size: 20px;
+  }
+}

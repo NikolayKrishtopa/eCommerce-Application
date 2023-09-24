@@ -55,3 +55,7 @@ Linting, formatting and tests are also run automatically at each commit.
     "cssModules.camelCase": true
   }
   ```
+
+## Best practices
+- CSS Modules Recommended notation: CamelCase
+- Consider using or implementing component in Components/UIKit first

@@ -1,571 +1,380 @@
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import {
-  CustomerUpdateAction,
-  Customer,
-  Address,
-} from '@commercetools/platform-sdk'
-import { SYSTEM_MESSAGES } from '@/utils/constants'
+  buildClientCredentialsFlowApiRoot,
+  buildRefreshTokenFlowApiRoot,
+  buildPasswordFlowApiRoot,
+  buildAnonymousSessionFlowApiRoot,
+} from '@/client'
+import isErrorResponse from '@/utils/isErrorResponse'
 import {
-  UserRegisterPayloadType,
-  UserLoginPayloadType,
-  UserUpdatePayloadType,
-} from '@/Models/Models'
-import { apiRoot } from '../eComMerchant/client'
+  type Cart,
+  type Customer,
+  type MyCustomerDraft,
+  type MyCustomerSignin,
+} from '@commercetools/platform-sdk'
+import { type UserRegisterPayloadType } from '@/Models/Models'
+import { SYSTEM_MESSAGES } from '@/utils/constants'
 
-export default function useAuth(
-  setSystMsg: (msg: string, isSuccess: boolean) => void,
-  setIsFetching: (isFetching: boolean) => void,
-) {
-  const [currentUser, setCurrentUser] = useState<null | Customer>(null)
-  const isLoggedIn = !!currentUser
-  const navigate = useNavigate()
+const DEFAULT_CURRENCY = 'EUR'
 
-  const checkAuth = () => {
-    if (currentUser) return
-    const id = localStorage.getItem('currentUser')
-    if (!id) {
-      setIsFetching(false)
-      return
+enum SessionType {
+  Client = 'client',
+  Anonymous = 'anonymous',
+  Authenticated = 'authenticated',
+}
+
+const isEnum = <T extends { [k: string]: unknown }>(
+  targetEnum: T,
+  value: unknown,
+): value is T[keyof T] => Object.values(targetEnum).includes(value)
+
+class SessionStore {
+  static STORAGE_SESSION_TYPE = 'sessionType'
+  static STORAGE_REFRESH_TOKEN = 'refreshToken'
+
+  private session = SessionType.Client
+  private refreshToken = ''
+
+  retrieveFromLocalStorage() {
+    const storageSessionType = localStorage.getItem(
+      SessionStore.STORAGE_SESSION_TYPE,
+    )
+    const storageRefreshToken = localStorage.getItem(
+      SessionStore.STORAGE_REFRESH_TOKEN,
+    )
+    this.session = isEnum(SessionType, storageSessionType)
+      ? storageSessionType
+      : SessionType.Client
+    this.refreshToken = storageRefreshToken || ''
+    return this
+  }
+
+  get() {
+    return {
+      session: this.session,
+      refreshToken: this.refreshToken,
     }
-    setIsFetching(true)
-    apiRoot
-      .customers()
-      .withId({ ID: id })
-      .get()
-      .execute()
-      .then((res) => {
-        if (!res || !res.body.firstName || !res.body.lastName) {
-          return
-        }
-        setCurrentUser(res.body)
-      })
-      .catch((res) => {
-        setSystMsg(res.body.message ?? SYSTEM_MESSAGES.LOGIN_FAIL, true)
-        localStorage.clear()
-      })
-      .finally(() => {
-        setIsFetching(false)
-      })
   }
 
-  const login = async (data: UserLoginPayloadType) => {
-    setIsFetching(true)
-    apiRoot
-      .login()
-      .post({
-        body: data,
-      })
-      .execute()
-      .then((res) => {
-        localStorage.setItem('currentUser', res.body.customer.id)
+  set(session: SessionType, refreshToken?: string) {
+    this.session = session
+    localStorage.setItem(SessionStore.STORAGE_SESSION_TYPE, session)
+    if (refreshToken) {
+      this.refreshToken = refreshToken
+      localStorage.setItem(SessionStore.STORAGE_REFRESH_TOKEN, refreshToken)
+    } else {
+      this.refreshToken = ''
+      localStorage.removeItem(SessionStore.STORAGE_REFRESH_TOKEN)
+    }
+  }
+}
 
-        setSystMsg(
-          `${SYSTEM_MESSAGES.LOGIN_SCSS} ${res.body.customer.firstName}`,
-          false,
-        )
-        checkAuth()
-        navigate('/')
-      })
-      .catch(() => {
-        setSystMsg(SYSTEM_MESSAGES.LOGIN_FAIL, true)
-        localStorage.clear()
-      })
-      .finally(() => setIsFetching(false))
+const sessionStore = new SessionStore().retrieveFromLocalStorage()
+
+function useAuthInner() {
+  const [currentUser, $setCurrentUser] = useState<Customer>()
+  const [currentCart, $setCurrentCart] = useState<Cart>()
+
+  const currentUserRef = useRef<typeof currentUser>()
+  const currentCartRef = useRef<typeof currentCart>()
+
+  const setCurrentUser = (customer: typeof currentUser) => {
+    $setCurrentUser(customer)
+    currentUserRef.current = customer
+  }
+  const setCurrentCart = (cart: typeof currentCart) => {
+    $setCurrentCart(cart)
+    currentCartRef.current = cart
   }
 
-  const register = (data: UserRegisterPayloadType) => {
-    setIsFetching(true)
-    apiRoot
-      .customers()
-      .post({
-        body: {
-          email: data.email,
-          firstName: data.firstName,
-          lastName: data.lastName,
-          password: data.password,
-        },
-      })
-      .execute()
-      .then((res) => {
-        const actions = [
-          {
-            action: 'addAddress',
-            address: {
-              streetName: data.street,
-              streetNumber: data.bldng,
-              postalCode: data.zipCode,
-              city: data.city,
-              country: data.country,
-            },
-          },
-        ] as CustomerUpdateAction[]
-        if (
-          !data.isBillingAddressSame &&
-          data.billingBldng &&
-          data.billingCity &&
-          data.billingCountry &&
-          data.billingStreet &&
-          data.billingZipCode
-        ) {
-          actions.push({
-            action: 'addAddress',
-            address: {
-              streetName: data.billingStreet,
-              streetNumber: data.billingBldng,
-              postalCode: data.billingZipCode,
-              city: data.billingCity,
-              country: data.billingCountry,
-            },
-          })
-        }
-        if (data.dateOfBirth) {
-          actions.push({
-            action: 'setDateOfBirth',
-            dateOfBirth: data.dateOfBirth,
-          })
-        }
-        apiRoot
-          .customers()
-          .withId({ ID: res.body.customer.id })
+  const authApiRootRef = useRef(buildClientCredentialsFlowApiRoot())
+
+  const authenticateClientApp = () => {
+    setCurrentUser(undefined)
+    authApiRootRef.current = buildClientCredentialsFlowApiRoot()
+    sessionStore.set(SessionType.Client)
+  }
+
+  const authenticateAnonymous = async (refreshToken?: string) => {
+    if (refreshToken) {
+      const apiRoot = buildRefreshTokenFlowApiRoot(refreshToken)
+      authApiRootRef.current = apiRoot
+    } else {
+      const apiRoot = buildAnonymousSessionFlowApiRoot()
+      const token = await apiRoot.retrieveToken()
+      sessionStore.set(SessionType.Anonymous, token.refreshToken)
+      authApiRootRef.current = apiRoot
+    }
+    setCurrentUser(undefined)
+  }
+
+  const authenticateCustomer = async (refreshToken: string) => {
+    const apiRoot = buildRefreshTokenFlowApiRoot(refreshToken)
+    const response = await apiRoot.me().get().execute()
+    setCurrentUser(response.body)
+    sessionStore.set(SessionType.Authenticated, refreshToken)
+    authApiRootRef.current = apiRoot
+  }
+
+  const initCart = async () => {
+    try {
+      const response = await authApiRootRef.current
+        .me()
+        .activeCart()
+        .get()
+        .execute()
+      setCurrentCart(response.body)
+    } catch (e) {
+      if (isErrorResponse(e) && e.statusCode === 404) {
+        const response = await authApiRootRef.current
+          .me()
+          .carts()
           .post({
             body: {
-              version: res.body.customer.version,
-              actions,
+              currency: DEFAULT_CURRENCY,
+              customerEmail: currentUserRef.current?.email,
             },
           })
           .execute()
-          .then((res2) => {
-            const actions2 = [] as CustomerUpdateAction[]
-            if (data.isBillingAddressSame) {
-              actions2.push({
-                action: 'addBillingAddressId',
-                addressId: res2.body.addresses[0].id,
-              })
-              if (data.setDefaultShipAddress) {
-                actions2.push({
-                  action: 'setDefaultShippingAddress',
-                  addressId: res2.body.addresses[0].id,
-                })
-              }
-              if (data.setDefaultBillingAddress) {
-                actions2.push({
-                  action: 'setDefaultBillingAddress',
-                  addressId: res2.body.addresses[0].id,
-                })
-              }
-            } else {
-              const billingAddress = res2.body.addresses.find(
-                (a) =>
-                  a.country === data.billingCountry &&
-                  a.city === data.billingCity &&
-                  a.postalCode === data.billingZipCode &&
-                  a.streetName === data.billingStreet &&
-                  a.streetNumber === data.billingBldng,
-              )
-              const address = res2.body.addresses.find(
-                (a) =>
-                  a.country === data.country &&
-                  a.city === data.city &&
-                  a.postalCode === data.zipCode &&
-                  a.streetName === data.street &&
-                  a.streetNumber === data.bldng,
-              )
-              if (data.setDefaultShipAddress) {
-                actions2.push({
-                  action: 'setDefaultShippingAddress',
-                  addressId: address!.id,
-                })
-              }
-              if (data.setDefaultBillingAddress) {
-                actions2.push({
-                  action: 'setDefaultBillingAddress',
-                  addressId: billingAddress!.id,
-                })
-              } else {
-                actions2.push({
-                  action: 'addBillingAddressId',
-                  addressId: billingAddress!.id,
-                })
-              }
-            }
-            apiRoot
-              .customers()
-              .withId({ ID: res2.body.id })
-              .post({
-                body: {
-                  version: res2.body.version,
-                  actions: actions2,
-                },
-              })
-              .execute()
-              .then(() => {
-                setSystMsg(SYSTEM_MESSAGES.REGISTER_SCSS, false)
-                login({ email: data.email, password: data.password })
-              })
-          })
-          .catch((res2) => {
-            setSystMsg(res2.body.message ?? SYSTEM_MESSAGES.REGISTER_FAIL, true)
-          })
-      })
-      .catch((res) => {
-        setSystMsg(res.body.message ?? SYSTEM_MESSAGES.REGISTER_FAIL, true)
-      })
-      .finally(() => setIsFetching(false))
+        setCurrentCart(response.body)
+      }
+    }
+  }
+
+  const throwErrorOnInvalidToken = async (
+    token: string,
+  ): Promise<void | never> => {
+    const isValid = await authApiRootRef.current.validateRefreshToken(token)
+    if (!isValid) {
+      throw new Error('Invalid token. Jump to catch')
+    }
+  }
+
+  useEffect(() => {
+    ;(async () => {
+      const { session, refreshToken } = sessionStore.get()
+      try {
+        if (session === SessionType.Authenticated) {
+          try {
+            await throwErrorOnInvalidToken(refreshToken)
+            await authenticateCustomer(refreshToken)
+            await initCart()
+          } catch {
+            authenticateAnonymous()
+          }
+        } else if (session === SessionType.Anonymous) {
+          try {
+            await throwErrorOnInvalidToken(refreshToken)
+            await authenticateAnonymous(refreshToken)
+            await initCart()
+          } catch {
+            authenticateAnonymous()
+          }
+        } else {
+          await authenticateAnonymous()
+          await initCart()
+        }
+      } catch {
+        authenticateClientApp()
+      }
+    })()
+  }, [])
+
+  const login = async (customerSignIn: MyCustomerSignin) => {
+    const { session } = sessionStore.get()
+    if (session === SessionType.Authenticated) {
+      return
+    }
+    let response
+    if (session === SessionType.Anonymous) {
+      response = await authApiRootRef.current
+        .me()
+        .login()
+        .post({ body: customerSignIn })
+        .execute()
+    } else {
+      response = await authApiRootRef.current
+        .login()
+        .post({ body: customerSignIn })
+        .execute()
+    }
+    const { email, password } = customerSignIn
+    const customerApiRoot = buildPasswordFlowApiRoot(email, password)
+    const token = await customerApiRoot.retrieveToken()
+    await authenticateCustomer(token.refreshToken)
+    const { cart } = response.body
+    setCurrentCart(cart)
   }
 
   const logout = () => {
-    setCurrentUser(null)
-    localStorage.clear()
-    setSystMsg(SYSTEM_MESSAGES.LOGOUT_SCSS, false)
-    navigate('/')
+    authenticateAnonymous()
   }
 
-  const setDefaultAddress = (
-    addressType: 'shipping' | 'billing',
-    addressId: string,
-    userVersion?: number,
-  ) => {
-    setIsFetching(true)
-    if (!currentUser) return
-    const { id } = currentUser
-    const version = userVersion || currentUser.version
-
-    apiRoot
-      .customers()
-      .withId({ ID: id })
-      .post({
-        body: {
-          version,
-          actions: [
-            {
-              action:
-                addressType === 'billing'
-                  ? 'setDefaultBillingAddress'
-                  : 'setDefaultShippingAddress',
-              addressId,
-            },
-          ],
-        },
-      })
-      .execute()
-      .then((res) => {
-        setCurrentUser(res.body)
-        setSystMsg(SYSTEM_MESSAGES.EDIT_USER_SCSS, false)
-      })
-      .catch((res) =>
-        setSystMsg(res.body.message ?? SYSTEM_MESSAGES.DEFAULT_ERROR, true),
-      )
-      .finally(() => setIsFetching(false))
-  }
-
-  const setAddress = (
-    addressType: 'shipping' | 'billing',
-    addressId: string,
-    userVersion?: number,
-  ) => {
-    setIsFetching(true)
-    if (!currentUser) return
-    const { id } = currentUser
-    const version = userVersion || currentUser.version
-
-    apiRoot
-      .customers()
-      .withId({ ID: id })
-      .post({
-        body: {
-          version,
-          actions: [
-            {
-              action:
-                addressType === 'billing'
-                  ? 'addBillingAddressId'
-                  : 'addShippingAddressId',
-              addressId,
-            },
-          ],
-        },
-      })
-      .execute()
-      .then((res) => {
-        setCurrentUser(res.body)
-        setSystMsg(SYSTEM_MESSAGES.EDIT_USER_SCSS, false)
-      })
-      .catch((res) =>
-        setSystMsg(res.body.message ?? SYSTEM_MESSAGES.DEFAULT_ERROR, true),
-      )
-      .finally(() => setIsFetching(false))
-  }
-
-  const unsetAddress = (
-    addressType: 'shipping' | 'billing',
-    addressId: string,
-  ) => {
-    setIsFetching(true)
-    if (!currentUser) return
-    const { id } = currentUser
-
-    apiRoot
-      .customers()
-      .withId({ ID: id })
-      .post({
-        body: {
-          version: currentUser.version,
-          actions: [
-            {
-              action:
-                addressType === 'billing'
-                  ? 'removeBillingAddressId'
-                  : 'removeShippingAddressId',
-              addressId,
-            },
-          ],
-        },
-      })
-      .execute()
-      .then((res) => {
-        setCurrentUser(res.body)
-        setSystMsg(SYSTEM_MESSAGES.EDIT_USER_SCSS, false)
-      })
-      .catch((res) =>
-        setSystMsg(res.body.message ?? SYSTEM_MESSAGES.DEFAULT_ERROR, true),
-      )
-      .finally(() => setIsFetching(false))
-  }
-
-  const addAddress = (
-    address: Address,
-    setDefaultShippingAddress: boolean,
-    setDefaultBillingAddress: boolean,
-  ) => {
-    setIsFetching(true)
-    if (!currentUser) return
-    const { id } = currentUser
-
-    apiRoot
-      .customers()
-      .withId({ ID: id })
-      .post({
-        body: {
-          version: currentUser.version,
-          actions: [
-            {
-              action: 'addAddress',
-              address,
-            },
-          ],
-        },
-      })
-      .execute()
-      .then((res) => {
-        setCurrentUser(res.body)
-        const newAddress = res?.body.addresses?.find(
-          (a) =>
-            a.city === address.city &&
-            a.streetName === address.streetName &&
-            a.streetNumber === address.streetNumber,
-        )
-        if (!newAddress?.id) return
-        if (setDefaultShippingAddress && !setDefaultBillingAddress) {
-          setDefaultAddress('shipping', newAddress.id, res.body.version)
-        } else if (setDefaultBillingAddress && !setDefaultShippingAddress) {
-          setDefaultAddress('billing', newAddress.id, res.body.version)
-        } else if (setDefaultBillingAddress && setDefaultShippingAddress) {
-          apiRoot
-            .customers()
-            .withId({ ID: id })
-            .post({
-              body: {
-                version: res.body.version,
-                actions: [
-                  {
-                    action: 'setDefaultBillingAddress',
-                    addressId: newAddress.id,
-                  },
-                  {
-                    action: 'setDefaultShippingAddress',
-                    addressId: newAddress.id,
-                  },
-                ],
-              },
-            })
-            .execute()
-            .then((res2) => {
-              setCurrentUser(res2.body)
-              setSystMsg(SYSTEM_MESSAGES.EDIT_USER_SCSS, false)
-            })
-            .catch((res2) =>
-              setSystMsg(
-                res2.body.message ?? SYSTEM_MESSAGES.DEFAULT_ERROR,
-                true,
-              ),
-            )
-            .finally(() => setIsFetching(false))
-        }
-        setSystMsg(SYSTEM_MESSAGES.EDIT_USER_SCSS, false)
-      })
-      .catch((res) =>
-        setSystMsg(res.body.message ?? SYSTEM_MESSAGES.DEFAULT_ERROR, true),
-      )
-      .finally(() => setIsFetching(false))
-  }
-
-  const editAddress = (addressId: string, address: Address) => {
-    setIsFetching(true)
-    if (!currentUser) return
-    const { id } = currentUser
-
-    apiRoot
-      .customers()
-      .withId({ ID: id })
-      .post({
-        body: {
-          version: currentUser.version,
-          actions: [
-            {
-              action: 'changeAddress',
-              addressId,
-              address,
-            },
-          ],
-        },
-      })
-      .execute()
-      .then((res) => {
-        setCurrentUser(res.body)
-        setSystMsg(SYSTEM_MESSAGES.EDIT_USER_SCSS, false)
-      })
-      .catch((res) =>
-        setSystMsg(res.body.message ?? SYSTEM_MESSAGES.DEFAULT_ERROR, true),
-      )
-      .finally(() => setIsFetching(false))
-  }
-
-  const removeAddress = (addressId: string) => {
-    setIsFetching(true)
-    if (!currentUser) return
-    const { id } = currentUser
-
-    apiRoot
-      .customers()
-      .withId({ ID: id })
-      .post({
-        body: {
-          version: currentUser.version,
-          actions: [
-            {
-              action: 'removeAddress',
-              addressId,
-            },
-          ],
-        },
-      })
-      .execute()
-      .then((res) => {
-        setCurrentUser(res.body)
-        setSystMsg(SYSTEM_MESSAGES.EDIT_USER_SCSS, false)
-      })
-      .catch((res) =>
-        setSystMsg(res.body.message ?? SYSTEM_MESSAGES.DEFAULT_ERROR, true),
-      )
-      .finally(() => setIsFetching(false))
-  }
-
-  const updateUserData = (userData: UserUpdatePayloadType) => {
-    if (!currentUser) return
-    setIsFetching(true)
-    const { firstName, lastName, dateOfBirth, email } = userData
-
-    const actions = [] as CustomerUpdateAction[]
-    if (firstName && firstName !== currentUser?.firstName) {
-      actions.push({
-        action: 'setFirstName',
-        firstName,
-      })
+  const register = async (customerDraft: MyCustomerDraft, autoLogin = true) => {
+    const { session } = sessionStore.get()
+    if (session !== SessionType.Anonymous) {
+      await authenticateAnonymous()
     }
-    if (lastName && lastName !== currentUser?.lastName) {
-      actions.push({
-        action: 'setLastName',
-        lastName,
-      })
-    }
-    if (dateOfBirth && dateOfBirth !== currentUser?.dateOfBirth) {
-      actions.push({
-        action: 'setDateOfBirth',
-        dateOfBirth,
-      })
-    }
-    if (email && email !== currentUser?.email) {
-      actions.push({
-        action: 'changeEmail',
-        email,
-      })
-    }
-    if (actions.length === 0) return
-    apiRoot
-      .customers()
-      .withId({ ID: currentUser.id })
-      .post({
-        body: {
-          version: currentUser.version,
-          actions,
-        },
-      })
+    const response = await authApiRootRef.current
+      .me()
+      .signup()
+      .post({ body: customerDraft })
       .execute()
-      .then((res) => {
-        setCurrentUser(res.body)
-        setSystMsg(SYSTEM_MESSAGES.EDIT_USER_SCSS, false)
-      })
-      .catch((res) =>
-        setSystMsg(res.body.message ?? SYSTEM_MESSAGES.DEFAULT_ERROR, true),
-      )
-      .finally(() => setIsFetching(false))
+    if (autoLogin) {
+      await login(customerDraft)
+    }
+    return response.body
   }
 
-  const updatePassword = (newPassword: string, currentPassword: string) => {
-    setIsFetching(true)
-    if (!currentUser) return
-    const { id } = currentUser
+  const authApiRoot = () => authApiRootRef.current
 
-    apiRoot
-      .customers()
-      .password()
-      .post({
-        body: {
-          id,
-          version: currentUser.version,
-          currentPassword,
-          newPassword,
-        },
-      })
-      .execute()
-      .then((res) => {
-        setCurrentUser(res.body)
-        setSystMsg(SYSTEM_MESSAGES.PASSWORD_CHANGE_SCSS, false)
-      })
-      .catch((res) =>
-        setSystMsg(
-          res.body.message ?? SYSTEM_MESSAGES.PASSWORD_CHANGE_ERR,
-          true,
-        ),
-      )
-      .finally(() => setIsFetching(false))
+  const sessionState = sessionStore.get().session
+  const isAuthenticated =
+    sessionStore.get().session === SessionType.Authenticated
+
+  return {
+    authApiRoot,
+    sessionState,
+    isAuthenticated,
+    currentUser,
+    currentCart,
+    setCurrentUser,
+    setCurrentCart,
+    currentUserRef,
+    currentCartRef,
+    login,
+    logout,
+    register,
+  }
+}
+
+function useAuth(params: {
+  systemMessage: (msg: string, isSuccess: boolean) => void
+  setIsFetching: (isFetching: boolean) => void
+}) {
+  const navigate = useNavigate()
+
+  const { systemMessage, setIsFetching } = params
+  const { login, logout, register, ...pass } = useAuthInner()
+  const { isAuthenticated, currentUserRef } = pass
+
+  const userLogin = async (data: MyCustomerSignin) => {
+    try {
+      setIsFetching(true)
+      await login(data)
+      const user = currentUserRef.current
+      if (user) {
+        systemMessage(`${SYSTEM_MESSAGES.LOGIN_SCSS} ${user.firstName}`, true)
+        navigate('/')
+      }
+    } catch (e) {
+      systemMessage(SYSTEM_MESSAGES.LOGIN_FAIL, false)
+      throw e
+    } finally {
+      setIsFetching(false)
+    }
+  }
+
+  const userLogout = () => {
+    if (!isAuthenticated) {
+      return
+    }
+    logout()
+    systemMessage(`${SYSTEM_MESSAGES.LOGOUT_SCSS}`, true)
+  }
+
+  const deriveCustomerPayload = (data: UserRegisterPayloadType) => {
+    const {
+      email,
+      password,
+      firstName,
+      lastName,
+      street: shippingAddrStreetName,
+      bldng: shippingAddrStreetNumber,
+      zipCode: shippingAddrPostalCode,
+      city: shippingAddrCity,
+      country: shippingAddrCountry,
+      billingStreet: billAddrStreetName,
+      billingBldng: billAddrStreetNumber,
+      billingZipCode: billAddrPostalCode,
+      billingCity: billAddrCity,
+      billingCountry: billAddrCountry,
+      dateOfBirth,
+      isBillingAddressSame,
+      setDefaultShipAddress: setDefaultShippingAddress,
+      setDefaultBillingAddress,
+    } = data
+
+    const shippingAddress = {
+      streetName: shippingAddrStreetName,
+      streetNumber: shippingAddrStreetNumber,
+      postalCode: shippingAddrPostalCode,
+      city: shippingAddrCity,
+      country: shippingAddrCountry,
+    }
+    const billingAddress = {
+      streetName: billAddrStreetName,
+      streetNumber: billAddrStreetNumber,
+      postalCode: billAddrPostalCode,
+      city: billAddrCity,
+      country: billAddrCountry,
+    }
+
+    const addresses = [shippingAddress]
+
+    const indexOf = (t: (typeof addresses)[number]) => {
+      const index = addresses.indexOf(t)
+      return index !== -1 ? index : undefined
+    }
+
+    let defaultShippingAddress
+    let defaultBillingAddress
+
+    if (setDefaultShippingAddress) {
+      defaultShippingAddress = indexOf(shippingAddress)
+    }
+
+    if (isBillingAddressSame) {
+      defaultBillingAddress = indexOf(shippingAddress)
+    } else {
+      addresses.push(billingAddress)
+      if (setDefaultBillingAddress) {
+        defaultBillingAddress = indexOf(billingAddress)
+      }
+    }
+
+    return {
+      email,
+      password,
+      firstName,
+      lastName,
+      dateOfBirth,
+      addresses,
+      defaultShippingAddress,
+      defaultBillingAddress,
+    } satisfies MyCustomerDraft
+  }
+
+  const userRegister = async (data: UserRegisterPayloadType) => {
+    try {
+      setIsFetching(true)
+      await register(deriveCustomerPayload(data))
+      systemMessage(SYSTEM_MESSAGES.REGISTER_SCSS, false)
+    } catch (e) {
+      systemMessage(SYSTEM_MESSAGES.REGISTER_FAIL, true)
+    } finally {
+      setIsFetching(false)
+    }
   }
 
   return {
-    login,
-    register,
-    isLoggedIn,
-    currentUser,
-    logout,
-    checkAuth,
-    setDefaultAddress,
-    setAddress,
-    addAddress,
-    removeAddress,
-    updateUserData,
-    updatePassword,
-    editAddress,
-    unsetAddress,
+    userLogin,
+    userLogout,
+    userRegister,
+    ...pass,
   }
 }
+
+export default useAuth
+export { SessionType }

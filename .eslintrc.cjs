@@ -56,5 +56,6 @@ module.exports = {
       },
     ],
     'react/require-default-props': 'off',
+    '@typescript-eslint/lines-between-class-members': 'off',
   },
 }
